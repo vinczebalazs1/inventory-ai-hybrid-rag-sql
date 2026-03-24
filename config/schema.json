@@ -1,0 +1,48 @@
+{
+  "inventory_items": [
+    {
+      "column": "item_code",
+      "type": "text"
+    },
+    {
+      "column": "sub_code",
+      "type": "integer"
+    },
+    {
+      "column": "activation_date",
+      "type": "date"
+    },
+    {
+      "column": "name",
+      "type": "text"
+    },
+    {
+      "column": "purchase_value",
+      "type": "integer"
+    },
+    {
+      "column": "depreciation",
+      "type": "integer"
+    },
+    {
+      "column": "current_value",
+      "type": "integer"
+    },
+    {
+      "column": "currency",
+      "type": "text"
+    },
+    {
+      "column": "quantity",
+      "type": "integer"
+    },
+    {
+      "column": "inventory_number",
+      "type": "text"
+    },
+    {
+      "column": "location",
+      "type": "text"
+    }
+  ]
+}

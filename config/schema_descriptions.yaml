@@ -1,0 +1,14 @@
+inventory_items:
+  description: Table storing inventory items
+  columns:
+    item_code: Unique item code
+    sub_code: Sub identifier
+    activation_date: Activation date of item
+    name: Name of the item
+    purchase_value: Original purchase value
+    depreciation: Depreciation amount
+    current_value: Current value
+    currency: Currency type
+    quantity: Number of items
+    inventory_number: Internal inventory ID
+    location: Physical location
