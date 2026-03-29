@@ -1,0 +1,156 @@
+=== DEVICE: Printer ===
+
+Description: A printer is a peripheral device that converts digital data
+into physical copies, typically on paper. It can be categorized into
+inkjet, laser, and multifunction printers (MFPs). Inkjet printers use
+liquid ink sprayed through microscopic nozzles, while laser printers use
+toner and electrostatic processes. Multifunction printers integrate
+printing, scanning, copying, and sometimes faxing capabilities.
+
+Usage: - Printing documents, photos, and graphics - Scanning physical
+documents into digital formats - Copying and sometimes faxing - Network
+printing in offices
+
+Troubleshooting: - Printer not responding: check power, cables, and
+network connection - Poor print quality: clean print heads or replace
+ink/toner - Paper jams: carefully remove jammed paper and check
+rollers - Driver issues: reinstall or update drivers
+
+Notes: - Laser printers are more efficient for high-volume printing -
+Inkjet printers are better for photo quality - Regular maintenance
+improves longevity
+
+=== DEVICE: Laptop ===
+
+Description: A laptop is a portable personal computer with an integrated
+screen, keyboard, battery, and hardware components. It is designed for
+mobility and can perform most tasks of a desktop computer.
+
+Usage: - Office work and productivity - Programming and development -
+Media consumption and gaming - Remote work and education
+
+Troubleshooting: - Won’t turn on: check battery and charger -
+Overheating: clean fans and vents - Slow performance: upgrade RAM or
+switch to SSD - Screen issues: check display settings or hardware
+
+Notes: - SSD storage significantly improves speed - Battery degrades
+over time - Proper cooling extends lifespan
+
+=== DEVICE: Desk ===
+
+Description: A desk is a piece of furniture designed to support work
+activities such as computing, writing, and organizing equipment. It can
+be fixed-height or adjustable.
+
+Usage: - Supporting computers and peripherals - Writing and studying -
+Organizing workspace items
+
+Troubleshooting: - Instability: tighten screws and joints - Lack of
+space: improve organization or upgrade desk - Poor ergonomics: adjust
+height or chair
+
+Notes: - Ergonomic desks improve posture - Standing desks promote
+health - Cable management is important
+
+=== DEVICE: Microphone ===
+
+Description: A microphone is an input device that converts sound waves
+into electrical signals. Types include condenser, dynamic, and USB
+microphones.
+
+Usage: - Audio recording - Voice calls and conferencing - Streaming and
+podcasting
+
+Troubleshooting: - No input: check connection and input device
+settings - Noise issues: reduce background noise - Distortion: adjust
+gain levels
+
+Notes: - Condenser microphones are more sensitive - Dynamic microphones
+are more durable - Pop filters improve recording quality
+
+=== DEVICE: Smartphone ===
+
+Description: A smartphone is a handheld device that combines mobile
+communication with computing capabilities. It features a touchscreen
+interface and supports various applications.
+
+Usage: - Communication (calls, messaging) - Internet browsing -
+Photography and video - Apps and entertainment
+
+Troubleshooting: - Slow performance: clear cache or restart - Battery
+drain: close background apps - Charging issues: check cable and port
+
+Notes: - Regular updates improve security - Battery health decreases
+over time - Storage management is important
+
+=== DEVICE: Server ===
+
+Description: A server is a powerful computer that provides services,
+data, or resources to other computers (clients) over a network.
+
+Usage: - Hosting websites and applications - Data storage and
+management - Running enterprise systems
+
+Troubleshooting: - Downtime: check hardware and logs - Network issues:
+verify connections - Performance: monitor CPU, RAM, storage
+
+Notes: - Requires cooling and redundancy - Regular backups are
+critical - Security is essential
+
+=== DEVICE: Switch ===
+
+Description: A network switch connects multiple devices in a LAN and
+forwards data to the correct destination using MAC addresses.
+
+Usage: - Connecting computers in a network - Managing traffic
+efficiently - Expanding network infrastructure
+
+Troubleshooting: - No connectivity: check cables and ports - Slow
+network: inspect bandwidth usage - Configuration errors: reset or
+reconfigure
+
+Notes: - Managed switches offer advanced features - VLAN support
+improves segmentation - Essential for network scalability
+
+=== DEVICE: Monitor ===
+
+Description: A monitor is an output device that displays visual
+information from a computer.
+
+Usage: - Viewing applications and media - Gaming and design work -
+Multi-monitor setups
+
+Troubleshooting: - No signal: check cables and input source -
+Flickering: adjust refresh rate - Poor quality: check resolution
+settings
+
+Notes: - Higher resolution improves clarity - IPS panels offer better
+color accuracy - Refresh rate matters for gaming
+
+=== DEVICE: NAS ===
+
+Description: A Network Attached Storage (NAS) is a dedicated file
+storage device connected to a network, allowing multiple users to access
+data.
+
+Usage: - File sharing - Backup storage - Media streaming
+
+Troubleshooting: - Cannot access: check network settings - Slow
+transfer: verify network speed - Disk failure: replace drives
+
+Notes: - RAID improves redundancy - Ideal for home and small business -
+Remote access possible
+
+=== DEVICE: Docking Station ===
+
+Description: A docking station expands the connectivity of a laptop,
+allowing connection to multiple peripherals.
+
+Usage: - Connecting monitors, keyboard, mouse - Charging laptop -
+Expanding ports
+
+Troubleshooting: - Not detected: check compatibility - Ports not
+working: update drivers - Power issues: verify adapter
+
+Notes: - Useful for office setups - USB-C and Thunderbolt common -
+Reduces cable clutter

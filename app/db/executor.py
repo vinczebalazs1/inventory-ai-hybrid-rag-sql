@@ -40,7 +40,7 @@ def execute_query(sql: str) -> dict:
         cur.execute(sql)
 
         # `cur.description` is None when the statement does not produce rows
-        # (for example INSERT/UPDATE/DELETE without RETURNING).
+        # (for example INSERT/UPDATE/DELETE without RETURNING). !!! nálam most még ez nem kerül alkalmazásra
         if cur.description is None:
             return {
                 "columns": [],
