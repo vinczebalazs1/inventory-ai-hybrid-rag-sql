@@ -1,276 +1,80 @@
-import json
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-
+import streamlit as st
 from app.orchestration.orchestrator import handle_question
+# python -m streamlit run app/web/simple_server.py
+# Van a KGK-n telephelyen Laptop ami 2024 évi gyártású?
+st.set_page_config(
+    page_title="Inventory AI",
+    page_icon="📦",
+    layout="wide"
+)
 
+st.title("📦 Inventory AI")
+st.caption("SQL + RAG + HYBRID assistant for inventory questions")
 
-HTML = """<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inventory AI</title>
-  <style>
-    :root {
-      --bg: #f6f8fc;
-      --card: #ffffff;
-      --line: #e5eaf3;
-      --text: #0f172a;
-      --muted: #5b6478;
-      --accent: #4f46e5;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Inter", "Segoe UI", sans-serif;
-      background: radial-gradient(1200px 400px at 90% -10%, #eaf0ff 0%, var(--bg) 60%);
-      color: var(--text);
-    }
-    .wrap {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 28px 16px 44px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-      padding: 18px;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      letter-spacing: -0.02em;
-    }
-    .sub {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.97rem;
-    }
-    .query {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-    }
-    input {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 15px;
-      outline: none;
-      color: var(--text);
-      background: #fff;
-    }
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-    }
-    button {
-      border: 0;
-      border-radius: 12px;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 600;
-      padding: 12px 16px;
-      cursor: pointer;
-    }
-    button:hover { background: #4338ca; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .result {
-      margin-top: 14px;
-      display: none;
-    }
-    .pill {
-      display: inline-block;
-      margin-bottom: 10px;
-      border-radius: 999px;
-      border: 1px solid #cfd5ff;
-      background: #eef0ff;
-      color: #3730a3;
-      padding: 4px 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-    .answer {
-      white-space: pre-wrap;
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
-    details {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px 10px;
-      background: #fafbff;
-      margin-top: 8px;
-    }
-    summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: #1f2a44;
-    }
-    pre {
-      overflow: auto;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px;
-      margin: 8px 0 0;
-      font-size: 12px;
-    }
-    .err {
-      margin-top: 10px;
-      color: #9f1239;
-      background: #fff1f5;
-      border: 1px solid #fecdd3;
-      border-radius: 10px;
-      padding: 10px;
-      display: none;
-      white-space: pre-wrap;
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Inventory AI</h1>
-      <div class="sub">Minimal interface for SQL + RAG + HYBRID questions.</div>
+with st.sidebar:
+    st.header("Controls")
+    show_debug = st.toggle("Show debug", value=False)
+    st.divider()
+    st.markdown("**Examples**")
+    examples = [
+      "Where is item E0001 located?",
+      "Is the Laptop available in location KGK?",
+      "Which items are stored in location GFB?"
+    ]
+    selected = st.radio("Try one:", examples, label_visibility="collapsed")
 
-      <div class="query">
-        <input id="question" placeholder="Ask a question..." />
-        <button id="ask">Ask</button>
-      </div>
+col1, col2 = st.columns([2, 1])
 
-      <div id="error" class="err"></div>
+with col1:
+    question = st.text_area(
+        "Ask a question",
+        value=selected,
+        height=120,
+        placeholder="Ask about products, stock, sales, suppliers..."
+    )
 
-      <div id="result" class="result">
-        <div id="route" class="pill">Route: -</div>
-        <div id="answer" class="answer"></div>
+with col2:
+    st.metric("Mode", "HYBRID")
+    st.info("Ask natural language questions. The system decides SQL, RAG, or hybrid routing.")
 
-        <details>
-          <summary>SQL</summary>
-          <pre id="sql">-</pre>
-        </details>
-        <details>
-          <summary>JSON Result</summary>
-          <pre id="json">-</pre>
-        </details>
-      </div>
-    </div>
-  </div>
+ask = st.button("🚀 Run analysis", type="primary", use_container_width=True)
 
-  <script>
-    const askBtn = document.getElementById("ask");
-    const input = document.getElementById("question");
-    const errorEl = document.getElementById("error");
-    const resultEl = document.getElementById("result");
-    const routeEl = document.getElementById("route");
-    const answerEl = document.getElementById("answer");
-    const sqlEl = document.getElementById("sql");
-    const jsonEl = document.getElementById("json");
+if ask and question.strip():
+    with st.spinner("Thinking..."):
+        result = handle_question(question.strip())
 
-    function setBusy(flag) {
-      askBtn.disabled = flag;
-      askBtn.textContent = flag ? "Working..." : "Ask";
-    }
+    if not result.get("ok", True):
+        error = result.get("error", {})
 
-    function showError(message) {
-      errorEl.style.display = "block";
-      errorEl.textContent = message;
-    }
+        st.divider()
+        st.warning(f"**{error.get('title', 'Valami figyelmet igényel')}**\n\n{error.get('message', 'Kérlek próbáld újra.')}")
 
-    function clearError() {
-      errorEl.style.display = "none";
-      errorEl.textContent = "";
-    }
+        if show_debug and error.get("detail"):
+            with st.expander("Technical details"):
+                st.code(error["detail"])
 
-    async function ask() {
-      const question = input.value.trim();
-      if (!question) return;
-      setBusy(true);
-      clearError();
-      try {
-        const res = await fetch("/api/ask", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Request failed");
+        st.stop()
 
-        resultEl.style.display = "block";
-        routeEl.textContent = "Route: " + (data.route || "-");
-        answerEl.textContent = data.answer || "-";
-        sqlEl.textContent = data.sql || "-";
-        jsonEl.textContent = JSON.stringify(data.result || {}, null, 2);
-      } catch (err) {
-        showError(err.message || String(err));
-      } finally {
-        setBusy(false);
-      }
-    }
+    route = result.get("route", "-")
+    answer = result.get("answer", "-")
+    sql = result.get("sql", "-")
+    raw = result.get("result", {})
 
-    askBtn.addEventListener("click", ask);
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") ask();
-    });
-  </script>
-</body>
-</html>
-"""
+    st.divider()
 
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Route", route)
+    c2.metric("SQL generated", "Yes" if sql and sql != "-" else "No")
+    c3.metric("Result rows", raw.get("row_count", "-") if isinstance(raw, dict) else "-")
 
-class Handler(BaseHTTPRequestHandler):
-    def _send_json(self, payload: dict, status: int = 200) -> None:
-        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        self.send_response(status)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(data)))
-        self.end_headers()
-        self.wfile.write(data)
+    st.subheader("Answer")
+    st.success(answer)
 
-    def do_GET(self) -> None:  # noqa: N802
-        if self.path == "/" or self.path.startswith("/?"):
-            data = HTML.encode("utf-8")
-            self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(data)))
-            self.end_headers()
-            self.wfile.write(data)
-            return
-        self.send_response(404)
-        self.end_headers()
+    if show_debug:
+        tab1, tab2 = st.tabs(["SQL", "Raw result"])
 
-    def do_POST(self) -> None:  # noqa: N802
-        if self.path != "/api/ask":
-            self._send_json({"error": "Not found"}, status=404)
-            return
-        try:
-            content_length = int(self.headers.get("Content-Length", "0"))
-            body = self.rfile.read(content_length) if content_length > 0 else b""
-            payload = json.loads(body.decode("utf-8")) if body else {}
-            question = str(payload.get("question", "")).strip()
-            if not question:
-                self._send_json({"error": "Missing question"}, status=400)
-                return
-            result = handle_question(question)
-            self._send_json(result, status=200)
-        except Exception as exc:
-            self._send_json({"error": str(exc)}, status=500)
+        with tab1:
+            st.code(sql, language="sql")
 
-    def log_message(self, format: str, *args) -> None:  # noqa: A003
-        return
-
-
-def run_server(host: str = "127.0.0.1", port: int = 8000) -> None:
-    server = ThreadingHTTPServer((host, port), Handler)
-    print(f"Inventory AI running on http://{host}:{port}")
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        server.server_close()
-
+        with tab2:
+            st.json(raw)

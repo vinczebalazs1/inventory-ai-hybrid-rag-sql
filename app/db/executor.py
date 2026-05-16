@@ -1,6 +1,8 @@
 import os
+import psycopg2
 from dotenv import load_dotenv
 from app.db.connection import get_connection
+from app.errors import DatabaseUnavailableError
 
 # Load .env values early so runtime limits can be configured without code changes.
 load_dotenv()
@@ -26,12 +28,15 @@ def execute_query(sql: str) -> dict:
     Resource safety:
     - Cursor and connection are always closed in `finally`, even on errors.
     """
-    # Open a new database connection for this execution request.
-    conn = get_connection()
-    # Create a cursor to send SQL commands and fetch data.
-    cur = conn.cursor()
+    conn = None
+    cur = None
 
     try:
+        # Open a new database connection for this execution request.
+        conn = get_connection()
+        # Create a cursor to send SQL commands and fetch data.
+        cur = conn.cursor()
+
         # Enforce a per-statement timeout at the PostgreSQL session level.
         # This protects the application from hanging on expensive queries.
         cur.execute(f"SET statement_timeout = {QUERY_TIMEOUT_MS};")
@@ -60,7 +65,16 @@ def execute_query(sql: str) -> dict:
             "row_count": len(rows),
         }
 
+    except DatabaseUnavailableError:
+        raise
+    except psycopg2.Error as exc:
+        raise DatabaseUnavailableError(
+            "Az adatbázis nem tudta lefuttatni a lekérdezést. Ellenőrizd az adatbázis állapotát és a sémát, majd próbáld újra.",
+            detail=str(exc),
+        ) from exc
     finally:
         # Always release database resources, regardless of success or failure.
-        cur.close()
-        conn.close()
+        if cur is not None:
+            cur.close()
+        if conn is not None:
+            conn.close()
