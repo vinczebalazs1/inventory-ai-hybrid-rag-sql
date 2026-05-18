@@ -1,8 +1,8 @@
 """
-Schema metadata loader and formatter.
+Séma metaadat betöltő és formázó modul.
 
-This module reads schema structure and optional human descriptions from config
-files, then composes a single text block for LLM prompt conditioning.
+Ez a modul config fájlokból olvassa ki a séma struktúrát és az opcionális
+emberi leírásokat, majd egyetlen szövegblokkot készít LLM prompt kondicionáláshoz.
 """
 
 import json
@@ -10,30 +10,32 @@ import yaml
 
 
 def load_schema() -> dict:
-    """Load raw table/column structure from JSON configuration."""
+    """Nyers tábla/oszlop struktúra betöltése JSON konfigurációból."""
     with open("config/schema.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def load_descriptions() -> dict:
-    """Load optional table/column descriptions from YAML configuration."""
+    """Opcionális tábla/oszlop leírások betöltése YAML konfigurációból."""
     with open("config/schema_descriptions.yaml", "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 def build_schema_text() -> str:
     """
-    Build a readable schema summary string for the text-to-SQL prompt.
+    Olvasható sémaösszefoglaló string építése a text-to-SQL prompthoz.
 
-    Output format groups information by table, then lists columns with types
-    and optional natural-language descriptions.
+    A kimeneti forma táblánként csoportosít, majd oszlopokat listáz típusokkal
+    és opcionális természetes nyelvű leírásokkal.
     """
     schema = load_schema()
     desc = load_descriptions()
 
     text = ""
 
-    # Iterate all known tables and attach optional descriptions.
+    # Itt készül az LLM számára olvasható séma blokk. A modell nem kérdezi le
+    # közvetlenül a DB metaadatokat, hanem erre a generált szövegre támaszkodik.
+    # Végigmegyünk az ismert táblákon, és hozzáadjuk az opcionális leírásokat.
     for table, columns in schema.items():
         text += f"\nTable: {table}\n"
 
@@ -43,13 +45,15 @@ def build_schema_text() -> str:
 
         text += "Columns:\n"
 
-        # Render each column as a bullet line for easier model parsing.
+        # Minden oszlopot bullet sorba renderelünk, hogy a modell könnyebben értelmezze.
         for col in columns:
             name = col["column"]
             dtype = col["type"]
 
             col_desc = desc.get(table, {}).get("columns", {}).get(name, "")
 
+            # Az oszlopleírások üzleti jelentést adnak az amúgy kétértelmű mezőknek,
+            # ami segít az LLM-nek jobb SQL-t generálni.
             line = f"- {name} ({dtype})"
             if col_desc:
                 line += f": {col_desc}"

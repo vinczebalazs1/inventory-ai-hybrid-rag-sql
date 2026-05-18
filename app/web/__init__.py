@@ -1,2 +1,1 @@
-"""Simple localhost web app for Inventory AI."""
-
+"""Web/UI belépési pontok az Inventory AI alkalmazáshoz."""

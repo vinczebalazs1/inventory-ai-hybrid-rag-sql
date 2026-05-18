@@ -4,48 +4,50 @@ from dotenv import load_dotenv
 from app.db.connection import get_connection
 from app.errors import DatabaseUnavailableError
 
-# Load .env values early so runtime limits can be configured without code changes.
+# Korán betöltjük a .env értékeket, hogy a futási limitek kódmódosítás nélkül állíthatók legyenek.
 load_dotenv()
 
-# Maximum execution time for a single SQL statement in milliseconds.
-# If a query exceeds this limit, PostgreSQL aborts it to protect the system.
+# Egyetlen SQL utasítás maximális futási ideje milliszekundumban.
+# Ha a lekérdezés túllépi ezt, a PostgreSQL megszakítja a rendszer védelme érdekében.
 QUERY_TIMEOUT_MS = int(os.getenv("SQL_QUERY_TIMEOUT_MS", "5000"))
 
-# Maximum number of rows returned to the caller.
-# This prevents very large result sets from consuming too much memory or bandwidth.
+# A callernek visszaadott sorok maximális száma.
+# Ez megakadályozza, hogy nagyon nagy eredményhalmazok túl sok memóriát vagy sávszélt fogyasszanak.
 MAX_ROWS_RETURNED = int(os.getenv("SQL_MAX_ROWS_RETURNED", "100"))
 
 
 def execute_query(sql: str) -> dict:
     """
-    Execute a SQL statement and return a normalized dictionary payload.
+    SQL utasítás futtatása és normalizált dictionary válaszcsomag visszaadása.
 
-    Return format:
-    - columns: list of column names (empty for non-SELECT statements)
-    - rows: list of row tuples (limited by MAX_ROWS_RETURNED)
-    - row_count: number of rows included in `rows`
+    Visszatérési forma:
+    - columns: oszlopnevek listája
+    - rows: sor tuple-ök listája, MAX_ROWS_RETURNED által limitálva
+    - row_count: a `rows` mezőben ténylegesen szereplő sorok száma
 
-    Resource safety:
-    - Cursor and connection are always closed in `finally`, even on errors.
+    Erőforrás-biztonság:
+    - A cursor és connection mindig bezáródik a `finally` blokkban, hiba esetén is.
     """
     conn = None
     cur = None
 
     try:
-        # Open a new database connection for this execution request.
+        # Új adatbázis kapcsolat nyitása ehhez az execution requesthez.
         conn = get_connection()
-        # Create a cursor to send SQL commands and fetch data.
+        # Cursor létrehozása SQL parancsok küldéséhez és adatok lekéréséhez.
         cur = conn.cursor()
 
-        # Enforce a per-statement timeout at the PostgreSQL session level.
-        # This protects the application from hanging on expensive queries.
+        # Statement szintű timeout beállítása a PostgreSQL sessionben.
+        # Ez megvédi az alkalmazást a drága lekérdezéseken való beragadástól.
         cur.execute(f"SET statement_timeout = {QUERY_TIMEOUT_MS};")
 
-        # Execute the caller-provided SQL statement.
+        # A caller által adott SQL utasítás futtatása.
+        # Ekkorra az orchestratornak már validálnia és limitálnia kellett az SQL-t,
+        # így az executor csak az adatbázis interakcióra koncentrál.
         cur.execute(sql)
 
-        # `cur.description` is None when the statement does not produce rows
-        # (for example INSERT/UPDATE/DELETE without RETURNING). !!! nálam most még ez nem kerül alkalmazásra
+        # A `cur.description` None, ha az utasítás nem ad vissza sorokat
+        # (például INSERT/UPDATE/DELETE RETURNING nélkül). Nálunk ez most még nem használt eset.
         if cur.description is None:
             return {
                 "columns": [],
@@ -53,27 +55,31 @@ def execute_query(sql: str) -> dict:
                 "row_count": 0,
             }
 
-        # Extract column names from cursor metadata.
+        # Oszlopnevek kinyerése a cursor metaadataiból.
         columns = [desc[0] for desc in cur.description]
-        # Fetch only up to the configured row cap.
+        # Csak a konfigurált sorkorlátig kérünk le adatot.
+        # Ez a második védelmi réteg az SQL LIMIT guardrail után.
         rows = cur.fetchmany(MAX_ROWS_RETURNED)
 
         return {
             "columns": columns,
             "rows": rows,
-            # Count rows that are actually returned (after limit is applied).
+            # A ténylegesen visszaadott sorok száma a limit alkalmazása után.
             "row_count": len(rows),
         }
 
     except DatabaseUnavailableError:
+        # Ezt a connection layer már barátságos DB hibává alakította.
         raise
     except psycopg2.Error as exc:
+        # A query-szintű DB hibák, például hiányzó oszlop vagy timeout, szintén
+        # adatbázis elérhetőségi/futtatási problémaként jelennek meg a UI-ban.
         raise DatabaseUnavailableError(
             "Az adatbázis nem tudta lefuttatni a lekérdezést. Ellenőrizd az adatbázis állapotát és a sémát, majd próbáld újra.",
             detail=str(exc),
         ) from exc
     finally:
-        # Always release database resources, regardless of success or failure.
+        # Mindig felszabadítjuk az adatbázis erőforrásokat, siker és hiba esetén is.
         if cur is not None:
             cur.close()
         if conn is not None:

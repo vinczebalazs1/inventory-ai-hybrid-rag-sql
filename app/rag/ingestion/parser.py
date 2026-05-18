@@ -2,23 +2,23 @@ import re
 from typing import List, Dict
 
 
-# Supported section names we want to extract from each device block
+# Támogatott szekciónevek, amelyeket minden eszközblokkból ki akarunk nyerni.
 SECTION_NAMES = ["description", "usage", "troubleshooting", "notes"]
 
 
 def parse_devices(text: str) -> List[Dict]:
     """
-    Parse raw TXT input into structured device objects.
+    Nyers TXT input parse-olása strukturált eszköz objektumokká.
 
-    Expected input format example:
+    Elvárt input formátum példa:
         === DEVICE: Printer ===
         Description: ...
         Usage: ...
         Troubleshooting: ...
         Notes: ...
 
-    Returns:
-        A list of dictionaries like:
+    Visszatérés:
+        Dictionary-k listája ilyen formában:
         [
             {
                 "name": "printer",
@@ -33,35 +33,37 @@ def parse_devices(text: str) -> List[Dict]:
 
     devices = []
 
-    # Split the input text into device blocks using the device delimiter
+    # Az input szöveget eszközblokkokra bontjuk az eszköz delimiter alapján.
+    # Az első splitelt rész lehet üres szöveg az első device marker előtt.
     blocks = re.split(r"=== DEVICE:", text)
 
     for block in blocks:
         block = block.strip()
 
-        # Skip empty blocks (can happen before the first delimiter)
+        # Üres blokkok kihagyása, például az első delimiter előtti rész.
         if not block:
             continue
 
-        # Extract device name from the header
-        # Example header: "Printer ===\nDescription:..."
+        # Eszköznév kinyerése a headerből.
+        # Példa header: "Printer ===\nDescription:..."
         header_match = re.match(r"(.*?)===", block, re.DOTALL)
 
-        # If header format is invalid, skip this block
+        # Ha a header formátuma hibás, kihagyjuk ezt a blokkot.
         if not header_match:
             continue
 
-        # Normalize device name (lowercase, trimmed)
+        # Eszköznév normalizálása: kisbetűsítés és trim.
+        # Ugyanez a kisbetűs név kerül később a Qdrant payload.name mezőbe.
         raw_name = header_match.group(1).strip()
         name = raw_name.lower()
 
-        # Extract the remaining content after the header
+        # A header utáni maradék tartalom kinyerése.
         content = block[header_match.end():].strip()
 
-        # Parse sections (description, usage, etc.)
+        # Szekciók parse-olása: description, usage stb.
         sections = parse_sections(content)
 
-        # Store structured device data
+        # Strukturált eszközadat eltárolása.
         devices.append({
             "name": name,
             "sections": sections
@@ -72,33 +74,35 @@ def parse_devices(text: str) -> List[Dict]:
 
 def parse_sections(text: str) -> Dict[str, str]:
     """
-    Extract predefined sections from a device block.
+    Előre definiált szekciók kinyerése egy eszközblokkból.
 
-    Recognized sections:
+    Felismert szekciók:
         Description:
         Usage:
         Troubleshooting:
         Notes:
 
-    Returns:
-        A dictionary mapping section names to their content.
+    Visszatérés:
+        Dictionary, amely szekcióneveket köt össze a tartalmukkal.
     """
 
     sections = {}
 
     for section in SECTION_NAMES:
-        # Regex explanation:
-        # - Match "SectionName:"
-        # - Capture everything until the next section or end of text
+        # Minden ismert szekciót a következő ismert szekció headerig
+        # vagy az eszközblokk végéig fogunk meg.
+        # Regex magyarázat:
+        # - "SectionName:" illesztése.
+        # - Minden szöveg megfogása a következő szekcióig vagy a szöveg végéig.
         pattern = rf"{section.capitalize()}:(.*?)(?=(Description|Usage|Troubleshooting|Notes):|$)"
 
         match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
 
         if match:
-            # Clean extracted content
+            # Kinyert tartalom tisztítása.
             content = match.group(1).strip()
 
-            # Only store non-empty sections
+            # Csak a nem üres szekciókat tároljuk.
             if content:
                 sections[section] = content
 

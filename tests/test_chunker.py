@@ -3,11 +3,10 @@ from app.rag.ingestion.chunker import chunk_all_devices
 
 
 def main():
-    
+    # Kézi ellenőrzés az ingestion parser -> chunker részéhez.
     with open("app/rag/data/devices.txt", "r", encoding="utf-8") as f:
         text = f.read()
 
-  
     devices = parse_devices(text)
 
     chunks = chunk_all_devices(devices)
@@ -16,6 +15,7 @@ def main():
 
 
     for c in chunks[:10]:
+        # Csak előnézetet írunk ki, hogy a nagy dokumentációs szöveg olvasható maradjon.
         print(f"DEVICE: {c.name}")
         print(f"SECTION: {c.section}")
         print(f"TEXT PREVIEW: {c.text[:100]}...")
@@ -23,4 +23,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Közvetlenül futtasd a generált chunkok ellenőrzéséhez.
     main()

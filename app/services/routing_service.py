@@ -3,11 +3,13 @@ from app.services.llm_service import ask_llm
 
 def route_query(question: str) -> str:
     """
-    Decide whether the question should be handled by:
+    Eldönti, hogy a kérdést melyik ág kezelje:
     - SQL
     - RAG
     - HYBRID
     """
+    # A routing önmagában is LLM feladat. A prompt egyetlen szavas választ kér,
+    # az alábbi parsing pedig ezt a három feldolgozási ág egyikére képezi le.
     prompt = f"""
 You are a query classifier.
 
@@ -37,6 +39,8 @@ A: HYBRID
 """
     response = ask_llm(prompt).strip().upper()
 
+    # A sorrend számít: a "HYBRID" egyszerre jelent adat- és dokumentációs szándékot,
+    # ezért előbb kell vizsgálni, mint a sima SQL-t.
     if "HYBRID" in response:
         return "HYBRID"
     if "SQL" in response:

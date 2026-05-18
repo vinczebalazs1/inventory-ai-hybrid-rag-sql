@@ -1,11 +1,50 @@
-from typing import List, Dict
-from app.rag.retrieval.retriever import retrieve_semantic, retrieve_by_name
+from typing import Dict, List
+
+from app.rag.retrieval.retriever import retrieve_by_name, retrieve_semantic
 from app.services.llm_service import ask_llm
+
+
+def _confidence_from_score(score) -> float | None:
+    if score is None:
+        return None
+
+    try:
+        normalized = max(0.0, min(1.0, float(score)))
+    except (TypeError, ValueError):
+        return None
+
+    return round(normalized * 100, 1)
+
+
+def build_sources(chunks: List[Dict]) -> List[Dict]:
+    sources = []
+    seen = set()
+
+    for chunk in chunks:
+        source = chunk.get("source") or chunk.get("name") or "-"
+        section = chunk.get("section", "-")
+        name = chunk.get("name", "-")
+        key = (source, section, name)
+
+        if key in seen:
+            continue
+        seen.add(key)
+
+        sources.append({
+            "source": source,
+            "section": section,
+            "name": name,
+            "doc_type": chunk.get("doc_type", "-"),
+            "confidence": _confidence_from_score(chunk.get("score")),
+            "text": (chunk.get("text") or "")[:240],
+        })
+
+    return sources
 
 
 def build_context(chunks: List[Dict]) -> str:
     """
-    Convert chunk list into readable context for LLM.
+    Chunk lista átalakítása LLM számára olvasható kontextussá.
     """
 
     if not chunks:
@@ -14,8 +53,12 @@ def build_context(chunks: List[Dict]) -> str:
     parts = []
 
     for c in chunks:
+        source = c.get("source", c.get("name", "-"))
+        doc_type = c.get("doc_type", "device_txt")
         part = f"""
 DEVICE: {c["name"]}
+SOURCE: {source}
+DOC_TYPE: {doc_type}
 SECTION: {c["section"]}
 CONTENT:
 {c["text"]}
@@ -25,14 +68,12 @@ CONTENT:
     return "\n\n".join(parts)
 
 
-# 🟢 PURE RAG
-def answer_rag(question: str) -> str:
+def answer_rag_details(question: str) -> Dict:
     """
-    Answer using only RAG (no SQL).
+    Válaszadás kizárólag RAG alapján, SQL nélkül.
     """
 
     chunks = retrieve_semantic(question)
-
     context = build_context(chunks)
 
     prompt = f"""
@@ -51,13 +92,19 @@ If the answer is not in the context, say you don't know.
 --- ANSWER ---
 """
 
-    return ask_llm(prompt).strip()
+    return {
+        "answer": ask_llm(prompt).strip(),
+        "sources": build_sources(chunks),
+    }
 
 
-# 🔵 HYBRID
-def answer_hybrid(question: str, names: List[str], sql_result: Dict) -> str:
+def answer_rag(question: str) -> str:
+    return answer_rag_details(question)["answer"]
+
+
+def answer_hybrid_details(question: str, names: List[str], sql_result: Dict) -> Dict:
     """
-    Answer using both SQL result and RAG documentation.
+    Válaszadás SQL eredmény és RAG dokumentáció együttes használatával.
     """
 
     chunks = []
@@ -96,4 +143,11 @@ Combine BOTH to answer the question clearly.
 --- ANSWER ---
 """
 
-    return ask_llm(prompt).strip()
+    return {
+        "answer": ask_llm(prompt).strip(),
+        "sources": build_sources(chunks),
+    }
+
+
+def answer_hybrid(question: str, names: List[str], sql_result: Dict) -> str:
+    return answer_hybrid_details(question, names, sql_result)["answer"]

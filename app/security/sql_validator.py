@@ -1,16 +1,16 @@
-﻿"""
-SQL validator that enforces a strict read-only query policy.
+"""
+SQL validátor, amely szigorú read-only query szabályt kényszerít ki.
 
-Accepted query types:
+Elfogadott query típusok:
 - SELECT
-- WITH (CTE that ultimately resolves to a read-only query)
+- WITH, ha végül read-only queryként fut
 """
 
 import re
 
 
-# Keywords that are never allowed in generated SQL because they can mutate data,
-# alter schema, or invoke procedural execution.
+# Kulcsszavak, amelyek generált SQL-ben soha nem engedélyezettek, mert adatot
+# módosíthatnak, sémát változtathatnak, vagy procedurális futtatást indíthatnak.
 BANNED_KEYWORDS = {
     "INSERT", "UPDATE", "DELETE", "DROP", "ALTER", "TRUNCATE",
     "CREATE", "GRANT", "REVOKE", "MERGE", "CALL", "EXEC", "EXECUTE"
@@ -18,52 +18,54 @@ BANNED_KEYWORDS = {
 
 
 class SQLValidationError(Exception):
-    """Raised when SQL does not satisfy the application's safety constraints."""
-
+    """Akkor dobjuk, ha az SQL nem felel meg az alkalmazás biztonsági szabályainak."""
 
 
 def validate_sql(sql: str) -> str:
     """
-    Validate and normalize SQL before execution.
+    SQL validálása és normalizálása futtatás előtt.
 
-    Safety checks:
-    - Non-empty input.
-    - No SQL comments.
-    - No multi-statement payload.
-    - Must start with SELECT or WITH.
-    - Must not contain banned write/DDL keywords.
+    Biztonsági ellenőrzések:
+    - Nem lehet üres.
+    - Nem tartalmazhat SQL kommenteket.
+    - Nem tartalmazhat több utasításból álló terhelést.
+    - SELECT vagy WITH kezdetűnek kell lennie.
+    - Nem tartalmazhat tiltott író/DDL kulcsszavakat.
 
-    Returns:
-    - Clean SQL string without trailing semicolon.
+    Visszatérés:
+    - Tiszta SQL string záró pontosvessző nélkül.
     """
-    # Reject empty or whitespace-only SQL.
+    # Üres vagy csak üres karakterekből álló SQL elutasítása.
     if not sql or not sql.strip():
         raise SQLValidationError("Empty SQL query.")
 
-    # Normalize surrounding whitespace for consistent checks.
+    # Környező üres karakterek normalizálása következetes ellenőrzésekhez.
     normalized = sql.strip()
 
-    # Disallow SQL comments to reduce obfuscation and payload smuggling risk.
+    # SQL kommentek tiltása az obfuszkáció és payload-csempészés kockázatának csökkentésére.
     if "--" in normalized or "/*" in normalized or "*/" in normalized:
         raise SQLValidationError("SQL comments are not allowed.")
 
-    # Reject multiple statements; only a single query is allowed.
+    # Több utasítás elutasítása; csak egyetlen query engedélyezett.
     semicolon_count = normalized.count(";")
     if semicolon_count > 1:
         raise SQLValidationError("Multiple SQL statements are not allowed.")
 
-    # Use uppercase copy for keyword-oriented checks.
+    # Nagybetűs másolat használata kulcsszó-alapú ellenőrzésekhez.
     sql_upper = normalized.upper()
 
-    # Enforce read-only query entry points.
+    # Csak olvasó query belépési pontok engedélyezése.
+    # A WITH engedélyezett, mert a read-only CTE hasznos komplexebb SELECT-ekhez.
     if not (sql_upper.startswith("SELECT") or sql_upper.startswith("WITH")):
         raise SQLValidationError("Only SELECT queries are allowed.")
 
-    # Block dangerous keywords even if the query starts with SELECT/WITH.
+    # Veszélyes kulcsszavak blokkolása akkor is, ha a query SELECT/WITH-tel indul.
+    # Ez string-szintű védelem, nem teljes SQL parser, de megfogja az LLM által
+    # generált legnyilvánvalóbb romboló parancsokat.
     for keyword in BANNED_KEYWORDS:
         pattern = rf"\b{keyword}\b"
         if re.search(pattern, sql_upper):
             raise SQLValidationError(f"Banned keyword detected: {keyword}")
 
-    # Remove trailing semicolon to keep downstream handling consistent.
+    # Záró pontosvessző eltávolítása, hogy a későbbi kezelés egységes maradjon.
     return normalized.rstrip(";")

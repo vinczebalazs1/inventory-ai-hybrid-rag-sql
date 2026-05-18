@@ -4,26 +4,28 @@ from psycopg2 import OperationalError
 from dotenv import load_dotenv
 from app.errors import DatabaseUnavailableError
 
-# Load environment variables from `.env` as soon as this module is imported.
-# This ensures DB connection parameters are available before `get_connection` is called.
+# A `.env` változókat már modul importkor betöltjük.
+# Így a DB kapcsolati paraméterek elérhetők, mire a `get_connection` lefut.
 load_dotenv()
 
 
 def get_connection():
     """
-    Create and return a new PostgreSQL connection using environment variables.
+    Új PostgreSQL kapcsolat létrehozása és visszaadása környezeti változókból.
 
-    Expected environment variables:
-    - DB_NAME: database name
-    - DB_USER: database user
-    - DB_PASSWORD: database password
-    - DB_HOST: database host
-    - DB_PORT: database port
+    Elvárt környezeti változók:
+    - DB_NAME: adatbázis neve
+    - DB_USER: adatbázis felhasználó
+    - DB_PASSWORD: adatbázis jelszó
+    - DB_HOST: adatbázis host
+    - DB_PORT: adatbázis port
 
-    The function returns a fresh connection object for each call.
-    Connection lifecycle (opening/closing) is handled by the caller.
+    A függvény minden híváskor friss connection objektumot ad vissza.
+    A kapcsolat életciklusát (nyitás/zárás) a hívó kezeli.
     """
     required_vars = ["DB_NAME", "DB_USER", "DB_PASSWORD", "DB_HOST", "DB_PORT"]
+    # Korán, érthető üzenettel hibázunk, ha a .env hiányos. Enélkül a psycopg2
+    # hibák kezdőknek sokkal nehezebben értelmezhetők.
     missing_vars = [name for name in required_vars if not os.getenv(name)]
 
     if missing_vars:
@@ -33,19 +35,22 @@ def get_connection():
         )
 
     try:
+        # Minden queryhez friss kapcsolat nyílik. Ez egyszerű és kis appnál rendben van,
+        # productionben viszont általában connection poolt használnánk.
         return psycopg2.connect(
-            # Database name to connect to.
+            # Az adatbázis neve, amelyhez kapcsolódunk.
             dbname=os.getenv("DB_NAME"),
-            # Username used for authentication.
+            # Az autentikációhoz használt felhasználónév.
             user=os.getenv("DB_USER"),
-            # Password used for authentication.
+            # Az autentikációhoz használt jelszó.
             password=os.getenv("DB_PASSWORD"),
-            # Host or IP where PostgreSQL is running.
+            # Host vagy IP, ahol a PostgreSQL fut.
             host=os.getenv("DB_HOST"),
-            # TCP port exposed by PostgreSQL (usually 5432).
+            # A PostgreSQL által nyitott TCP port, általában 5432.
             port=os.getenv("DB_PORT"),
         )
     except OperationalError as exc:
+        # Az OperationalError tipikus kapcsolat/auth/hálózati hibákat fed le.
         raise DatabaseUnavailableError(
             "Az alkalmazás nem tud kapcsolódni az adatbázishoz. Ellenőrizd, hogy fut-e a PostgreSQL, és helyesek-e a DB_* beállítások.",
             detail=str(exc),

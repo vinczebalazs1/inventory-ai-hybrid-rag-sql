@@ -1,10 +1,10 @@
 """
-Application-level errors that are safe to show in the UI.
+Alkalmazásszintű hibák, amelyek biztonságosan megjeleníthetők a UI-ban.
 """
 
 
 class AppError(Exception):
-    """Base error with a user-facing message and optional debug detail."""
+    """Alap hibatípus felhasználói üzenettel és opcionális hibakeresési részlettel."""
 
     def __init__(
         self,
@@ -20,6 +20,7 @@ class AppError(Exception):
         self.detail = detail
 
     def to_dict(self) -> dict:
+        # A frontend ezt a stabil struktúrát várja, amikor az orchestrator ok=False választ ad.
         return {
             "code": self.code,
             "title": self.title,
@@ -29,7 +30,7 @@ class AppError(Exception):
 
 
 class LLMUnavailableError(AppError):
-    """Raised when the LLM cannot be used because of config or API problems."""
+    """Akkor dobjuk, ha az LLM konfigurációs vagy API hiba miatt nem használható."""
 
     def __init__(self, message: str, *, detail: str | None = None):
         super().__init__(
@@ -41,7 +42,7 @@ class LLMUnavailableError(AppError):
 
 
 class DatabaseUnavailableError(AppError):
-    """Raised when the database cannot be reached or configured."""
+    """Akkor dobjuk, ha az adatbázis nem érhető el vagy nincs jól konfigurálva."""
 
     def __init__(self, message: str, *, detail: str | None = None):
         super().__init__(
@@ -53,7 +54,7 @@ class DatabaseUnavailableError(AppError):
 
 
 class UserInputError(AppError):
-    """Raised when the user input cannot be processed safely."""
+    """Akkor dobjuk, ha a felhasználói input nem dolgozható fel biztonságosan."""
 
     def __init__(self, message: str, *, detail: str | None = None):
         super().__init__(

@@ -1,8 +1,8 @@
 """
-Thin wrapper around the OpenAI client for text generation tasks.
+Vékony wrapper az OpenAI kliens körül szöveggenerálási feladatokhoz.
 
-The helper function centralizes model invocation parameters so all services can
-reuse a single call pattern.
+A helper függvény központosítja a modellhívás paramétereit, így minden service
+ugyanazt a hívási mintát tudja újrahasználni.
 """
 
 import os
@@ -10,21 +10,24 @@ from openai import OpenAI, OpenAIError
 from dotenv import load_dotenv
 from app.errors import LLMUnavailableError
 
-# Load API credentials and related runtime configuration.
+# API hitelesítési adatok és kapcsolódó futásidejű konfiguráció betöltése.
 load_dotenv()
 
 client = None
 
 
 def _get_client() -> OpenAI:
-    """Create the OpenAI client lazily so the UI can start without a key."""
+    """OpenAI kliens késleltetett létrehozása, hogy a UI kulcs nélkül is el tudjon indulni."""
     global client
 
+    # Az első sikeres létrehozás után újrahasználjuk ugyanazt az SDK klienst.
+    # Így nem építjük újra a kliens objektumot minden requestnél.
     if client is not None:
         return client
 
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
+        # A hiányzó kulcs konfigurációs hiba, nem a felhasználó kérdésének hibája.
         raise LLMUnavailableError(
             "Az AI rész még nincs beállítva. Add meg az OPENAI_API_KEY értéket a .env fájlban, majd indítsd újra az alkalmazást.",
             detail="Missing environment variable: OPENAI_API_KEY",
@@ -36,23 +39,28 @@ def _get_client() -> OpenAI:
 
 def ask_llm(prompt: str, model: str = "gpt-4o-mini") -> str:
     """
-    Send a single user prompt to the selected model and return text content.
+    Egyetlen felhasználói prompt elküldése a kiválasztott modellnek, majd a szöveg visszaadása.
 
-    Parameters:
-    - prompt: full prompt string to send as a user message.
-    - model: model identifier, defaults to a lightweight general-purpose model.
+    Paraméterek:
+    - prompt: teljes prompt string, amely felhasználói üzenetként megy a modellnek.
+    - model: modellazonosító; alapból könnyű általános célú modell.
     """
     try:
+        # Minden chat-alapú LLM hívás ezen az egy függvényen megy át, így a model,
+        # temperature és hibakezelés egységes marad a service-ek között.
         response = _get_client().chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
-            # Use deterministic output for stable SQL and answer generation.
+            # Determinisztikus kimenet stabil SQL- és válaszgeneráláshoz.
             temperature=0
         )
         return response.choices[0].message.content or ""
     except LLMUnavailableError:
+        # A saját barátságos hibánkat változtatás nélkül továbbengedjük.
         raise
     except OpenAIError as exc:
+        # A provider-specifikus SDK hibákat olyan alkalmazáshibává alakítjuk,
+        # amelyet az orchestrator/frontend meg tud jeleníteni.
         raise LLMUnavailableError(
             "Az AI szolgáltatás most nem tud válaszolni. Ellenőrizd az API kulcsot, a hozzáférést/billinget és a hálózati kapcsolatot, majd próbáld újra.",
             detail=str(exc),

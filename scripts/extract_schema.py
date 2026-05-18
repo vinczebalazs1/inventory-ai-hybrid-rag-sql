@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Ez a lekérdezés kiolvassa a PostgreSQL metaadatait, majd ebből készül el
+# a text-to-SQL prompt által használt config/schema.json fájl.
 QUERY = """
 SELECT
     table_name,
@@ -17,6 +19,8 @@ ORDER BY table_name, ordinal_position;
 
 
 def main():
+    # Ez a script közvetlenül a konfigurált adatbázishoz kapcsolódik.
+    # Fejlesztői/karbantartási eszköz, nem része a normál request útvonalnak.
     conn = psycopg2.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
@@ -32,6 +36,8 @@ def main():
     schema = {}
 
     for table, column, dtype in rows:
+        # Táblánként csoportosítjuk a sorokat, hogy a kimenet illeszkedjen
+        # a schema_service.load_schema() által várt formához.
         if table not in schema:
             schema[table] = []
 
@@ -42,6 +48,7 @@ def main():
 
     os.makedirs("config", exist_ok=True)
 
+    # A schema.json fájlt futás közben az app/services/schema_service.py olvassa.
     with open("config/schema.json", "w") as f:
         json.dump(schema, f, indent=2)
 
@@ -52,4 +59,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Kézzel futtasd, amikor az adatbázis sémája megváltozik.
     main()

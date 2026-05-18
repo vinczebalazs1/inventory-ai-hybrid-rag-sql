@@ -1,17 +1,17 @@
 """
-Input-level prompt injection checks.
+Input-szintű prompt injection ellenőrzések.
 
-The patterns here are heuristic and intentionally simple.
-They provide a first-pass safety filter before calling the LLM pipeline.
+Az itt szereplő minták heurisztikusak és szándékosan egyszerűek.
+Első körös biztonsági szűrőt adnak az LLM feldolgozási lánc meghívása előtt.
 """
 
-import re #regular expression
+import re # reguláris kifejezések
 
 
-# Phrases commonly seen in prompt-injection attempts.
+# Prompt-injection próbálkozásokban gyakran előforduló kifejezések.
 SUSPICIOUS_PATTERNS = [
 
-    # Prompt injection (instruction manipulation)
+    # Prompt injection, azaz utasításmanipuláció
     r"ignore (all )?(previous )?instructions",
     r"disregard (the )?rules",
     r"forget (everything|all)",
@@ -19,7 +19,7 @@ SUSPICIOUS_PATTERNS = [
     r"act as",
     r"pretend to be",
 
-    # System prompt / schema extraction attempts
+    # System prompt / séma kinyerési próbálkozások
     r"reveal (the )?schema",
     r"show (me )?(the )?(database )?schema",
     r"output (the )?system prompt",
@@ -27,7 +27,7 @@ SUSPICIOUS_PATTERNS = [
     r"what is your system prompt",
     r"show hidden instructions",
 
-    # SQL injection / database manipulation attempts
+    # SQL injection / adatbázis-manipulációs próbálkozások
     r"drop table",
     r"delete from",
     r"insert into",
@@ -35,26 +35,26 @@ SUSPICIOUS_PATTERNS = [
     r"alter table",
     r"truncate table",
 
-    # Obfuscated or chained SQL injection patterns
+    # Elrejtett vagy láncolt SQL injection minták
     r";\s*drop",
     r";\s*delete",
     r"--",
     r"/\*.*\*/",
 
-    # Data exfiltration attempts
+    # Adatkiszivárogtatási próbálkozások
     r"dump (the )?database",
     r"export (all )?data",
     r"show all tables",
     r"list all tables",
     r"select \* from",
 
-    # Privilege escalation / role manipulation
+    # Jogosultságnövelés / szerepmanipuláció
     r"you are an admin",
     r"grant me access",
     r"bypass security",
     r"ignore security",
 
-    # LLM jailbreak / safety bypass attempts
+    # LLM jailbreak / biztonsági megkerülési próbálkozások
     r"do anything now",
     r"jailbreak",
     r"override restrictions",
@@ -64,20 +64,22 @@ SUSPICIOUS_PATTERNS = [
 
 
 class PromptInjectionError(Exception):
-    """Raised when input text matches a suspicious prompt-injection pattern."""
+    """Akkor dobjuk, ha az input gyanús prompt-injection mintára illeszkedik."""
     pass
 
 
 def check_prompt_injection(text: str) -> None:
     """
-    Scan input text against known suspicious patterns.
+    Input szöveg ellenőrzése ismert gyanús minták ellen.
 
-    Raises:
-    - PromptInjectionError: when a pattern indicates probable injection intent.
+    Kivétel:
+    - PromptInjectionError: ha egy minta valószínű injection szándékot jelez.
     """
-    # Perform case-insensitive matching by normalizing to lowercase first.
+    # Kis-nagybetű független kereséshez először kisbetűsítünk.
     lowered = text.lower()
 
+    # Ez szándékosan első körös heurisztikus szűrő. Gyakori veszélyes
+    # kifejezéseket fog meg, mielőtt a kérdés eljutna az útvonalválasztó LLM-hez.
     for pattern in SUSPICIOUS_PATTERNS:
         if re.search(pattern, lowered):
             raise PromptInjectionError(

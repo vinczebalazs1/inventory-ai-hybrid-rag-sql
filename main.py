@@ -2,9 +2,12 @@ from app.orchestration.orchestrator import handle_question
 
 
 def main():
+    # Minimális CLI belépési pont ugyanannak a feldolgozási láncnak a kipróbálásához Streamlit nélkül.
     question = input("Kerdes: ")
 
     try:
+        # A CLI és a webes UI ugyanazt az orchestrator hívást használja,
+        # ezért a működésnek egyeznie kell, csak a megjelenítés más.
         response = handle_question(question)
 
         print("\n--- ROUTE ---")
@@ -21,6 +24,13 @@ def main():
             print("\n--- MATCHED NAMES ---")
             print(response["matched_names"])
 
+        if response.get("sources"):
+            print("\n--- SOURCES ---")
+            for i, source in enumerate(response["sources"], start=1):
+                confidence = source.get("confidence")
+                confidence_text = f"{confidence}%" if confidence is not None else "-"
+                print(f"[{i}] {source.get('source')} | {source.get('section')} | {confidence_text}")
+
         print("\n--- NATURAL LANGUAGE ANSWER ---")
         print(response["answer"])
 
@@ -30,4 +40,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Így futtatható közvetlenül: python main.py
     main()
