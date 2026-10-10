@@ -1,6 +1,7 @@
 import streamlit as st
 from app.orchestration.orchestrator import handle_question
 from app.rag.ingestion.ingestion_service import ingest_uploaded_document
+from app.web.document_preview import render_document_analysis
 
 # Ezt a fájlt a Streamlit minden UI frissítéskor fentről lefelé végrehajtja.
 # Szándékosan vékony marad: bekéri a felhasználói inputot, meghívja az orchestrator-t,
@@ -9,11 +10,10 @@ from app.rag.ingestion.ingestion_service import ingest_uploaded_document
 # Van a KGK-n telephelyen Laptop ami 2024 évi gyártású?
 st.set_page_config(
     page_title="Inventory AI",
-    page_icon="📦",
     layout="wide"
 )
 
-st.title("📦 Inventory AI")
+st.title(" Inventory AI")
 st.caption("SQL + RAG + HYBRID assistant for inventory questions")
 
 with st.sidebar:
@@ -60,6 +60,9 @@ with st.sidebar:
     ]
     selected = st.radio("Try one:", examples, label_visibility="collapsed")
 
+with st.expander("Dokumentum elemzése – PDF / DOCX", expanded=False):
+    render_document_analysis(show_debug)
+
 col1, col2 = st.columns([2, 1])
 
 with col1:
@@ -74,7 +77,7 @@ with col2:
     st.metric("Mode", "HYBRID")
     st.info("Ask natural language questions. The system decides SQL, RAG, or hybrid routing.")
 
-ask = st.button("🚀 Run analysis", type="primary", use_container_width=True)
+ask = st.button("Run analysis", type="primary", use_container_width=True)
 
 if ask and question.strip():
     with st.spinner("Thinking..."):

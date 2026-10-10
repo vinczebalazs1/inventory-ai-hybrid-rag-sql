@@ -6,18 +6,21 @@ emberi leírásokat, majd egyetlen szövegblokkot készít LLM prompt kondicion�
 """
 
 import json
+from pathlib import Path
 import yaml
+
+CONFIG_DIR = Path(__file__).resolve().parents[2] / "config"
 
 
 def load_schema() -> dict:
     """Nyers tábla/oszlop struktúra betöltése JSON konfigurációból."""
-    with open("config/schema.json", "r", encoding="utf-8") as f:
+    with (CONFIG_DIR / "schema.json").open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def load_descriptions() -> dict:
     """Opcionális tábla/oszlop leírások betöltése YAML konfigurációból."""
-    with open("config/schema_descriptions.yaml", "r", encoding="utf-8") as f:
+    with (CONFIG_DIR / "schema_descriptions.yaml").open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 

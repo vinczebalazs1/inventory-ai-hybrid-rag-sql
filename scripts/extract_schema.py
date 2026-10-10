@@ -52,7 +52,7 @@ def main():
     with open("config/schema.json", "w") as f:
         json.dump(schema, f, indent=2)
 
-    print("✅ schema.json létrehozva")
+    print("schema.json létrehozva")
 
     cur.close()
     conn.close()

@@ -1,154 +1,82 @@
-# Inventory AI – Hybrid RAG + SQL Query System
+# Inventory AI
 
-AI-powered system for querying inventory data and technical documentation using natural language.
+Minimal hybrid SQL + RAG assistant for inventory questions.
 
-## 🧠 Overview
+The app routes a natural language question to SQL, RAG, or HYBRID processing, then returns a user-facing answer with optional SQL result data and document sources.
 
-Inventory AI is a hybrid LLM-based system designed to bridge the gap between structured database queries and unstructured document retrieval.
+## What It Includes
 
-The system allows users to ask natural language questions and automatically decides how to answer them using:
+* Streamlit web UI in `app/web/simple_server.py`
+* CLI entry point in `main.py`
+* SQL generation, validation, guardrails, and PostgreSQL execution
+* RAG ingestion and retrieval with OpenAI embeddings and Qdrant
+* PDF/TXT upload from the web UI for knowledge base updates
+* Tests for routing, SQL safety, ingestion, parsing, chunking, and RAG
 
-* SQL queries (structured data)
-* RAG (document-based knowledge)
-* Hybrid processing (combination of both)
+## Project Layout
 
-## 🎯 Problem
+* `app/orchestration/` - main question handling flow
+* `app/services/` - routing, SQL generation, LLM answers, schema loading
+* `app/security/` - prompt injection checks, SQL validator, limits
+* `app/db/` - PostgreSQL connection and query execution
+* `app/rag/` - parsing, chunking, embeddings, Qdrant retrieval
+* `app/web/` - Streamlit UI
+* `config/` - schema and column mapping files
+* `scripts/` - helper scripts
+* `tests/` - automated tests
 
-Traditional systems separate:
+## Setup
 
-* database queries (SQL)
-* document search (manual lookup)
+Create and activate a virtual environment, then install dependencies:
 
-This project combines both into a unified intelligent interface.
+`python -m venv venv`
 
-## 🏗️ Architecture
+`venv\Scripts\activate`
 
-The system follows a modular architecture:
+`pip install -r requirements.txt`
 
-* **Backend API (Python / FastAPI)**
-* **Query Router (LLM-based decision)**
-* **SQL Engine (Text-to-SQL + execution)**
-* **RAG Engine (vector search + LLM)**
-* **Answer Generator (final response synthesis)**
+Create `.env` from `.env.example` and fill in the required values.
 
-👉 The architecture processes user input from question → routing → execution → final answer.
+Required configuration:
 
-## 🔄 Query Types
+* `OPENAI_API_KEY`
+* `DB_NAME`
+* `DB_USER`
+* `DB_PASSWORD`
+* `DB_HOST`
+* `DB_PORT`
 
-The system supports 3 query types:
+RAG also expects Qdrant configuration:
 
-### 1. SQL Queries
+* `QDRANT_URL`
+* `QDRANT_API_KEY`
+* `QDRANT_COLLECTION` optional, defaults to `devices`
 
-Example:
+## Run
 
-> "Where is the projector?"
+Web UI:
 
-* Converted to SQL
-* Executed on PostgreSQL
-* Returns structured result
+`python -m streamlit run app/web/simple_server.py`
 
-### 2. RAG Queries
+CLI:
 
-Example:
+`python main.py`
 
-> "How to calibrate a 3D printer?"
+## Tests
 
-* Vector search in documentation
-* Relevant chunks retrieved
-* LLM generates answer
+`pytest`
 
-### 3. Hybrid Queries
+## Document analysis (Docling)
 
-Example:
+The **Dokumentum elemzése – PDF / DOCX** panel provides generic field extraction,
+inventory schema mapping, validation and an evidence-based preview without database
+writes. The existing RAG upload remains separate.
 
-> "How many 3D printers are available and how to maintain them?"
+Install development dependencies with `pip install -r requirements-dev.txt`.
+Prepare PDF models with `python -m scripts.prepare_docling_models` (internet required).
+See [Document processing V1](docs/document_processing_v1.md) for setup, configuration,
+data models, usage and limitations.
 
-* SQL → retrieves quantity
-* RAG → retrieves documentation
-* LLM → merges results into final answer
+## Notes
 
-## ⚙️ Tech Stack
-
-* **Python**
-* **FastAPI**
-* **OpenAI (GPT-4)**
-* **PostgreSQL**
-* **Vector DB (Qdrant)**
-* **LLM-based routing & generation**
-
-## 🔐 Security
-
-* SQL query validation (SELECT only)
-* Injection protection
-* Guardrails for LLM output
-* Query limits and timeouts
-
-## 📂 Project Structure
-
-```bash
-app/
- ├── orchestration/     # pipeline, planner
- ├── services/          # LLM + SQL generation
- ├── security/          # validation & guardrails
- ├── prompts/           # prompt templates
- ├── db/                # DB connection & execution
- └── models/            # data schemas
-
-config/
-scripts/
-tests/
-main.py
-```
-
-## ⚙️ Setup
-
-```bash
-git clone https://github.com/vinczebalazs1/inventory-ai-hybrid-rag-sql.git
-cd inventory-ai-hybrid-rag-sql
-
-python -m venv venv
-venv\Scripts\activate
-
-pip install -r requirements.txt
-```
-
-## 🔐 Environment Variables
-
-Create a `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-Fill in your credentials (API keys, DB config).
-
-## ▶️ Run
-
-```bash
-python main.py
-```
-
-## 🧪 Testing
-
-```bash
-pytest
-```
-
-## 💡 Key Features
-
-* Natural language → SQL generation
-* Semantic document retrieval (RAG)
-* Intelligent query routing
-* Hybrid answer synthesis
-* Modular and extensible architecture
-
-## 📈 Future Improvements
-
-* Web UI
-* API endpoints
-* Logging & monitoring
-* Deployment (Docker / Cloud)
-
-## 👤 Author
-
-Balázs Vincze
+Use `scripts/extract_schema.py` after database schema changes to refresh `config/schema.json`.

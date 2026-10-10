@@ -37,7 +37,7 @@ def _get_client() -> OpenAI:
     return client
 
 
-def ask_llm(prompt: str, model: str = "gpt-4o-mini") -> str:
+def ask_llm(prompt: str, model: str = "gpt-6-luna") -> str:
     """
     Egyetlen felhasználói prompt elküldése a kiválasztott modellnek, majd a szöveg visszaadása.
 
