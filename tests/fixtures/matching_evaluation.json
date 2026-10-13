@@ -1,0 +1,2845 @@
+{
+  "version": 1,
+  "description": "Kézzel tervezett szintetikus rekordegyeztetési esetek; nem valós üzleti adatok. Az elvárt kimenetek előzetes policy-címkék.",
+  "split_policy": "10 kalibrációs és 48 külön teszteset. A küszöbök nem optimalizáltak ezekre az esetekre; a végső mérést a test halmazon kell értelmezni.",
+  "cases": [
+    {
+      "id": "C01",
+      "split": "calibration",
+      "category": "exact",
+      "description": "Egyedi leltári szám; minden dokumentummező egyezik.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "LAB-001"
+        },
+        {
+          "field": "name",
+          "value": "Brother HL-L2372DN"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "C-PR",
+            "inventory_number": "LAB-001",
+            "name": "Brother HL-L2372DN"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "inventory_number"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C02",
+      "split": "calibration",
+      "category": "item_code",
+      "description": "Csak igazoltan egyedi cikkszám áll rendelkezésre.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "CAL-ROUTER"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "CAL-ROUTER",
+            "name": "MikroTik hAP ax3"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C03",
+      "split": "calibration",
+      "category": "composite_description",
+      "description": "Név és telephely alapján valószínű, de nem bizonyított azonosság.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": " DELL   Latitude 5540 "
+        },
+        {
+          "field": "location",
+          "value": "Budapest"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "C-LAP",
+            "name": "Dell Latitude 5540",
+            "location": "Budapest"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C04",
+      "split": "calibration",
+      "category": "sparse",
+      "description": "Önmagában az általános eszköznév nem elég az azonosításhoz.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Monitor"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "C-MON",
+            "name": "Monitor"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "INSUFFICIENT_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C05",
+      "split": "calibration",
+      "category": "new",
+      "description": "Üres szintetikus leltár, új azonosító és eszköznév.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "CAL-NEW"
+        },
+        {
+          "field": "name",
+          "value": "Epson EB-FH52"
+        },
+        {
+          "field": "location",
+          "value": "Szeged"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C06",
+      "split": "calibration",
+      "category": "duplicate_identifier",
+      "description": "Két külön sor osztozik ugyanazon nem egyedi leltári számon.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "DUP-CAL"
+        },
+        {
+          "field": "name",
+          "value": "Office display"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "A",
+            "inventory_number": "DUP-CAL",
+            "name": "Office display"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "B",
+            "inventory_number": "DUP-CAL",
+            "name": "Office display"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r2"
+        ],
+        "match_status": "AMBIGUOUS_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C07",
+      "split": "calibration",
+      "category": "typo",
+      "description": "Egy karakter elírás a névben, a helyszín egyezik.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Lenovo ThinkPqd T14"
+        },
+        {
+          "field": "location",
+          "value": "Győr"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "L14",
+            "name": "Lenovo ThinkPad T14",
+            "location": "Győr"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "name"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C08",
+      "split": "calibration",
+      "category": "identifier_conflict",
+      "description": "Leltári szám és cikkszám két külön rekordra mutat.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "C-INV-1"
+        },
+        {
+          "field": "item_code",
+          "value": "C-ITEM-2"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "C-ITEM-1",
+            "inventory_number": "C-INV-1"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "C-ITEM-2",
+            "inventory_number": "C-INV-2"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C09",
+      "split": "calibration",
+      "category": "schema_failure",
+      "description": "A séma audit meghiúsul; ez nem bizonyít új rekordot.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "CAL-SCHEMA"
+        },
+        {
+          "field": "name",
+          "value": "Router"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "schema_mismatch",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "ERROR",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "C10",
+      "split": "calibration",
+      "category": "multiple_entities",
+      "description": "Két külön leltári szám a lapos dokumentummezőkben.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "ONE"
+        },
+        {
+          "field": "inventory_number",
+          "value": "TWO"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": false,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T01",
+      "split": "test",
+      "category": "exact",
+      "description": "Egyedi cikkszám és pontos eszközleírás egy másik modell mellett.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "IT-100"
+        },
+        {
+          "field": "name",
+          "value": "HP EliteBook 840 G10"
+        },
+        {
+          "field": "location",
+          "value": "Pécs"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "IT-100",
+            "name": "HP EliteBook 840 G10",
+            "location": "Pécs"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "IT-101",
+            "name": "HP EliteBook 850 G10",
+            "location": "Pécs"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T02",
+      "split": "test",
+      "category": "identifier_trim",
+      "description": "Az azonosító körüli szóközök eltávolíthatók, a tartalma megmarad.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": " INV-00500 "
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "PROJECTOR",
+            "inventory_number": "INV-00500",
+            "name": "Optoma HD146X"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "inventory_number"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T03",
+      "split": "test",
+      "category": "composite_key",
+      "description": "Cikkszám önmagában nem egyedi, az alábontási kóddal együtt igazolt kulcs.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "BUNDLE"
+        },
+        {
+          "field": "sub_code",
+          "value": 2
+        },
+        {
+          "field": "name",
+          "value": "Dell P2422H"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "BUNDLE",
+            "sub_code": 1,
+            "name": "Dell P2422H"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "BUNDLE",
+            "sub_code": 2,
+            "name": "Dell P2422H"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code",
+          "sub_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r2"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T04",
+      "split": "test",
+      "category": "location_delta",
+      "description": "Pontos azonosító mellett költözött az eszköz; helyszínfrissítés ellenőrzendő.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "MOVE-1"
+        },
+        {
+          "field": "name",
+          "value": "Canon i-SENSYS MF445dw"
+        },
+        {
+          "field": "location",
+          "value": "Debrecen"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "MOVE-1",
+            "name": "Canon i-SENSYS MF445dw",
+            "location": "Budapest"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "UPDATE_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "location"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T05",
+      "split": "test",
+      "category": "quantity_delta",
+      "description": "A mennyiség változott, miközben a rekordazonosító biztos.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "CHAIR-PACK"
+        },
+        {
+          "field": "name",
+          "value": "Irodai szék"
+        },
+        {
+          "field": "quantity",
+          "value": 6
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "CHAIR-PACK",
+            "name": "Irodai szék",
+            "quantity": 4
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "UPDATE_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "quantity"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T06",
+      "split": "test",
+      "category": "money_delta",
+      "description": "Egy fillérnyi pontos decimális eltérés sem veszhet el.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "FIN-01"
+        },
+        {
+          "field": "name",
+          "value": "Fluke 117"
+        },
+        {
+          "field": "purchase_value",
+          "value": "123456789012345.68"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "FIN-01",
+            "name": "Fluke 117",
+            "purchase_value": "123456789012345.67"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {
+        "purchase_value": "numeric"
+      },
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "UPDATE_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "purchase_value"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T07",
+      "split": "test",
+      "category": "decimal_equivalence",
+      "description": "Eltérő decimális skála ugyanazt a pénzértéket fejezi ki.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "FIN-02"
+        },
+        {
+          "field": "purchase_value",
+          "value": "1200.00"
+        },
+        {
+          "field": "currency",
+          "value": "EUR"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "FIN-02",
+            "purchase_value": "1200.0",
+            "currency": "EUR"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {
+        "purchase_value": "numeric"
+      },
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T08",
+      "split": "test",
+      "category": "date_delta",
+      "description": "Érvényes ISO dátumok egy nap eltéréssel.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "DATE-01"
+        },
+        {
+          "field": "activation_date",
+          "value": "2024-02-29"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "DATE-01",
+            "activation_date": "2024-02-28"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "UPDATE_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "activation_date"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T09",
+      "split": "test",
+      "category": "unicode",
+      "description": "Unicode összetett és felbontott ékezet, valamint whitespace különbség.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "UNI-1"
+        },
+        {
+          "field": "name",
+          "value": "  Mérőműszer   X200 "
+        },
+        {
+          "field": "location",
+          "value": " GYŐR "
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "UNI-1",
+            "name": "Mérőműszer X200",
+            "location": "Győr"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T10",
+      "split": "test",
+      "category": "typo",
+      "description": "Névbeli karaktercsere, egyező helyszín és üzembe helyezési dátum.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Lenovo ThinkPad T41 Gen 4"
+        },
+        {
+          "field": "location",
+          "value": "Sopron"
+        },
+        {
+          "field": "activation_date",
+          "value": "2025-01-15"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "T14-01",
+            "name": "Lenovo ThinkPad T14 Gen 4",
+            "location": "Sopron",
+            "activation_date": "2025-01-15"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T11",
+      "split": "test",
+      "category": "word_order",
+      "description": "Szavak sorrendje változott, a modellazonosító megmaradt.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "P2422H Dell Monitor"
+        },
+        {
+          "field": "location",
+          "value": "Veszprém"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "DISP-22",
+            "name": "Dell Monitor P2422H",
+            "location": "Veszprém"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "name"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T12",
+      "split": "test",
+      "category": "model_numbers",
+      "description": "5540 és 5550 külön modell; magas névhasonlóság nem bizonyít azonosságot.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Dell Latitude 5540"
+        },
+        {
+          "field": "location",
+          "value": "Eger"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "D-5550",
+            "name": "Dell Latitude 5550",
+            "location": "Eger"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T13",
+      "split": "test",
+      "category": "ambiguous",
+      "description": "Azonos név és helyszín mellett két külön fizikai eszköz.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Samsung S24R350"
+        },
+        {
+          "field": "location",
+          "value": "Baja"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "S-1",
+            "name": "Samsung S24R350",
+            "location": "Baja"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "S-2",
+            "name": "Samsung S24R350",
+            "location": "Baja"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r2"
+        ],
+        "match_status": "AMBIGUOUS_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T14",
+      "split": "test",
+      "category": "location_disambiguation",
+      "description": "Azonos típus, két város; helyszín csak kiegészítő bizonyíték.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Zebra ZD421"
+        },
+        {
+          "field": "location",
+          "value": "Nyíregyháza"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "Z-A",
+            "name": "Zebra ZD421",
+            "location": "Nyíregyháza"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "Z-B",
+            "name": "Zebra ZD421",
+            "location": "Kaposvár"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T15",
+      "split": "test",
+      "category": "date_disambiguation",
+      "description": "Név és aktiválási dátum alapján elkülöníthető beszerzések.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Cisco Catalyst C1000"
+        },
+        {
+          "field": "activation_date",
+          "value": "2025-06-10"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "SW-OLD",
+            "name": "Cisco Catalyst C1000",
+            "activation_date": "2022-06-10"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "SW-NEW",
+            "name": "Cisco Catalyst C1000",
+            "activation_date": "2025-06-10"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r2"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T16",
+      "split": "test",
+      "category": "identifier_conflict",
+      "description": "Mindkét létező azonosító külön rekordhoz tartozik.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "CAM-A"
+        },
+        {
+          "field": "inventory_number",
+          "value": "INV-CAM-B"
+        },
+        {
+          "field": "name",
+          "value": "Sony Alpha A6400"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "CAM-A",
+            "inventory_number": "INV-CAM-A",
+            "name": "Sony Alpha A6400"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "CAM-B",
+            "inventory_number": "INV-CAM-B",
+            "name": "Sony Alpha A6400"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T17",
+      "split": "test",
+      "category": "identifier_technical_conflict",
+      "description": "Pontos leltári szám mellett más gyártó és modell szerepel.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "MIX-1"
+        },
+        {
+          "field": "name",
+          "value": "HP ProBook 450"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "MIX-1",
+            "name": "Dell Latitude 7440"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T18",
+      "split": "test",
+      "category": "leading_zero",
+      "description": "Az INV-00125 nem olvadhat össze az INV-125 azonosítóval.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "INV-00125"
+        },
+        {
+          "field": "name",
+          "value": "Brother ADS-1700W"
+        },
+        {
+          "field": "location",
+          "value": "Szolnok"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "OLD-SCAN",
+            "inventory_number": "INV-125",
+            "name": "BenQ GW2480",
+            "location": "Miskolc"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T19",
+      "split": "test",
+      "category": "identifier_case",
+      "description": "Azonosító kisbetűje nem normalizálható nagybetűvé üzleti szabály nélkül.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "rack-a"
+        },
+        {
+          "field": "name",
+          "value": "Synology DS923"
+        },
+        {
+          "field": "location",
+          "value": "Szeged"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "RACK-A",
+            "name": "APC Smart UPS 1500",
+            "location": "Budapest"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T20",
+      "split": "test",
+      "category": "punctuation_identifier",
+      "description": "A kötőjel az azonosító része, nem dobható el.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "A-12"
+        },
+        {
+          "field": "name",
+          "value": "Logitech Brio 500"
+        },
+        {
+          "field": "location",
+          "value": "Tata"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "A12",
+            "name": "Canon EOS R50",
+            "location": "Paks"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T21",
+      "split": "test",
+      "category": "new_empty",
+      "description": "Teljes keresés üres leltárban, elegendő új rekordadat.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "NEW-2026-1"
+        },
+        {
+          "field": "name",
+          "value": "Bosch GLM 50-27"
+        },
+        {
+          "field": "location",
+          "value": "Dunaújváros"
+        },
+        {
+          "field": "quantity",
+          "value": 1
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T22",
+      "split": "test",
+      "category": "new_unrelated_inventory",
+      "description": "Új eszköz meglévő, eltérő kategóriájú leltárrekordok mellett.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "MIC-NEW"
+        },
+        {
+          "field": "name",
+          "value": "Rode NT-USB"
+        },
+        {
+          "field": "location",
+          "value": "Békéscsaba"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "DESK-1",
+            "name": "Irodai íróasztal",
+            "location": "Békéscsaba"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "VAC-2",
+            "name": "Karcher WD3",
+            "location": "Szeged"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T23",
+      "split": "test",
+      "category": "sparse_new",
+      "description": "Csak új cikkszám alapján nem indokolt teljes újrekord-javaslat.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "UNKNOWN-ONLY"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T24",
+      "split": "test",
+      "category": "empty_document",
+      "description": "Nincs kinyert dokumentummező.",
+      "document_fields": [],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "INSUFFICIENT_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T25",
+      "split": "test",
+      "category": "nonidentifying_fields",
+      "description": "Ár és pénznem önmagában nem rekordazonosító.",
+      "document_fields": [
+        {
+          "field": "purchase_value",
+          "value": 100000
+        },
+        {
+          "field": "currency",
+          "value": "HUF"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "PRICE-1",
+            "name": "Dell P2723D",
+            "purchase_value": 100000,
+            "currency": "HUF"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "INSUFFICIENT_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T26",
+      "split": "test",
+      "category": "document_conflict",
+      "description": "Ugyanaz a célséma mező két eltérő cikkszámot kapott.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "DOC-A"
+        },
+        {
+          "field": "item_code",
+          "value": "DOC-B"
+        },
+        {
+          "field": "name",
+          "value": "LG 27UP650"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": false,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T27",
+      "split": "test",
+      "category": "repeated_equal_field",
+      "description": "Ismétlődő, de azonos értékű mezők nem jelentenek két eszközt.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "REPEAT-1"
+        },
+        {
+          "field": "item_code",
+          "value": "REPEAT-1"
+        },
+        {
+          "field": "name",
+          "value": "Philips 243V7"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "REPEAT-1",
+            "name": "Philips 243V7"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T28",
+      "split": "test",
+      "category": "multi_entity_name",
+      "description": "Két eszköz neve, egyetlen lapos mezőlista; nincs rekordcsoportosítás.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Dell U2723QE"
+        },
+        {
+          "field": "name",
+          "value": "HP LaserJet M404"
+        },
+        {
+          "field": "location",
+          "value": "Budapest"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": false,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T29",
+      "split": "test",
+      "category": "invalid_identifier",
+      "description": "A kritikus azonosító előző normalizálása hibás volt.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": null,
+          "raw": "???",
+          "invalid": true
+        },
+        {
+          "field": "name",
+          "value": "Epson L3250"
+        },
+        {
+          "field": "location",
+          "value": "Pécs"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "EPS-1",
+            "name": "Epson L3250",
+            "location": "Pécs"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "INSUFFICIENT_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T30",
+      "split": "test",
+      "category": "invalid_quantity",
+      "description": "Érvényes cikkszám mellett hibás mennyiség nem válhat módosítássá.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "BAD-QTY"
+        },
+        {
+          "field": "quantity",
+          "value": null,
+          "raw": "kettő",
+          "invalid": true
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "BAD-QTY",
+            "name": "TP-Link TL-SG108",
+            "quantity": 2
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T31",
+      "split": "test",
+      "category": "missing_evidence",
+      "description": "A kinyert azonosítóhoz nincs forrásidézet; nincs automatikus elfogadás.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "NO-EVID",
+          "evidence": null
+        },
+        {
+          "field": "name",
+          "value": "Acer Vero B247"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "NO-EVID",
+            "name": "Acer Vero B247"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "INSUFFICIENT_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T32",
+      "split": "test",
+      "category": "database_null",
+      "description": "Adatbázis NULL helyszín ismeretlen érték, nem tényleges eltérés.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "NULL-LOC"
+        },
+        {
+          "field": "location",
+          "value": "Kecskemét"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "NULL-LOC",
+            "location": null
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T33",
+      "split": "test",
+      "category": "document_null",
+      "description": "Explicit üres dokumentummező nem jelent SQL NULL-ra törlési utasítást.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "DOC-NULL"
+        },
+        {
+          "field": "location",
+          "value": null,
+          "raw": ""
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "DOC-NULL",
+            "location": "Salgótarján"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T34",
+      "split": "test",
+      "category": "omitted_document_field",
+      "description": "Hiányzó helyszín és értékmezők a dokumentumban nem törlendők.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "OMIT-1"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "OMIT-1",
+            "location": "Tatabánya",
+            "current_value": 42000,
+            "quantity": 1
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T35",
+      "split": "test",
+      "category": "partial_search",
+      "description": "Kandidánskorlát miatt csonkolt keresésből nem lehet új rekordra következtetni.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "LIMIT-NEW"
+        },
+        {
+          "field": "name",
+          "value": "Fujitsu ScanSnap iX1600"
+        },
+        {
+          "field": "location",
+          "value": "Mór"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "partial",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "SEARCH_INCOMPLETE",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T36",
+      "split": "test",
+      "category": "partial_exact",
+      "description": "A részleges keresés akkor is jelzendő, ha egy pontos rekord látszik.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "LIMIT-EXACT"
+        },
+        {
+          "field": "name",
+          "value": "Dymo LabelWriter 550"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "LIMIT-EXACT",
+            "name": "Dymo LabelWriter 550"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "partial",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "SEARCH_INCOMPLETE",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T37",
+      "split": "test",
+      "category": "database_error",
+      "description": "Adatbázis elérési hiba nem NO_MATCH.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "OFFLINE-1"
+        },
+        {
+          "field": "name",
+          "value": "Asus ExpertBook B1"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "error",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "ERROR",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T38",
+      "split": "test",
+      "category": "timeout",
+      "description": "Időtúllépés után nincs újrekord-javaslat.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "TIMEOUT-1"
+        },
+        {
+          "field": "name",
+          "value": "Yealink T54W"
+        }
+      ],
+      "records": [],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "timeout",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "SEARCH_INCOMPLETE",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T39",
+      "split": "test",
+      "category": "sql_injection_text",
+      "description": "Azonosítóba írt SQL töredék egyszerű adat; nem egyezik normál kulccsal.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "x' OR 1=1 --"
+        },
+        {
+          "field": "name",
+          "value": "A dokumentumban szereplő külön tétel"
+        },
+        {
+          "field": "location",
+          "value": "Szeged"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "NORMAL-1",
+            "name": "HP ZBook Firefly 14",
+            "location": "Pécs"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [],
+        "match_status": "NO_MATCH",
+        "actions": [
+          "CREATE_RECORD_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T40",
+      "split": "test",
+      "category": "serial_semantics",
+      "description": "Service Tag nem belső leltári szám, még azonos karakterek esetén sem.",
+      "document_fields": [],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "SVC-1",
+            "inventory_number": "ST123456",
+            "name": "Dell OptiPlex 7010"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [
+        {
+          "label": "Service Tag",
+          "value": "ST123456"
+        }
+      ],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "INSUFFICIENT_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T41",
+      "split": "test",
+      "category": "unstable_identity",
+      "description": "Nincs igazolt egyedi kulcs; egy látható egyezés nem biztos rekordazonosítás.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "NO-KEY"
+        },
+        {
+          "field": "name",
+          "value": "NEC MultiSync EA241F"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "NO-KEY",
+            "name": "NEC MultiSync EA241F"
+          }
+        }
+      ],
+      "unique_keys": [],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T42",
+      "split": "test",
+      "category": "same_model_multiple_ids",
+      "description": "Azonos leltári szám két fizikai eszközön, eltérő stabil kulcsokkal.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "DUP-INV-42"
+        },
+        {
+          "field": "name",
+          "value": "LG 24MP400"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "LG-A",
+            "inventory_number": "DUP-INV-42",
+            "name": "LG 24MP400"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "LG-B",
+            "inventory_number": "DUP-INV-42",
+            "name": "LG 24MP400"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r2"
+        ],
+        "match_status": "AMBIGUOUS_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T43",
+      "split": "test",
+      "category": "different_description",
+      "description": "Pontos kulcs mellett kisbetűsítés nem értékeltérés.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "TXT-CASE"
+        },
+        {
+          "field": "name",
+          "value": "epson eb-w06"
+        },
+        {
+          "field": "location",
+          "value": " budapest "
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "TXT-CASE",
+            "name": "EPSON EB-W06",
+            "location": "Budapest"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT"
+        ],
+        "review_required": false,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T44",
+      "split": "test",
+      "category": "multi_delta",
+      "description": "Egy rekord több független, validált mezőeltéréssel.",
+      "document_fields": [
+        {
+          "field": "item_code",
+          "value": "DELTA-44"
+        },
+        {
+          "field": "name",
+          "value": "APC Back UPS 650"
+        },
+        {
+          "field": "location",
+          "value": "Siófok"
+        },
+        {
+          "field": "quantity",
+          "value": 2
+        },
+        {
+          "field": "current_value",
+          "value": 15000
+        },
+        {
+          "field": "currency",
+          "value": "EUR"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "DELTA-44",
+            "name": "APC Back UPS 650",
+            "location": "Keszthely",
+            "quantity": 1,
+            "current_value": 25000,
+            "currency": "HUF"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "EXACT_MATCH",
+        "actions": [
+          "ATTACH_DOCUMENT",
+          "UPDATE_CANDIDATE",
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "location"
+          },
+          {
+            "record_id": "r1",
+            "field": "quantity"
+          },
+          {
+            "record_id": "r1",
+            "field": "current_value"
+          },
+          {
+            "record_id": "r1",
+            "field": "currency"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T45",
+      "split": "test",
+      "category": "simple_typo",
+      "description": "Betűhiba a gyártónévben, változatlan modell és helyszín.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Logitehc MX Master 3"
+        },
+        {
+          "field": "location",
+          "value": "Zalaegerszeg"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "MOUSE-45",
+            "name": "Logitech MX Master 3",
+            "location": "Zalaegerszeg"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "MOUSE-46",
+            "name": "Microsoft Sculpt",
+            "location": "Zalaegerszeg"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": [
+          {
+            "record_id": "r1",
+            "field": "name"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T46",
+      "split": "test",
+      "category": "no_location",
+      "description": "Pontos eszköznév és dátum, helyszín nélkül.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Elgato Stream Deck MK2"
+        },
+        {
+          "field": "activation_date",
+          "value": "2025-09-03"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "DECK-1",
+            "name": "Elgato Stream Deck MK2",
+            "activation_date": "2025-09-03"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "LIKELY_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": false,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T47",
+      "split": "test",
+      "category": "unsupported_serial_mapping",
+      "description": "Hibás korábbi mapping: Serial Number címkét inventory_number mezőbe soroltak.",
+      "document_fields": [
+        {
+          "field": "inventory_number",
+          "value": "SER-7788",
+          "label": "Serial Number"
+        },
+        {
+          "field": "name",
+          "value": "Dell Precision 3580"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "SERIAL-47",
+            "inventory_number": "SER-7788",
+            "name": "Dell Precision 3580"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r1"
+        ],
+        "match_status": "CONFLICTING_DATA",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    },
+    {
+      "id": "T48",
+      "split": "test",
+      "category": "near_tie",
+      "description": "Két hasonló nevű kandidáns ugyanazon helyszínen; a kis eltérés nem döntő.",
+      "document_fields": [
+        {
+          "field": "name",
+          "value": "Dell Professional Monitor P24"
+        },
+        {
+          "field": "location",
+          "value": "Esztergom"
+        }
+      ],
+      "records": [
+        {
+          "record_id": "r1",
+          "values": {
+            "item_code": "NEAR-A",
+            "name": "Dell Professional Monitor P24 A",
+            "location": "Esztergom"
+          }
+        },
+        {
+          "record_id": "r2",
+          "values": {
+            "item_code": "NEAR-B",
+            "name": "Dell Professional Monitor P24 B",
+            "location": "Esztergom"
+          }
+        }
+      ],
+      "unique_keys": [
+        [
+          "item_code"
+        ]
+      ],
+      "schema_types": {},
+      "search_status": "complete",
+      "unmapped_fields": [],
+      "expected": {
+        "record_ids": [
+          "r2"
+        ],
+        "match_status": "AMBIGUOUS_MATCH",
+        "actions": [
+          "MANUAL_REVIEW"
+        ],
+        "review_required": true,
+        "uncertain": true,
+        "identity_evaluable": true,
+        "deltas": []
+      }
+    }
+  ]
+}

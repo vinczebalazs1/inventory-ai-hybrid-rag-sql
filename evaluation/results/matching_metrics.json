@@ -1,0 +1,563 @@
+{
+  "dataset_sha256": "7c666c1786c017c929a59024a09632c9566eac2b2ce9cb28c56bf509724b9d08",
+  "python": "3.11.9",
+  "settings": {
+    "exact_only": {
+      "target_schema": "public",
+      "target_table": "inventory_items",
+      "strategy": "exact_only",
+      "max_candidates": 100,
+      "max_scan_rows": 1000,
+      "query_timeout_ms": 3000,
+      "connect_timeout_seconds": 5,
+      "max_field_length": 1000,
+      "exact_threshold": 0.95,
+      "likely_threshold": 0.72,
+      "ambiguity_margin": 0.05,
+      "duplicate_threshold": 0.45,
+      "model_conflict_cap": 0.4,
+      "inventory_number_weight": 0.5,
+      "item_code_weight": 0.4,
+      "sub_code_weight": 0.1,
+      "name_weight": 0.3,
+      "location_weight": 0.1,
+      "activation_date_weight": 0.1
+    },
+    "hybrid": {
+      "target_schema": "public",
+      "target_table": "inventory_items",
+      "strategy": "hybrid",
+      "max_candidates": 100,
+      "max_scan_rows": 1000,
+      "query_timeout_ms": 3000,
+      "connect_timeout_seconds": 5,
+      "max_field_length": 1000,
+      "exact_threshold": 0.95,
+      "likely_threshold": 0.72,
+      "ambiguity_margin": 0.05,
+      "duplicate_threshold": 0.45,
+      "model_conflict_cap": 0.4,
+      "inventory_number_weight": 0.5,
+      "item_code_weight": 0.4,
+      "sub_code_weight": 0.1,
+      "name_weight": 0.3,
+      "location_weight": 0.1,
+      "activation_date_weight": 0.1
+    }
+  },
+  "repeats": 5,
+  "dataset_cases": 58,
+  "metrics": {
+    "calibration": {
+      "exact_only": {
+        "cases": 10,
+        "matching": {
+          "true_positive": 2,
+          "false_positive": 0,
+          "false_negative": 5,
+          "precision": 1.0,
+          "recall": 0.2857142857142857,
+          "f1": 0.4444444444444444,
+          "identity_evaluable_cases": 9,
+          "ranking_evaluable_cases": 7,
+          "top_1_accuracy": 0.42857142857142855,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.42857142857142855,
+              "recall_at_k": 0.42857142857142855
+            },
+            "3": {
+              "precision_at_k": 0.19047619047619047,
+              "recall_at_k": 0.5714285714285714
+            },
+            "5": {
+              "precision_at_k": 0.1142857142857143,
+              "recall_at_k": 0.5714285714285714
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.7,
+          "action_set_accuracy": 0.9,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 5,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.8,
+          "abstention_rate": 0.8,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 2
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 1
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 1
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 0,
+          "false_positive": 0,
+          "false_negative": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "volume": {
+          "supplied_inventory_rows": 9,
+          "examined_rows": 6,
+          "document_fields": 19
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 50,
+            "mean_ms": 0.04471997730433941,
+            "median_ms": 0.023949891328811646,
+            "p95_ms": 0.11949986219406128
+          },
+          "scoring": {
+            "samples": 50,
+            "mean_ms": 0.10149999521672726,
+            "median_ms": 0.02259993925690651,
+            "p95_ms": 0.3237002529203892
+          },
+          "total": {
+            "samples": 50,
+            "mean_ms": 0.41577200405299664,
+            "median_ms": 0.3206001129001379,
+            "p95_ms": 0.6892997771501541
+          }
+        }
+      },
+      "hybrid": {
+        "cases": 10,
+        "matching": {
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 3,
+          "precision": 1.0,
+          "recall": 0.5714285714285714,
+          "f1": 0.7272727272727273,
+          "identity_evaluable_cases": 9,
+          "ranking_evaluable_cases": 7,
+          "top_1_accuracy": 0.7142857142857143,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.7142857142857143,
+              "recall_at_k": 0.7142857142857143
+            },
+            "3": {
+              "precision_at_k": 0.2857142857142857,
+              "recall_at_k": 0.8571428571428571
+            },
+            "5": {
+              "precision_at_k": 0.17142857142857143,
+              "recall_at_k": 0.8571428571428571
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.9,
+          "action_set_accuracy": 1.0,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 5,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.8,
+          "abstention_rate": 0.6,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 2
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 1
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 1
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 1,
+          "false_positive": 0,
+          "false_negative": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "volume": {
+          "supplied_inventory_rows": 9,
+          "examined_rows": 8,
+          "document_fields": 19
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 50,
+            "mean_ms": 0.05291200242936611,
+            "median_ms": 0.06749993190169334,
+            "p95_ms": 0.10799989104270935
+          },
+          "scoring": {
+            "samples": 50,
+            "mean_ms": 0.14484199695289135,
+            "median_ms": 0.1672001089900732,
+            "p95_ms": 0.3507002256810665
+          },
+          "total": {
+            "samples": 50,
+            "mean_ms": 0.4757520090788603,
+            "median_ms": 0.5250000394880772,
+            "p95_ms": 0.6968001835048199
+          }
+        }
+      }
+    },
+    "test": {
+      "exact_only": {
+        "cases": 48,
+        "matching": {
+          "true_positive": 18,
+          "false_positive": 0,
+          "false_negative": 16,
+          "precision": 1.0,
+          "recall": 0.5294117647058824,
+          "f1": 0.6923076923076923,
+          "identity_evaluable_cases": 46,
+          "ranking_evaluable_cases": 34,
+          "top_1_accuracy": 0.6176470588235294,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.6176470588235294,
+              "recall_at_k": 0.6176470588235294
+            },
+            "3": {
+              "precision_at_k": 0.2156862745098039,
+              "recall_at_k": 0.6470588235294118
+            },
+            "5": {
+              "precision_at_k": 0.12941176470588237,
+              "recall_at_k": 0.6470588235294118
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.7916666666666666,
+          "action_set_accuracy": 0.8125,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 21,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 0.3333333333333333,
+          "review_rate": 0.8125,
+          "abstention_rate": 0.625,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 5
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "ERROR",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 16
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "EXACT_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 4
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 5
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 7
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 3
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 4,
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1": 0.75
+        },
+        "volume": {
+          "supplied_inventory_rows": 50,
+          "examined_rows": 32,
+          "document_fields": 115
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 240,
+            "mean_ms": 0.04607291387704512,
+            "median_ms": 0.0454997643828392,
+            "p95_ms": 0.11250004172325134
+          },
+          "scoring": {
+            "samples": 240,
+            "mean_ms": 0.10371166087376575,
+            "median_ms": 0.02305000089108944,
+            "p95_ms": 0.354900024831295
+          },
+          "total": {
+            "samples": 240,
+            "mean_ms": 0.47031918074935675,
+            "median_ms": 0.39335014298558235,
+            "p95_ms": 0.9146002121269703
+          }
+        }
+      },
+      "hybrid": {
+        "cases": 48,
+        "matching": {
+          "true_positive": 24,
+          "false_positive": 0,
+          "false_negative": 10,
+          "precision": 1.0,
+          "recall": 0.7058823529411765,
+          "f1": 0.8275862068965517,
+          "identity_evaluable_cases": 46,
+          "ranking_evaluable_cases": 34,
+          "top_1_accuracy": 0.8235294117647058,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.8235294117647058,
+              "recall_at_k": 0.8235294117647058
+            },
+            "3": {
+              "precision_at_k": 0.30392156862745096,
+              "recall_at_k": 0.9117647058823529
+            },
+            "5": {
+              "precision_at_k": 0.1823529411764706,
+              "recall_at_k": 0.9117647058823529
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.9166666666666666,
+          "action_set_accuracy": 0.9375,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 21,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.8125,
+          "abstention_rate": 0.5,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 3
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 5
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "NO_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "ERROR",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 16
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "EXACT_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "LIKELY_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 6
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 7
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 3
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 8,
+          "false_positive": 0,
+          "false_negative": 2,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.8888888888888888
+        },
+        "volume": {
+          "supplied_inventory_rows": 50,
+          "examined_rows": 47,
+          "document_fields": 115
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 240,
+            "mean_ms": 0.07410957283961277,
+            "median_ms": 0.07440010085701942,
+            "p95_ms": 0.12250011786818504
+          },
+          "scoring": {
+            "samples": 240,
+            "mean_ms": 0.19138623999121288,
+            "median_ms": 0.20079989917576313,
+            "p95_ms": 0.4344000481069088
+          },
+          "total": {
+            "samples": 240,
+            "mean_ms": 0.624805015589421,
+            "median_ms": 0.6369499024003744,
+            "p95_ms": 1.0949000716209412
+          }
+        }
+      }
+    }
+  },
+  "measurement_scope": "Offline synthetic retrieval and actual matching service; no LLM or PostgreSQL latency.",
+  "reference_policy": "Frozen manual expectations may disagree with implementation; discrepancies are retained in CSV.",
+  "implementation_sha256": "5a48deed48d757570e2efdae2b44c3afdbd8c0b4ba8a938593501cc99a196213",
+  "libraries": {
+    "rapidfuzz": "3.14.6",
+    "pydantic": "2.12.5",
+    "psycopg2-binary": "2.9.11"
+  },
+  "hybrid_minus_baseline": {
+    "calibration": {
+      "precision": 0.0,
+      "recall": 0.2857142857142857,
+      "f1": 0.2828282828282829,
+      "top_1_accuracy": 0.28571428571428575
+    },
+    "test": {
+      "precision": 0.0,
+      "recall": 0.17647058823529416,
+      "f1": 0.13527851458885942,
+      "top_1_accuracy": 0.2058823529411764
+    }
+  }
+}

@@ -24,3 +24,4 @@ docling==2.80.0
 # Docling 2.80 downloads OCRv4 artifacts; newer RapidOCR changes their names.
 rapidocr==3.3.1
 qdrant-client==1.17.1
+rapidfuzz==3.14.6

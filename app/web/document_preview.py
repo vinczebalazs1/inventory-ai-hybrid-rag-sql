@@ -6,10 +6,12 @@ import streamlit as st
 from app.document_processing.config import Settings
 from app.document_processing.processing_service import process_document
 from app.errors import AppError
+from app.web.reconciliation_preview import clear_reconciliation, render_reconciliation
 
 
 def _clear_preview() -> None:
     st.session_state.pop("document_preview", None)
+    clear_reconciliation()
 
 
 def render_document_analysis(show_debug: bool = False) -> None:
@@ -18,7 +20,7 @@ def render_document_analysis(show_debug: bool = False) -> None:
     uploaded = st.file_uploader("Elemzendő dokumentum", type=["pdf", "docx"],
                                key="analysis_upload", on_change=_clear_preview)
     if st.button("Analyze document", disabled=uploaded is None):
-        st.session_state.pop("document_preview", None)
+        _clear_preview()
         with st.spinner("Dokumentum feldolgozása…"):
             try:
                 st.session_state["document_preview"] = process_document(uploaded.getvalue(), uploaded.name)
@@ -46,6 +48,7 @@ def render_document_analysis(show_debug: bool = False) -> None:
             st.dataframe(rows, use_container_width=True, hide_index=True)
         else:
             st.caption("Nincs.")
+    render_reconciliation(result, show_debug=show_debug)
     with st.expander("Debug / raw output"):
         st.code(result.parsed_document.extraction_text, language="markdown")
         st.json(result.extraction.model_dump(mode="json"))

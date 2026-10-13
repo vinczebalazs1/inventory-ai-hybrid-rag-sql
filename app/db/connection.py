@@ -9,7 +9,7 @@ from app.errors import DatabaseUnavailableError
 load_dotenv()
 
 
-def get_connection():
+def get_connection(*, connect_timeout: int | None = None):
     """
     Új PostgreSQL kapcsolat létrehozása és visszaadása környezeti változókból.
 
@@ -48,6 +48,7 @@ def get_connection():
             host=os.getenv("DB_HOST"),
             # A PostgreSQL által nyitott TCP port, általában 5432.
             port=os.getenv("DB_PORT"),
+            **({"connect_timeout": connect_timeout} if connect_timeout is not None else {}),
         )
     except OperationalError as exc:
         # Az OperationalError tipikus kapcsolat/auth/hálózati hibákat fed le.

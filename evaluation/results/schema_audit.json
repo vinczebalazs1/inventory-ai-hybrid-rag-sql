@@ -1,0 +1,22 @@
+{
+  "table_schema": "public",
+  "table_name": "inventory_items",
+  "columns": {
+    "item_code": "text",
+    "sub_code": "integer",
+    "activation_date": "date",
+    "name": "text",
+    "purchase_value": "integer",
+    "depreciation": "integer",
+    "current_value": "integer",
+    "currency": "text",
+    "quantity": "integer",
+    "inventory_number": "text",
+    "location": "text"
+  },
+  "primary_key": [],
+  "unique_keys": [],
+  "verified": true,
+  "compatible": true,
+  "differences": []
+}

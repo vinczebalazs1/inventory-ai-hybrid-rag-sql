@@ -84,6 +84,52 @@ Streamlit UI display
 
 ## Honnan indul a user kerdes?
 
+## Dokumentumelemzés és rekordegyeztetés
+
+A dokumentumelemzés a kérdés–válasz rendszertől külön indítható ág. A feltöltött
+PDF/DOCX kinyert adatai a felületen láthatók, majd külön gomb indítja az adatbázis
+kandidánsainak keresését és az összehasonlítást.
+
+```text
+app/web/document_preview.py
+    → process_document(bytes, filename)
+    → Docling → LLM extraction → LLM mapping → normalizálás/validáció
+    → ProcessingResult (Streamlit session state)
+    → app/web/reconciliation_preview.py
+    → Egyeztetés az adatbázissal
+    → reconcile_document(processing_result)
+    → read-only PostgreSQL keresés → determinisztikus ranking
+    → mezőösszehasonlítás → javaslatok
+    → ReconciliationResult (Streamlit session state)
+```
+
+| Komponens | Feladat |
+|---|---|
+| `app/document_processing/` | Docling parser, általános kinyerés, séma szerinti mapping, validáció |
+| `app/record_matching/models.py` | Szigorú, JSON-szerializálható egyeztetési szerződések |
+| `app/record_matching/config.py` | Validált keresési korlátok, súlyok és küszöbök |
+| `app/record_matching/normalization.py` | Összehasonlítási normalizálás és modellszámtokenek |
+| `app/record_matching/preparation.py` | Validált mezők, bizonyítékok, ismétlések és többentitásos konfliktusok |
+| `app/record_matching/repository.py` | Sémavizsgálat és paraméterezett, csak olvasó PostgreSQL-keresés |
+| `app/record_matching/candidate_service.py` | Korlátos kandidánsválogatás és keresőtokenek |
+| `app/record_matching/matching_engine.py` | Exact/composite/fuzzy pontozás, rangsor, konfliktus és bizonytalanság |
+| `app/record_matching/comparison_service.py` | Mezőértékek és bizonyítékok összehasonlítása |
+| `app/record_matching/suggestion_engine.py` | Indokolt csatolási, frissítési, újrekord- és review-javaslatok |
+| `app/record_matching/reconciliation_service.py` | A teljes egyeztetés UI-tól független belépési pontja |
+| `app/web/reconciliation_preview.py` | Külön indítógomb, rangsor, eltérések, indokok és javaslatok |
+| `app/evaluation/` | Offline adatkészlet, futtatás és metrikák |
+| `scripts/evaluate_matching.py` | Exact-only és hibrid determinisztikus módszer összehasonlítása |
+
+Az egyeztetés nem hív LLM-et, nem ír az üzleti adatbázisba és nem hoz létre
+Qdrant–PostgreSQL kapcsolatot. A korábbi HYBRID név alapján szűrt RAG-keresése
+továbbra is külön működik. A jelenlegi javaslatok végrehajtásához később külön
+módosítási és dokumentumkapcsolati adatmodell szükséges.
+
+Részletek: [rekordegyeztetés](docs/record_reconciliation.md),
+[offline kiértékelés](docs/record_matching_evaluation.md).
+
+## Honnan indul a user kerdes?
+
 Fajl:
 
 ```text
