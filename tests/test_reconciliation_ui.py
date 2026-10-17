@@ -101,10 +101,10 @@ def test_ranking_evidence_differences_and_advisory_actions_render(monkeypatch):
     assert not app.exception
     tables = [element.value for element in app.dataframe]
     ranking = next(table for table in tables if "Rang" in table.columns)
-    assert ranking.iloc[0]["item_code"] == "A001"
+    assert ranking.iloc[0]["Cikkszám"] == "A001"
     assert ranking.iloc[0]["Hasonlósági pontszám"] == 1.0
     comparison = next(table for table in tables if "Eltérés" in table.columns)
-    assert comparison.iloc[0]["Státusz"] == "DIFFERENT"
+    assert comparison.iloc[0]["Státusz"] == "Eltér"
     assert comparison.iloc[0]["Bizonyíték"] == "Location: Budapest"
     assert comparison.iloc[0]["Adatbázis"] == "Győr"
     assert any("Rekordfrissítés javaslata" in element.value for element in app.markdown)
@@ -128,7 +128,8 @@ def test_all_statuses_render_without_hiding_review(monkeypatch, status):
     app = app_with_analysis().run()
     app.button(key="reconcile_document").click().run()
     assert not app.exception
-    assert any(element.value == status.value for element in app.caption)
+    assert not any(element.value == status.value for element in app.caption)
+    assert any(reconciliation_preview.STATUS_LABELS[status] in element.value for element in app.markdown)
     assert any("emberi ellenőrzést" in element.value for element in app.warning)
     if not result.search_metadata.complete:
         assert any("keresés nem teljes" in element.value for element in app.warning)
@@ -218,3 +219,37 @@ def test_reconciliation_results_are_per_session():
     assert not first.exception and not second.exception
     assert reconciliation_preview.RESULT_KEY not in second.session_state
     assert not any(element.value == MatchStatus.EXACT_MATCH.value for element in second.caption)
+
+
+def test_inventory_primary_summary_is_hungarian_and_does_not_claim_global_scan():
+    from test_inventory_identity import reconcile
+    result = reconcile({"inventory_number": "L-94279", "location": "KGK"},
+                       [{"inventory_number": "L-94279", "location": "LIB"}])
+    app = app_with_analysis()
+    app.session_state[reconciliation_preview.RESULT_KEY] = result
+    app.run()
+    assert not app.exception
+    assert any("Leltári szám: L-94279" in item.value for item in app.text)
+    assert any("Pontos leltáriszám-egyezés" in item.value for item in app.markdown)
+    assert any("egyediségét az adatbázis garantálja" in item.value for item in app.caption)
+    assert any("Teljes táblás névkeresésre nem volt szükség" in item.value for item in app.caption)
+    assert not any("keresés nem teljes" in item.value for item in app.warning)
+    ranking = next(item.value for item in app.dataframe if "Rang" in item.value.columns)
+    assert ranking.iloc[0]["Leltári szám"] == "L-94279"
+    assert "record_id" not in ranking.columns and "strategy" not in ranking.columns
+
+
+def test_unverified_duplicates_render_separate_candidate_deltas_and_review_proposals():
+    from test_inventory_identity import reconcile
+    result = reconcile({"inventory_number": "DUP", "location": "KGK"},
+                       [{"inventory_number": "DUP", "location": "LIB"},
+                        {"inventory_number": "DUP", "location": "BGK"}], unique=[])
+    app = app_with_analysis()
+    app.session_state[reconciliation_preview.RESULT_KEY] = result
+    app.run()
+    assert not app.exception
+    ranking = next(item.value for item in app.dataframe if "Rang" in item.value.columns)
+    deltas = next(item.value for item in app.dataframe if "Eltérés" in item.value.columns)
+    assert len(ranking) == 2 and set(deltas["Jelölt"]) == {1, 2}
+    assert any("azonossága még nem igazolt" in item.value for item in app.warning)
+    assert not any("egyediségét az adatbázis garantálja" in item.value for item in app.caption)

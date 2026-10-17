@@ -67,7 +67,7 @@ class EvaluationCase(FixtureModel):
 
 
 class EvaluationDataset(FixtureModel):
-    version: Literal[1]
+    version: Literal[1, 2]
     description: str
     split_policy: str
     cases: list[EvaluationCase]

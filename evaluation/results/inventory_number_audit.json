@@ -1,0 +1,241 @@
+{
+  "audited_at_utc": "2026-10-17T09:41:21.072282+00:00",
+  "read_only": true,
+  "audit_source_sha256": "3a3de1b2a82cc7924cc353b5dfba760ff666d6a06e66e6b4b549cdcafa8834f5",
+  "sample_limit": 50,
+  "blockers": [
+    "Azonos nem NULL leltári számok: a teljes UNIQUE index nem hozható létre."
+  ],
+  "warnings": [],
+  "schema_info": {
+    "table_schema": "public",
+    "table_name": "inventory_items",
+    "columns": {
+      "item_code": "text",
+      "sub_code": "integer",
+      "activation_date": "date",
+      "name": "text",
+      "purchase_value": "integer",
+      "depreciation": "integer",
+      "current_value": "integer",
+      "currency": "text",
+      "quantity": "integer",
+      "inventory_number": "text",
+      "location": "text"
+    },
+    "primary_key": [],
+    "unique_keys": [],
+    "verified": true,
+    "compatible": true,
+    "differences": []
+  },
+  "inventory_unique_verified": false,
+  "counts": {
+    "rows": 1000,
+    "null": 0,
+    "empty": 0,
+    "whitespace_only": 0,
+    "contains_whitespace": 0
+  },
+  "duplicate_groups": 8,
+  "duplicate_rows": 16,
+  "duplicate_samples_truncated": false,
+  "duplicate_samples": [
+    {
+      "inventory_number": "L-16912",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-16912",
+          "item_code": "E0208",
+          "sub_code": 0,
+          "name": "Switch",
+          "location": "GFB",
+          "activation_date": "2230-09-02"
+        },
+        {
+          "inventory_number": "L-16912",
+          "item_code": "E0276",
+          "sub_code": 0,
+          "name": "Printer",
+          "location": "BGK",
+          "activation_date": "2298-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-17256",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-17256",
+          "item_code": "E0297",
+          "sub_code": 0,
+          "name": "Monitor",
+          "location": "NIK",
+          "activation_date": "2319-09-02"
+        },
+        {
+          "inventory_number": "L-17256",
+          "item_code": "E0729",
+          "sub_code": 0,
+          "name": "Monitor",
+          "location": "NIK",
+          "activation_date": "2751-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-17758",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-17758",
+          "item_code": "E0312",
+          "sub_code": 0,
+          "name": "Server",
+          "location": "LIB",
+          "activation_date": "2334-09-02"
+        },
+        {
+          "inventory_number": "L-17758",
+          "item_code": "E0814",
+          "sub_code": 0,
+          "name": "Tablet",
+          "location": "NIK",
+          "activation_date": "2836-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-36622",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-36622",
+          "item_code": "E0231",
+          "sub_code": 0,
+          "name": "Chair",
+          "location": "LIB",
+          "activation_date": "2253-09-02"
+        },
+        {
+          "inventory_number": "L-36622",
+          "item_code": "E0535",
+          "sub_code": 0,
+          "name": "Webcam",
+          "location": "RKK",
+          "activation_date": "2557-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-45143",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-45143",
+          "item_code": "E0087",
+          "sub_code": 0,
+          "name": "NAS",
+          "location": "RKK",
+          "activation_date": "2109-09-02"
+        },
+        {
+          "inventory_number": "L-45143",
+          "item_code": "E0793",
+          "sub_code": 0,
+          "name": "Monitor",
+          "location": "NIK",
+          "activation_date": "2815-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-54305",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-54305",
+          "item_code": "E0591",
+          "sub_code": 0,
+          "name": "Docking station",
+          "location": "RKK",
+          "activation_date": "2613-09-02"
+        },
+        {
+          "inventory_number": "L-54305",
+          "item_code": "E0748",
+          "sub_code": 0,
+          "name": "Monitor",
+          "location": "NIK",
+          "activation_date": "2770-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-66423",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-66423",
+          "item_code": "E0670",
+          "sub_code": 0,
+          "name": "Docking station",
+          "location": "LIB",
+          "activation_date": "2692-09-02"
+        },
+        {
+          "inventory_number": "L-66423",
+          "item_code": "E0680",
+          "sub_code": 0,
+          "name": "Chair",
+          "location": "GFB",
+          "activation_date": "2702-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    },
+    {
+      "inventory_number": "L-88949",
+      "occurrence_count": 2,
+      "records": [
+        {
+          "inventory_number": "L-88949",
+          "item_code": "E0691",
+          "sub_code": 0,
+          "name": "Keyboard",
+          "location": "KGK",
+          "activation_date": "2713-09-02"
+        },
+        {
+          "inventory_number": "L-88949",
+          "item_code": "E0867",
+          "sub_code": 0,
+          "name": "Tablet",
+          "location": "LIB",
+          "activation_date": "2889-09-02"
+        }
+      ],
+      "records_truncated": false,
+      "recommended_action": "Kézzel ellenőrizd az eredeti leltárbizonylatokat; ne töröld vagy számozd át automatikusan."
+    }
+  ],
+  "normalization_collision_groups": 0,
+  "normalization_collision_samples": [],
+  "normalization_collision_samples_truncated": false,
+  "migration_ready": false
+}

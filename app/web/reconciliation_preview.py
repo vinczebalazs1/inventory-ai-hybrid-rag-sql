@@ -29,6 +29,20 @@ ACTION_LABELS = {
     ActionType.CREATE_RECORD_CANDIDATE: "Új rekord javaslata",
     ActionType.MANUAL_REVIEW: "Emberi ellenőrzés szükséges",
 }
+FIELD_LABELS = {"inventory_number": "Leltári szám", "item_code": "Cikkszám", "sub_code": "Alszám",
+                "name": "Eszköznév", "location": "Helyszín", "activation_date": "Aktiválás dátuma",
+                "quantity": "Mennyiség", "currency": "Pénznem", "purchase_value": "Beszerzési érték",
+                "depreciation": "Értékcsökkenés", "current_value": "Jelenlegi érték"}
+STRATEGY_LABELS = {"inventory_number_exact": "Pontos leltáriszám-egyezés",
+                  "inventory_number_unverified": "Leltári szám egyezik, egyediség nem igazolt",
+                  "exact_identifier": "Pontos másodlagos azonosítóegyezés",
+                  "unverified_identifier": "Azonosítóérték egyezik, egyediség nem igazolt",
+                  "composite_identifier": "Cikkszám és alszám egyezése",
+                  "composite_fields": "Több leíró mező egyezése",
+                  "fuzzy_name": "Hasonló eszköznév", "weighted_fields": "Mezők súlyozott egyezése"}
+COMPARISON_LABELS = {ComparisonStatus.EQUAL: "Egyezik", ComparisonStatus.DIFFERENT: "Eltér",
+                     ComparisonStatus.UNKNOWN: "Ismeretlen", ComparisonStatus.INVALID: "Hibás adat",
+                     ComparisonStatus.NOT_COMPARABLE: "Nem összehasonlítható"}
 
 
 def clear_reconciliation() -> None:
@@ -49,7 +63,7 @@ def _value(value: object) -> str:
     return "—" if value is None else str(value)
 
 
-def _render_candidates(candidates: list[CandidateRecord]) -> None:
+def _render_candidates(candidates: list[CandidateRecord], show_debug: bool = False) -> None:
     st.subheader("Rangsorolt rekordjelöltek")
     if not candidates:
         st.caption("Nincs megjeleníthető rekordjelölt.")
@@ -61,13 +75,15 @@ def _render_candidates(candidates: list[CandidateRecord]) -> None:
     rows = []
     for candidate in candidates:
         row = {"Rang": candidate.rank}
-        row.update({field: _value(candidate.values.get(field)) for field in relevant_fields})
+        row.update({FIELD_LABELS[field]: _value(candidate.values.get(field)) for field in relevant_fields})
         row.update({
             "Hasonlósági pontszám": candidate.similarity_score,
-            "Stratégia": candidate.strategy,
-            "Stabil rekordazonosító": _value(candidate.record_id),
+            "Egyeztetés alapja": STRATEGY_LABELS.get(candidate.strategy, "Mezőegyeztetés"),
+            "Egyedi kulcs értéke egyezik": candidate.verified_identifier_match,
             "Ellenőrzés szükséges": candidate.review_required,
         })
+        if show_debug:
+            row.update({"strategy": candidate.strategy, "record_id": _value(candidate.record_id)})
         rows.append(row)
     st.dataframe(rows, use_container_width=True, hide_index=True)
 
@@ -77,7 +93,7 @@ def _render_candidates(candidates: list[CandidateRecord]) -> None:
             if not candidate.record_id:
                 st.warning("Ehhez a jelölthöz nem igazolt stabil rekordazonosító.")
             if candidate.matching_fields:
-                st.text("Egyező mezők: " + ", ".join(candidate.matching_fields))
+                st.text("Egyező mezők: " + ", ".join(FIELD_LABELS.get(f, f) for f in candidate.matching_fields))
             for reason in candidate.reasons:
                 st.text(reason)
             if candidate.identifier_conflicts:
@@ -89,7 +105,7 @@ def _render_candidates(candidates: list[CandidateRecord]) -> None:
             if candidate.score_breakdown:
                 st.dataframe([
                     {
-                        "Mező": part.field,
+                        "Mező": FIELD_LABELS.get(part.field, part.field),
                         "Hasonlóság": part.similarity,
                         "Súly": part.weight,
                         "Hozzájárulás": part.contribution,
@@ -111,13 +127,14 @@ def _render_comparisons(result: ReconciliationResult) -> None:
     st.caption(f"Eltérő mezők száma: {differences}")
     st.dataframe([
         {
-            "Mező": comparison.field,
+            "Jelölt": comparison.candidate_rank,
+            "Mező": FIELD_LABELS.get(comparison.field, comparison.field),
             "Eltérés": comparison.status == ComparisonStatus.DIFFERENT,
             "Forráscímke": _value(comparison.source_label),
             "Dokumentum – eredeti": _value(comparison.raw_document_value),
             "Dokumentum – normalizált": _value(comparison.normalized_document_value),
             "Adatbázis": _value(comparison.database_value),
-            "Státusz": comparison.status.value,
+            "Státusz": COMPARISON_LABELS[comparison.status],
             "Bizonyíték": _value(comparison.evidence),
             "Oldal": _value(comparison.page),
             "Magyarázat": comparison.explanation,
@@ -134,8 +151,10 @@ def _render_actions(result: ReconciliationResult) -> None:
     for action in result.suggested_actions:
         st.markdown(f"**{ACTION_LABELS[action.action_type]}**")
         st.text(action.reason)
-        if action.target_record:
-            st.text("Célrekord: " + action.target_record)
+        if action.candidate_rank:
+            st.text(f"Érintett jelölt: {action.candidate_rank}.")
+        if action.action_type == ActionType.UPDATE_CANDIDATE and not action.target_identity_verified:
+            st.warning("A célrekord azonossága még nem igazolt; ez csak ellenőrizendő lehetőség.")
         if action.review_required:
             st.warning("Emberi ellenőrzés szükséges a javaslat értékeléséhez.")
         for label, fields in (
@@ -144,15 +163,25 @@ def _render_actions(result: ReconciliationResult) -> None:
             ("Hiányzó mezők", action.missing_fields),
         ):
             if fields:
-                st.text(label + ": " + ", ".join(fields))
+                st.text(label + ": " + ", ".join(FIELD_LABELS.get(f, f) for f in fields))
         for limitation in action.limitations:
             st.text(limitation)
 
 
 def _render_result(result: ReconciliationResult, show_debug: bool) -> None:
     st.subheader("Egyeztetési összefoglaló")
-    st.write(STATUS_LABELS[result.match_status])
-    st.caption(result.match_status.value)
+    primary_exact = (result.match_status == MatchStatus.EXACT_MATCH and result.matched_record
+                     and result.matched_record.strategy == "inventory_number_exact")
+    st.write("Pontos leltáriszám-egyezés" if primary_exact else STATUS_LABELS[result.match_status])
+    if show_debug:
+        st.caption(result.match_status.value)
+    if result.prepared_document and result.prepared_document.values.get("inventory_number"):
+        st.text("Leltári szám: " + str(result.prepared_document.values["inventory_number"]))
+    schema = result.search_metadata.schema_info
+    if schema and schema.verified and schema.compatible and ["inventory_number"] in schema.unique_keys:
+        st.caption("A leltári szám egyediségét az adatbázis garantálja. NULL érték alapján nincs azonosítás.")
+    else:
+        st.caption("A leltári szám egyedisége nincs adatbázis-kulccsal igazolva; a találatok kézzel ellenőrizhetők.")
     if result.review_required:
         st.warning("Az eredmény emberi ellenőrzést igényel.")
     else:
@@ -161,6 +190,8 @@ def _render_result(result: ReconciliationResult, show_debug: bool) -> None:
         st.text(reason)
     if not result.search_metadata.complete:
         st.warning("A keresés nem teljes. Ebből nem állapítható meg, hogy egy rekord nem létezik.")
+    if result.search_metadata.fuzzy_search.skipped_reason == "verified_inventory_lookup":
+        st.caption("A célzott leltáriszám-keresés befejeződött. Teljes táblás névkeresésre nem volt szükség.")
     for warning in dict.fromkeys(result.warnings + result.search_metadata.warnings):
         st.text(warning)
     if result.candidates:
@@ -168,9 +199,9 @@ def _render_result(result: ReconciliationResult, show_debug: bool) -> None:
         st.text("Legjobb jelölt: " + _value(best.values.get("name") or best.record_id))
         score_column, strategy_column = st.columns(2)
         score_column.metric("Hasonlósági pontszám", f"{best.similarity_score:.3f}")
-        strategy_column.metric("Egyeztetési stratégia", best.strategy)
+        strategy_column.metric("Egyeztetés alapja", STRATEGY_LABELS.get(best.strategy, "Mezőegyeztetés"))
     st.caption("A 0–1 közötti pontszám rangsorolási érték, nem kalibrált valószínűség.")
-    _render_candidates(result.candidates)
+    _render_candidates(result.candidates, show_debug)
     _render_comparisons(result)
     _render_actions(result)
     if show_debug:

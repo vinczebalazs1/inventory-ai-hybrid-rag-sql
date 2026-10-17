@@ -88,6 +88,18 @@ Az elemzett PDF/DOCX adatai a **Dokumentum elemzése – PDF / DOCX** panel
 **Egyeztetés az adatbázissal** gombjával hasonlíthatók össze a PostgreSQL leltárral.
 Az egyeztetés a már elkészült elemzést használja; nem indít új LLM-hívást.
 
+Az elsődleges eszközazonosító a meglévő **`inventory_number` (leltári szám)**.
+Igazolt UNIQUE kulcs és konfliktusmentes pontos találat esetén `EXACT_MATCH`
+keletkezik, teljes táblás fuzzy keresés nélkül. Helyszíneltérés ettől még lehet:
+ilyenkor a rendszer külön frissítési javaslatot mutat. Új eszköz-ID nem szükséges.
+
+**Aktuális adatbázishelyzet (2026-10-17):** 1000 sor, 8 duplikált leltári szám,
+16 érintett rekord, nincs igazolt UNIQUE index. A migráció elkészült, de az üzleti
+adatbázison nem futott le. Előbb kézi adatellenőrzés, majd explicit jóváhagyás kell.
+Az [audit és migrációs útmutató](docs/inventory_number_migration.md) tartalmazza
+a pontos lépéseket; az [implementációs riport](docs/inventory_number_report.md)
+a 202 sikeres tesztet, a méréseket és az élesítés fennmaradó feltételeit.
+
 1. Tölts fel dokumentumot és indítsd el az **Analyze document** elemzést.
 2. Ellenőrizd a kinyert mezőket és a dokumentumbeli bizonyítékokat.
 3. Kattints az **Egyeztetés az adatbázissal** gombra.

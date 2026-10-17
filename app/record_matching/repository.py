@@ -4,6 +4,7 @@ No Text-to-SQL, business writes, extension installation or implicit schema chang
 All stages share one repeatable-read snapshot. Filtered fuzzy searches are partial.
 """
 from contextlib import contextmanager
+from collections import Counter
 from datetime import date, datetime
 from decimal import Decimal
 import json
@@ -83,9 +84,12 @@ def _scalar(value) -> Scalar:
 def record_from_row(row: dict, schema: SchemaInfo) -> DatabaseRecord:
     values = {key: _scalar(value) for key, value in row.items()}
     keys = ([schema.primary_key] if schema.primary_key else []) + schema.unique_keys
+    # Prefer the existing inventory business key even if another PK also exists.
+    keys.sort(key=lambda key: key != ["inventory_number"])
     if schema.verified:
         for key in keys:
-            if key and all(name in values and values[name] is not None for name in key):
+            if key and all(name in values and values[name] is not None
+                           and (not isinstance(values[name], str) or values[name].strip()) for name in key):
                 identity = {name: values[name] for name in key}
                 return DatabaseRecord(values=values, identity_fields=key,
                                       record_id=json.dumps(identity, sort_keys=True, ensure_ascii=False,
@@ -226,35 +230,77 @@ class InventoryRepository:
             columns.extend(name for name in key if name not in columns)
         if not schema.unique_keys:
             metadata.warnings.append("Nincs igazolt PRIMARY KEY vagy teljes egyedi index; tartós rekordazonosság nem állapítható meg.")
-        exact_conditions, exact_parameters = _exact_conditions(values, expected)
         exact_records = []
-        if exact_conditions:
-            metadata.strategies.append("exact_identifier")
-            exact_records = self._rows(cursor, columns, sql.SQL(" OR ").join(exact_conditions),
-                                       exact_parameters, settings.max_candidates + 1, schema)
-            metadata.scanned_rows += len(exact_records)
-            if len(exact_records) > settings.max_candidates:
-                metadata.truncated = True
-                metadata.scope = "identifier_limit"
-                metadata.warnings.append("Az azonosítókeresés elérte a kandidánskorlátot.")
-                return exact_records[:settings.max_candidates]
-            if settings.strategy == "exact_only" or _verified_identity_lookup(exact_records, values, schema):
+        has_inventory = "inventory_number" in expected and _usable_identifier(values.get("inventory_number"))
+        if has_inventory:
+            stage = metadata.inventory_lookup
+            stage.unique_constraint_verified = ["inventory_number"] in schema.unique_keys
+            metadata.strategies.append("inventory_number_exact")
+            exact_records = self._lookup(cursor, columns, ["inventory_number"], values, settings, metadata, stage)
+            if stage.complete and stage.unique_constraint_verified and _verified_identity_lookup(exact_records, values, schema):
                 metadata.complete = True
-                metadata.scope = "exact_identifiers" if settings.strategy == "exact_only" else "verified_identifier"
+                metadata.scope = "verified_identifier"
+                metadata.secondary_lookup.skipped_reason = "primary_record_identifiers_consistent"
+                metadata.fuzzy_search.skipped_reason = "verified_inventory_lookup"
                 return exact_records
-        elif settings.strategy == "exact_only":
-            metadata.scope = "no_identifier"
-            return []
+            if stage.truncated:
+                metadata.scope = "identifier_limit"
+                metadata.truncated = True
+                metadata.warnings.append("Több rekord leltári száma egyezik; a jelöltlista korlátozott.")
+                return exact_records[:settings.max_candidates]
+        else:
+            metadata.inventory_lookup.skipped_reason = "no_usable_inventory_number"
+
+        # A broad item_code is intentionally secondary. Its siblings cannot
+        # exhaust the candidate budget of a verified inventory number lookup.
+        if "item_code" in expected and _usable_identifier(values.get("item_code")):
+            metadata.strategies.append("item_code_exact")
+            key = ["item_code"]
+            composite = any(set(key) == {"item_code", "sub_code"} for key in schema.unique_keys)
+            if composite and values.get("sub_code") is not None and "sub_code" in expected:
+                key.append("sub_code")
+                metadata.strategies.append("item_code_sub_code_exact")
+            metadata.secondary_lookup.unique_constraint_verified = (["item_code"] in schema.unique_keys
+                or (composite and values.get("sub_code") is not None))
+            secondary = self._lookup(cursor, columns, key, values, settings, metadata, metadata.secondary_lookup)
+            # Rows already read by the primary lookup must not appear twice.
+            secondary = [row for row in secondary if not has_inventory
+                         or row.values.get("inventory_number") != values["inventory_number"]]
+            exact_records.extend(secondary)
+            metadata.truncated = metadata.secondary_lookup.truncated or len(exact_records) > settings.max_candidates
+            if metadata.truncated:
+                metadata.scope = "identifier_limit"
+                metadata.warnings.append("A másodlagos azonosítókeresés elérte a kandidánskorlátot.")
+                return exact_records[:settings.max_candidates]
+            if _verified_identity_lookup(exact_records, values, schema):
+                metadata.complete = True
+                metadata.scope = "verified_identifier"
+                metadata.fuzzy_search.skipped_reason = "verified_secondary_lookup"
+                return exact_records
+        else:
+            metadata.secondary_lookup.skipped_reason = "no_usable_item_code"
+        if settings.strategy == "exact_only":
+            metadata.complete = metadata.inventory_lookup.attempted or metadata.secondary_lookup.attempted
+            metadata.scope = "exact_identifiers" if metadata.complete else "no_identifier"
+            metadata.fuzzy_search.skipped_reason = "exact_only_strategy"
+            return exact_records
 
         # The sentinel prevents unbounded materialization of a large table.
+        fuzzy_start = perf_counter()
+        metadata.fuzzy_search.attempted = True
         metadata.strategies.append("bounded_table_scan")
-        scanned = self._rows(cursor, columns, sql.SQL("TRUE"), [], settings.max_scan_rows + 1, schema)
+        scanned = self._table_rows(cursor, columns, settings.max_scan_rows + 1, schema)
         metadata.scanned_rows += len(scanned)
         if len(scanned) <= settings.max_scan_rows:
             records, truncated = select_candidates(scanned, values, settings)
             metadata.complete = not truncated
             metadata.truncated = truncated
             metadata.scope = "full_table"
+            metadata.fuzzy_search.complete = not truncated
+            metadata.fuzzy_search.truncated = truncated
+            metadata.fuzzy_search.matching_rows = len(records) + int(truncated)
+            metadata.fuzzy_search.duration_ms = (perf_counter() - fuzzy_start) * 1000
+            metadata.absence_check_complete = not truncated
             if truncated:
                 metadata.warnings.append("A teljes táblán végzett keresés eredménye meghaladja a kandidánskorlátot.")
             return records
@@ -263,18 +309,48 @@ class InventoryRepository:
         metadata.strategies.extend(strategies)
         metadata.scope = "filtered_subset"
         metadata.complete = False
+        metadata.truncated = True  # The bounded table scan already omitted rows.
+        metadata.fuzzy_search.truncated = True
+        metadata.fuzzy_search.duration_ms = (perf_counter() - fuzzy_start) * 1000
         metadata.warnings.append("A tábla meghaladja a teljes vizsgálat korlátját; a névalapú előszűrés nem igazolja a rekord globális hiányát.")
         if not conditions:
             return exact_records
-        filtered = self._rows(cursor, columns, sql.SQL(" OR ").join(conditions), parameters,
-                              settings.max_candidates + 1, schema)
+        filtered = self._filtered_rows(cursor, columns, values, expected, settings.max_candidates + 1, schema)
         metadata.scanned_rows += len(filtered)
-        metadata.truncated = len(filtered) > settings.max_candidates
-        if metadata.truncated:
+        if len(filtered) > settings.max_candidates:
             metadata.warnings.append("A szűrt keresés elérte a kandidánskorlátot.")
+        # Preserve primary observations even when the fuzzy SQL LIMIT excludes them.
+        filtered = _merge_observations(exact_records, filtered)
         records, cut = select_candidates(filtered, values, settings)
         metadata.truncated = metadata.truncated or cut
+        metadata.fuzzy_search.truncated = metadata.truncated
+        metadata.fuzzy_search.matching_rows = len(records) + int(cut)
+        metadata.fuzzy_search.duration_ms = (perf_counter() - fuzzy_start) * 1000
         return records
+
+    def _lookup(self, cursor, columns, key, values, settings, metadata, stage):
+        start = perf_counter()
+        stage.attempted = True
+        try:
+            records = self._identifier_rows(cursor, columns, key, values, settings.max_candidates + 1, metadata.schema_info)
+            metadata.scanned_rows += len(records)
+            stage.matching_rows = len(records)
+            stage.truncated = len(records) > settings.max_candidates
+            stage.complete = not stage.truncated
+            return records
+        finally:
+            stage.duration_ms = (perf_counter() - start) * 1000
+
+    def _identifier_rows(self, cursor, columns, key, values, limit, schema):
+        condition = sql.SQL(" AND ").join(sql.SQL("{} = %s").format(sql.Identifier(name)) for name in key)
+        return self._rows(cursor, columns, condition, [values[name] for name in key], limit, schema)
+
+    def _table_rows(self, cursor, columns, limit, schema):
+        return self._rows(cursor, columns, sql.SQL("TRUE"), [], limit, schema)
+
+    def _filtered_rows(self, cursor, columns, values, expected, limit, schema):
+        conditions, parameters, _ = _filtered_conditions(values, expected)
+        return self._rows(cursor, columns, sql.SQL(" OR ").join(conditions), parameters, limit, schema)
 
 
 def _validate_search_values(values, expected, settings):
@@ -304,11 +380,30 @@ def _verified_identity_lookup(records, values, schema):
     record = records[0]
     if any(values.get(name) is not None and values[name] != record.values.get(name) for name in IDENTIFIER_FIELDS):
         return False
+    if values.get("sub_code") is not None and values.get("sub_code") != record.values.get("sub_code"):
+        return False
     for key in schema.unique_keys:
         if set(key).issubset({*IDENTIFIER_FIELDS, "sub_code"}) and any(name in IDENTIFIER_FIELDS for name in key):
             if all(values.get(name) is not None and values[name] == record.values.get(name) for name in key):
                 return True
     return False
+
+
+def _usable_identifier(value):
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _merge_observations(first, second):
+    """Union overlapping query results, preserving physical duplicate multiplicity."""
+    remaining = Counter(row.model_dump_json() for row in first)
+    merged = list(first)
+    for row in second:
+        key = row.model_dump_json()
+        if remaining[key]:
+            remaining[key] -= 1
+        else:
+            merged.append(row)
+    return merged
 
 
 def _filtered_conditions(values, expected):

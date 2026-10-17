@@ -100,7 +100,8 @@ def test_live_composite_key_and_parameterized_injection(inventory):
     execute("INSERT INTO inventory_items(item_code,sub_code,name) VALUES ('A',1,'Dell'),('A',2,'Dell')")
     result = repo.search({"item_code": "A", "sub_code": 2}, columns, settings)
     assert result.metadata.schema_info.primary_key == ["item_code", "sub_code"]
-    assert {row.record_id for row in result.records} == {'{"item_code":"A","sub_code":1}', '{"item_code":"A","sub_code":2}'}
+    assert {row.record_id for row in result.records} == {'{"item_code":"A","sub_code":2}'}
+    assert result.metadata.secondary_lookup.complete and not result.metadata.fuzzy_search.attempted
     attack = "A'; DROP TABLE inventory_items; --"
     result = repo.search({"item_code": attack}, columns, settings)
     assert not result.records and result.metadata.complete
@@ -149,7 +150,8 @@ def test_live_timeout_and_schema_mismatch_are_incomplete(inventory):
     assert any("quantity" in difference for difference in result.metadata.schema_info.differences)
 
 
-def test_docx_to_processing_to_postgres_to_streamlit(inventory, monkeypatch):
+@pytest.mark.parametrize("business_key", ["item_code", "inventory_number"])
+def test_docx_to_processing_to_postgres_to_streamlit(inventory, monkeypatch, business_key):
     """Real parser, extraction/mapping contracts, SQL, matcher and rendered result."""
     from io import BytesIO
     import json
@@ -163,10 +165,12 @@ def test_docx_to_processing_to_postgres_to_streamlit(inventory, monkeypatch):
     import app.web.reconciliation_preview as preview
 
     repo, columns, settings, execute = inventory
-    execute("ALTER TABLE inventory_items ADD PRIMARY KEY(item_code)")
-    execute("INSERT INTO inventory_items(item_code,name,location) VALUES ('DOCX-1','Dell Latitude 5540','Pécs')")
+    execute(sql.SQL("CREATE UNIQUE INDEX document_key ON inventory_items({})").format(sql.Identifier(business_key)))
+    execute("INSERT INTO inventory_items(item_code,inventory_number,name,location) VALUES ('DOCX-1','L-DOCX-1','Dell Latitude 5540','Pécs')")
     source_fields = [("Item code", "DOCX-1", "item_code"), ("Device", "Dell Latitude 5540", "name"),
                      ("Location", "Győr", "location")]
+    if business_key == "inventory_number":
+        source_fields.append(("Leltári szám", "L-DOCX-1", "inventory_number"))
     document = Document()
     for label, value, _ in source_fields:
         document.add_paragraph(f"{label}: {value}")
@@ -179,6 +183,7 @@ def test_docx_to_processing_to_postgres_to_streamlit(inventory, monkeypatch):
     processed = process_document(buffer.getvalue(), "inventory.docx")
     output = reconcile_document(processed, repository=repo, settings=settings, columns=columns)
     assert output.match_status == MatchStatus.EXACT_MATCH
+    assert output.matched_record.identity_fields == [business_key]
     assert ActionType.UPDATE_CANDIDATE in {action.action_type for action in output.suggested_actions}
     assert llm.call_count == 2
     run = Mock(return_value=output)
@@ -190,3 +195,162 @@ def test_docx_to_processing_to_postgres_to_streamlit(inventory, monkeypatch):
     assert not app.exception and run.call_count == 1 and llm.call_count == 2
     assert any("Rekordfrissítés" in item.value for item in app.markdown)
     assert execute("SELECT location FROM inventory_items") == [("Pécs",)]
+
+
+def test_inventory_unique_ignores_shared_item_and_large_fuzzy_population(inventory):
+    repo, columns, settings, execute = inventory
+    execute("CREATE UNIQUE INDEX inv_unique ON inventory_items(inventory_number)")
+    execute("INSERT INTO inventory_items(inventory_number,item_code,sub_code,name,location) "
+            "SELECT 'L-' || n, 'PRINTER', 0, 'Printer', 'LIB' FROM generate_series(1,4000) n")
+    result = repo.search({"inventory_number": "L-942", "item_code": "PRINTER", "sub_code": 0, "name": "Printer"},
+                         columns, MatchingSettings(target_schema=settings.target_schema, max_candidates=1, max_scan_rows=1))
+    assert len(result.records) == 1 and result.records[0].record_id == '{"inventory_number":"L-942"}'
+    assert result.metadata.complete and not result.metadata.truncated
+    assert result.metadata.scanned_rows == 1
+    assert result.metadata.inventory_lookup.complete and result.metadata.inventory_lookup.unique_constraint_verified
+    assert not result.metadata.fuzzy_search.attempted and not result.metadata.absence_check_complete
+
+
+def test_T20_inventory_injection_and_identifier_characters_remain_literal(inventory):
+    repo, columns, settings, execute = inventory
+    execute("CREATE UNIQUE INDEX inv_unique ON inventory_items(inventory_number)")
+    attack = "L'; DROP TABLE inventory_items; --"
+    for value in (attack, "L-001", "L-1", "l-001", " L-001 "):
+        execute("INSERT INTO inventory_items(inventory_number) VALUES (%s)", (value,))
+        result = repo.search({"inventory_number": value}, columns, settings)
+        assert len(result.records) == 1 and result.records[0].values["inventory_number"] == value
+    assert execute("SELECT count(*) FROM inventory_items") == [(5,)]
+
+
+def migration_sql(schema, *, rollback=False):
+    """The production SQL is fixed to public; use only a generated test schema here."""
+    assert schema.startswith("test_") and schema.replace("_", "").isalnum()
+    name = "001_inventory_number_unique" + ("_rollback" if rollback else "") + ".sql"
+    return (Path(__file__).resolve().parents[1] / "migrations" / name).read_text(encoding="utf-8").replace("public.", schema + ".")
+
+
+def test_T18_migration_duplicates_fail_without_invalid_index_or_data_changes(inventory):
+    _, _, settings, execute = inventory
+    execute("INSERT INTO inventory_items(inventory_number,item_code) VALUES ('DUP','A'),('DUP','B')")
+    before = execute("SELECT * FROM inventory_items ORDER BY item_code")
+    with pytest.raises(psycopg2.errors.RaiseException, match="Duplicate inventory"):
+        execute(migration_sql(settings.target_schema))
+    assert execute("SELECT * FROM inventory_items ORDER BY item_code") == before
+    assert execute("SELECT count(*) FROM pg_indexes WHERE schemaname=%s", (settings.target_schema,)) == [(0,)]
+
+
+def test_T19_existing_unique_is_reused_and_not_removed_by_rollback(inventory):
+    repo, columns, settings, execute = inventory
+    execute("CREATE UNIQUE INDEX existing_inventory_key ON inventory_items(inventory_number) INCLUDE(name)")
+    execute(migration_sql(settings.target_schema))
+    execute(migration_sql(settings.target_schema, rollback=True))
+    assert repo.inspect_schema(columns, settings).unique_keys == [["inventory_number"]]
+    assert execute("SELECT indexname FROM pg_indexes WHERE schemaname=%s", (settings.target_schema,)) == [("existing_inventory_key",)]
+
+
+def test_migration_is_idempotent_nullable_atomic_and_has_guarded_rollback(inventory):
+    repo, columns, settings, execute = inventory
+    execute("INSERT INTO inventory_items(inventory_number) VALUES ('L-001'), (NULL), (NULL)")
+    before = execute("SELECT inventory_number FROM inventory_items ORDER BY inventory_number")
+    execute(migration_sql(settings.target_schema))
+    execute(migration_sql(settings.target_schema))
+    assert repo.inspect_schema(columns, settings).unique_keys == [["inventory_number"]]
+    with pytest.raises(psycopg2.errors.UniqueViolation):
+        execute("INSERT INTO inventory_items(inventory_number) VALUES ('L-001')")
+    assert execute("SELECT inventory_number FROM inventory_items ORDER BY inventory_number") == before
+    execute(migration_sql(settings.target_schema, rollback=True))
+    assert repo.inspect_schema(columns, settings).unique_keys == []
+    assert execute("SELECT inventory_number FROM inventory_items ORDER BY inventory_number") == before
+
+
+def test_migration_object_name_collision_and_unowned_rollback_are_safe(inventory):
+    _, _, settings, execute = inventory
+    execute("CREATE INDEX inventory_items_inventory_number_uidx ON inventory_items(name)")
+    with pytest.raises(psycopg2.errors.RaiseException, match="name occupied"):
+        execute(migration_sql(settings.target_schema))
+    with pytest.raises(psycopg2.errors.RaiseException, match="refusing rollback"):
+        execute(migration_sql(settings.target_schema, rollback=True))
+    assert execute("SELECT count(*) FROM pg_indexes WHERE schemaname=%s", (settings.target_schema,)) == [(1,)]
+
+
+def test_blank_inventory_blocks_migration_without_forcing_not_null(inventory):
+    _, _, settings, execute = inventory
+    execute("INSERT INTO inventory_items(inventory_number) VALUES (E' \\t\\n')")
+    with pytest.raises(psycopg2.errors.RaiseException, match="Blank inventory"):
+        execute(migration_sql(settings.target_schema))
+    assert execute("SELECT count(*) FROM pg_indexes WHERE schemaname=%s", (settings.target_schema,)) == [(0,)]
+
+
+def test_inventory_audit_distinguishes_raw_duplicates_and_normalization_collisions(inventory, monkeypatch):
+    from app.record_matching import inventory_audit
+    repo, columns, settings, execute = inventory
+    monkeypatch.setattr(inventory_audit, "load_schema", lambda: {"inventory_items": [
+        {"column": key, "type": value} for key, value in columns.items()]})
+    execute("INSERT INTO inventory_items(inventory_number,item_code) VALUES "
+            "('DUP','A'),('DUP','B'),('L-001','C'),(' l-001 ','D'),(NULL,'E'),('', 'F'),(E' \\t','G')")
+    before = execute("SELECT * FROM inventory_items ORDER BY item_code")
+    audit = inventory_audit.audit_inventory_numbers(repo, settings, sample_limit=1)
+    assert audit["duplicate_groups"] == 1 and audit["duplicate_rows"] == 2
+    assert audit["counts"]["null"] == audit["counts"]["empty"] == audit["counts"]["whitespace_only"] == 1
+    assert audit["normalization_collision_groups"] == 2  # blank variants and L-001
+    assert audit["normalization_collision_samples_truncated"]
+    assert audit["duplicate_samples"][0]["records_truncated"]
+    assert not audit["migration_ready"]
+    assert execute("SELECT * FROM inventory_items ORDER BY item_code") == before
+
+
+def test_isolated_inventory_search_benchmark(inventory, tmp_path):
+    """Comparable fresh SQL measurements: previous OR lookup vs primary lookup."""
+    from datetime import datetime, timezone
+    from hashlib import sha256
+    import json
+    from time import perf_counter
+    from app.evaluation.metrics import _timing_summary
+    from app.evaluation.runner import implementation_hashes
+    from app.record_matching.models import SearchMetadata
+
+    repo, columns, settings, execute = inventory
+    execute("CREATE UNIQUE INDEX inv_unique ON inventory_items(inventory_number)")
+    execute("INSERT INTO inventory_items(inventory_number,item_code,sub_code,name,location) "
+            "SELECT 'L-' || n, 'PRINTER', 0, 'Printer', 'LIB' FROM generate_series(1,4000) n")
+    execute("ANALYZE inventory_items")
+    settings = MatchingSettings(target_schema=settings.target_schema, max_candidates=1, max_scan_rows=1000)
+    values = {"inventory_number": "L-1234", "item_code": "PRINTER", "sub_code": 0, "name": "Printer"}
+    timings = {mode: [] for mode in ("previous_or_lookup", "primary_inventory_lookup", "fuzzy_fallback")}
+    stats = {}
+    with repo._transaction(settings) as cursor:
+        schema = repo._inspect(cursor, columns, settings)
+        for iteration in range(55):  # Five warmups, then 50 interleaved measurements.
+            for mode in timings:
+                start = perf_counter()
+                if mode == "previous_or_lookup":
+                    rows = repo._rows(cursor, list(columns),
+                        sql.SQL("inventory_number = %s OR item_code = %s"),
+                        [values["inventory_number"], values["item_code"]], settings.max_candidates + 1, schema)
+                    metadata = SearchMetadata(complete=len(rows) <= settings.max_candidates,
+                                              truncated=len(rows) > settings.max_candidates, scanned_rows=len(rows))
+                else:
+                    metadata = SearchMetadata(schema_info=schema, candidate_limit=settings.max_candidates)
+                    rows = repo._search(cursor, values if mode == "primary_inventory_lookup" else {"name": "Printer"},
+                                        columns, settings, metadata)
+                elapsed = (perf_counter() - start) * 1000
+                if iteration >= 5:
+                    timings[mode].append(elapsed)
+                stats[mode] = {"complete_for_scope": metadata.complete, "truncated": metadata.truncated,
+                               "materialized_rows": metadata.scanned_rows, "returned_rows": len(rows)}
+    assert stats["primary_inventory_lookup"]["complete_for_scope"]
+    assert stats["primary_inventory_lookup"]["materialized_rows"] == 1
+    assert stats["previous_or_lookup"]["truncated"] and stats["fuzzy_fallback"]["truncated"]
+    root = Path(__file__).resolve().parents[1]
+    source_hash, _ = implementation_hashes(root)
+    report = {"generated_at_utc": datetime.now(timezone.utc).isoformat(), "rows": 4000, "repeats": 50,
+              "warmup_iterations": 5, "implementation_sha256": source_hash,
+              "benchmark_source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+              "measurement_scope": "Isolated PostgreSQL; existing read-only connection/snapshot; schema audit and connection setup excluded for every mode.",
+              "baseline": "Previous OR inventory_number/item_code SQL with the original sentinel cutoff. Query stage only, not a replay of the old full application.",
+              "stats": stats, "timings": {mode: _timing_summary(samples) for mode, samples in timings.items()}}
+    report["primary_minus_previous_mean_ms"] = (report["timings"]["primary_inventory_lookup"]["mean_ms"]
+                                                - report["timings"]["previous_or_lookup"]["mean_ms"])
+    destination = Path(os.getenv("MATCHING_BENCHMARK_OUTPUT", str(tmp_path / "inventory_search_benchmark.json")))
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

@@ -2,6 +2,11 @@
 
 Ellenőrzés dátuma: **2026-10-10**.
 
+Ez a korábbi verzió történeti riportja. A **2026-10-17-i leltáriszám-alapú
+véglegesítés, a 202 teszt és az új mérések** az
+[aktuális riportban](inventory_number_report.md) találhatók. Az `evaluation/results/`
+állományai már a friss futásokat tartalmazzák; az alábbi számok a korábbi futásra vonatkoznak.
+
 ## A. Elkészült funkciók
 
 A meglévő dokumentumelemzés `ProcessingResult` eredményéből külön indítható,

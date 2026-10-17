@@ -58,7 +58,7 @@ class MatchingEngine:
             technical_conflict = (model_conflict(str(fields["name"]), str(record.values["name"])) or
                                   name_similarity(fields["name"], record.values["name"]) < settings.duplicate_threshold)
         if document.values.get("sub_code") is not None and record.values.get("sub_code") is not None:
-            if document.values["sub_code"] != record.values["sub_code"] and "item_code" in matching:
+            if document.values["sub_code"] != record.values["sub_code"] and any(name in matching for name in IDENTIFIER_FIELDS):
                 conflicts.append("sub_code")
         keys = schema.unique_keys + ([schema.primary_key] if schema.primary_key else []) if schema else []
         verified = stable_identity(record, schema) and any(
@@ -75,7 +75,9 @@ class MatchingEngine:
             score = 1.0 if verified else max(score, settings.likely_threshold)
             reasons.append("Ellenőrzött egyedi kulcs egyezik." if verified else
                            "Az azonosító értéke egyezik; önmagában nincs igazolt egyediség.")
-        if "item_code" in matching and "sub_code" in matching:
+        if "inventory_number" in matching:
+            strategy = "inventory_number_exact" if verified and ["inventory_number"] in keys else "inventory_number_unverified"
+        elif "item_code" in matching and "sub_code" in matching:
             strategy = "composite_identifier"
         elif "name" in matching and any(name in matching for name in ("location", "activation_date")):
             strategy = "composite_fields" if not exact_id else strategy
@@ -111,8 +113,12 @@ class MatchingEngine:
         for rank, candidate in enumerate(candidates, 1):
             candidate.rank = rank
         def decision(status, reason, selected=None, review=True):
+            search.metadata.identity_verified = status == MatchStatus.EXACT_MATCH
             return MatchDecision(status=status, candidates=candidates, matched_record=selected,
                                  reasons=[reason], review_required=review)
+        inventory_matches = [row for row in candidates if "inventory_number" in row.matching_fields]
+        if len(inventory_matches) > 1 or search.metadata.inventory_lookup.matching_rows > 1:
+            return decision(MatchStatus.AMBIGUOUS_MATCH, "A leltári szám több rekordhoz tartozik; kézi adatellenőrzés szükséges.")
         if (not search.metadata.complete or search.metadata.truncated or search.metadata.timed_out
                 or not search.metadata.schema_info or not search.metadata.schema_info.verified
                 or not search.metadata.schema_info.compatible):

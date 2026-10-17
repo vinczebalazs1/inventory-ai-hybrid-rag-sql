@@ -22,13 +22,14 @@ def compare_fields(document: PreparedDocument, record: CandidateRecord,
         origins = [field for field in document.fields if field.target_field == name]
         if not origins:
             comparisons.append(FieldComparison(field=name, database_value=record.values.get(name),
-                               record_id=record.record_id, status=Status.UNKNOWN,
+                               record_id=record.record_id, candidate_rank=record.rank, status=Status.UNKNOWN,
                                explanation="A dokumentumból hiányzó mező nem jelent eltérést vagy törlést."))
             continue
         for origin in origins:
             comparison = FieldComparison(field=name, source_label=origin.source_label,
                 raw_document_value=origin.raw_value, normalized_document_value=origin.normalized_value,
                 database_value=record.values.get(name), record_id=record.record_id,
+                candidate_rank=record.rank,
                 evidence=origin.evidence, page=origin.page, status=Status.NOT_COMPARABLE, explanation="")
             if origin.validation_status in ("INVALID", "CONFLICT"):
                 comparison.status, comparison.explanation = Status.INVALID, origin.explanation or "Ellentmondó dokumentumadat."

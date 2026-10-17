@@ -1,0 +1,51 @@
+{
+  "generated_at_utc": "2026-10-17T10:03:32.422812+00:00",
+  "rows": 4000,
+  "repeats": 50,
+  "warmup_iterations": 5,
+  "implementation_sha256": "5b4b1c6b90a14ed427bfe26d3457bacc72bcb662d9ff7cba4c96a8ab8cda785b",
+  "benchmark_source_sha256": "a4949bb37d81d04a6d6738d005f170dc6f0a4b527d5ba3559c8926880cf43479",
+  "measurement_scope": "Isolated PostgreSQL; existing read-only connection/snapshot; schema audit and connection setup excluded for every mode.",
+  "baseline": "Previous OR inventory_number/item_code SQL with the original sentinel cutoff. Query stage only, not a replay of the old full application.",
+  "stats": {
+    "previous_or_lookup": {
+      "complete_for_scope": false,
+      "truncated": true,
+      "materialized_rows": 2,
+      "returned_rows": 2
+    },
+    "primary_inventory_lookup": {
+      "complete_for_scope": true,
+      "truncated": false,
+      "materialized_rows": 1,
+      "returned_rows": 1
+    },
+    "fuzzy_fallback": {
+      "complete_for_scope": false,
+      "truncated": true,
+      "materialized_rows": 1003,
+      "returned_rows": 1
+    }
+  },
+  "timings": {
+    "previous_or_lookup": {
+      "samples": 50,
+      "mean_ms": 2.410735972225666,
+      "median_ms": 2.3957001976668835,
+      "p95_ms": 2.6757000014185905
+    },
+    "primary_inventory_lookup": {
+      "samples": 50,
+      "mean_ms": 0.5776539724320173,
+      "median_ms": 0.5849499721080065,
+      "p95_ms": 0.6887000054121017
+    },
+    "fuzzy_fallback": {
+      "samples": 50,
+      "mean_ms": 37.99846397712827,
+      "median_ms": 37.73664985783398,
+      "p95_ms": 40.83840036764741
+    }
+  },
+  "primary_minus_previous_mean_ms": -1.8330819997936487
+}

@@ -119,6 +119,22 @@ app/web/document_preview.py
 | `app/web/reconciliation_preview.py` | Külön indítógomb, rangsor, eltérések, indokok és javaslatok |
 | `app/evaluation/` | Offline adatkészlet, futtatás és metrikák |
 | `scripts/evaluate_matching.py` | Exact-only és hibrid determinisztikus módszer összehasonlítása |
+| `app/record_matching/inventory_audit.py` | Read-only leltáriszám-audit, valódi duplikációk és normalizálási ütközések |
+| `scripts/audit_inventory_numbers.py` | Az audit futtatása és JSON-riport mentése |
+| `migrations/001_inventory_number_unique.sql` | Külön jóváhagyással alkalmazható, tranzakciós UNIQUE index |
+| `migrations/001_inventory_number_unique_rollback.sql` | Csak a migráció saját indexének ellenőrzött eltávolítása |
+| `scripts/verify_matching_report.py` | A mérési riport adat- és forráslenyomatainak ellenőrzése |
+
+Az egyeztetés elsőként `inventory_number = %s` alapján keres. Igazolt egyedi,
+konfliktusmentes találatnál kihagyja a másodlagos és fuzzy keresést, és a meglévő
+leltári szám kanonikus JSON-ját használja rekordhivatkozásnak. Egyébként külön
+cikkszám/alszám-keresés, majd a korábbi fuzzy logika következik. A leltári szám,
+a másodlagos kulcs és a fuzzy szakasz teljessége külön metaadat; a célzott találat
+nem állít teljes táblabejárást. A javaslatok és az eltérések jelöltenként is megjelennek.
+
+Az aktuális élő auditban 8 duplikált leltári szám akadályozza a UNIQUE indexet.
+A kód ezt nem kerüli meg: adatjavítás és jóváhagyott migráció előtt nincs bizonyított
+azonosság ezen a táblán. Részletek: [audit és migráció](docs/inventory_number_migration.md).
 
 Az egyeztetés nem hív LLM-et, nem ír az üzleti adatbázisba és nem hoz létre
 Qdrant–PostgreSQL kapcsolatot. A korábbi HYBRID név alapján szűrt RAG-keresése

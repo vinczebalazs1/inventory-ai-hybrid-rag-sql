@@ -1,7 +1,7 @@
 inventory_items:
   description: Table storing inventory items
   columns:
-    item_code: Unique item code
+    item_code: Cikkszám; egyedisége nem feltételezhető, csak adatbázis-kulcs alapján igazolható.
     sub_code: Sub identifier
     activation_date: Activation date of item
     name: Name of the item
@@ -10,5 +10,5 @@ inventory_items:
     current_value: Current value
     currency: Currency type
     quantity: Number of items
-    inventory_number: Internal inventory ID
+    inventory_number: Elsődleges belső leltári szám; nem gyártói sorozatszám vagy Service Tag. A vezető nullák, kötőjelek és kis-/nagybetűk jelentést hordozhatnak. Egyedisége csak adatbázis UNIQUE vagy PRIMARY KEY alapján igazolható.
     location: Physical location

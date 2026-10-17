@@ -25,7 +25,8 @@ def candidate_priority(record: DatabaseRecord, values: dict[str, Scalar]) -> tup
                      values.get("sub_code") is not None and
                      values["item_code"] == record.values.get("item_code") and
                      values["sub_code"] == record.values.get("sub_code"))
-    return exact, composite, name_similarity(values.get("name"), record.values.get("name"))
+    inventory = bool(values.get("inventory_number") and values["inventory_number"] == record.values.get("inventory_number"))
+    return inventory, exact, composite, name_similarity(values.get("name"), record.values.get("name"))
 
 
 def select_candidates(
@@ -36,7 +37,7 @@ def select_candidates(
     relevant = []
     for record in records:
         priority = candidate_priority(record, values)
-        if priority[0] or (settings.strategy == "hybrid" and priority[2] >= settings.duplicate_threshold):
+        if priority[1] or (settings.strategy == "hybrid" and priority[3] >= settings.duplicate_threshold):
             relevant.append(record)
     relevant.sort(key=lambda record: (
         *(-float(value) for value in candidate_priority(record, values)),

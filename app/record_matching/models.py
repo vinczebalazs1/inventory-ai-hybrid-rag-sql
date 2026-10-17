@@ -79,6 +79,17 @@ class DatabaseRecord(Contract):
     values: dict[str, Scalar]
 
 
+class SearchStage(Contract):
+    """matching_rows is a lower bound when truncated; unattempted is not complete."""
+    attempted: bool = False
+    complete: bool = False
+    matching_rows: int = 0
+    truncated: bool = False
+    unique_constraint_verified: bool = False
+    skipped_reason: str | None = None
+    duration_ms: float = 0.0
+
+
 class SearchMetadata(Contract):
     schema_info: SchemaInfo | None = None
     complete: bool = False
@@ -91,6 +102,11 @@ class SearchMetadata(Contract):
     timed_out: bool = False
     warnings: list[str] = Field(default_factory=list)
     duration_ms: float = 0.0
+    inventory_lookup: SearchStage = Field(default_factory=SearchStage)
+    secondary_lookup: SearchStage = Field(default_factory=SearchStage)
+    fuzzy_search: SearchStage = Field(default_factory=SearchStage)
+    identity_verified: bool = False
+    absence_check_complete: bool = False
 
 
 class CandidateSearchResult(Contract):
@@ -140,6 +156,7 @@ class FieldComparison(Contract):
     page: int | None = None
     explanation: str
     record_id: str | None = None
+    candidate_rank: int | None = None
 
 
 class SuggestedAction(Contract):
@@ -152,6 +169,8 @@ class SuggestedAction(Contract):
     missing_fields: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
     executable: Literal[False] = False
+    candidate_rank: int | None = None
+    target_identity_verified: bool = False
 
 
 class ValidationSummary(Contract):
@@ -164,7 +183,7 @@ class ValidationSummary(Contract):
 
 class ProcessingMetadata(Contract):
     strategy: str
-    algorithm_version: str = "1.0"
+    algorithm_version: str = "1.1"
     settings_fingerprint: str = ""
     reconciliation_ms: float = 0.0
     candidate_search_ms: float = 0.0

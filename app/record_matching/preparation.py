@@ -71,6 +71,10 @@ def prepare_document(result: ProcessingResult, columns: dict[str, str],
             if item.validation_status != "UNSUPPORTED":
                 item.validation_status = "INVALID"
             item.explanation = str(exc)
+            # An invalid supplied identifier cannot be silently ignored in favour
+            # of an otherwise exact secondary key.
+            if field in IDENTIFIER_FIELDS:
+                prepared.blocked = True
             prepared.validation_issues.append(ValidationIssue(field=field, severity="warning", message=str(exc)))
         prepared.fields.append(item)
 

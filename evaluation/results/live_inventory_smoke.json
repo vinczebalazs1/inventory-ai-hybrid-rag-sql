@@ -1,0 +1,69 @@
+{
+  "checked_at_utc": "2026-10-17T10:05:49.877904+00:00",
+  "implementation_sha256": "5b4b1c6b90a14ed427bfe26d3457bacc72bcb662d9ff7cba4c96a8ab8cda785b",
+  "read_only": true,
+  "location_unchanged": true,
+  "scope": "Real Docling DOCX parsing and actual PostgreSQL reconciliation. Field extraction/mapping supplied manually; no live LLM.",
+  "cases": [
+    {
+      "sample": "examples/inventory_number/egyezo.docx",
+      "status": "SEARCH_INCOMPLETE",
+      "candidate_count": 100,
+      "first_inventory_number": "L-94279",
+      "inventory_lookup": {
+        "attempted": true,
+        "complete": true,
+        "matching_rows": 1,
+        "truncated": false,
+        "unique_constraint_verified": false,
+        "skipped_reason": null,
+        "duration_ms": 1.7391997389495373
+      },
+      "identity_verified": false,
+      "search_scope": "full_table",
+      "search_complete": false,
+      "actions": [
+        {
+          "type": "MANUAL_REVIEW",
+          "affected_fields": [],
+          "executable": false,
+          "target_identity_verified": false
+        }
+      ]
+    },
+    {
+      "sample": "examples/inventory_number/helyszinvaltozas.docx",
+      "status": "SEARCH_INCOMPLETE",
+      "candidate_count": 100,
+      "first_inventory_number": "L-94279",
+      "inventory_lookup": {
+        "attempted": true,
+        "complete": true,
+        "matching_rows": 1,
+        "truncated": false,
+        "unique_constraint_verified": false,
+        "skipped_reason": null,
+        "duration_ms": 1.6397000290453434
+      },
+      "identity_verified": false,
+      "search_scope": "full_table",
+      "search_complete": false,
+      "actions": [
+        {
+          "type": "UPDATE_CANDIDATE",
+          "affected_fields": [
+            "location"
+          ],
+          "executable": false,
+          "target_identity_verified": false
+        },
+        {
+          "type": "MANUAL_REVIEW",
+          "affected_fields": [],
+          "executable": false,
+          "target_identity_verified": false
+        }
+      ]
+    }
+  ]
+}

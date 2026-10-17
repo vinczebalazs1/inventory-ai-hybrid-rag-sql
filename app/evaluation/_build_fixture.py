@@ -259,10 +259,70 @@ case("T48", "near_tie", "Két hasonló nevű kandidáns ugyanazon helyszínen; a
       "r2": {"item_code": "NEAR-B", "name": "Dell Professional Monitor P24 B", "location": "Esztergom"}},
      ["r2"], "AMBIGUOUS_MATCH", REVIEW, True, uncertain=True)
 
+case("I01", "inventory_primary", "A leltári szám elsődleges az egyedi cikkszám mellett is.",
+     {"inventory_number": "L-94279", "item_code": "E0001", "sub_code": 0, "name": "Printer"},
+     {"r1": {"inventory_number": "L-94279", "item_code": "E0001", "sub_code": 0, "name": "Printer"}},
+     ["r1"], unique=[["inventory_number"], ["item_code"]])
+case("I02", "inventory_unverified_delta", "UNIQUE nélkül a helyszíneltérés csak ellenőrizendő lehetőség.",
+     {"inventory_number": "L-1", "location": "KGK"}, {"r1": {"inventory_number": "L-1", "location": "LIB"}},
+     ["r1"], status="LIKELY_MATCH", actions=("UPDATE_CANDIDATE", "MANUAL_REVIEW"), review=True,
+     unique=[], deltas=[("r1", "location")], uncertain=True)
+case("I03", "inventory_location_change", "Igazolt leltári szám mellett a helyszín változhat.",
+     {"inventory_number": "L-1", "location": "KGK"}, {"r1": {"inventory_number": "L-1", "location": "LIB"}},
+     ["r1"], actions=UPDATE, review=True, unique=[["inventory_number"]], deltas=[("r1", "location")])
+case("I04", "inventory_duplicate_secondary", "Duplikált leltári számot egyedi cikkszám mellett sem választunk önkényesen.",
+     {"inventory_number": "DUP", "item_code": "A"},
+     {"r1": {"inventory_number": "DUP", "item_code": "A"}, "r2": {"inventory_number": "DUP", "item_code": "B"}},
+     ["r1"], status="AMBIGUOUS_MATCH", actions=REVIEW, review=True, uncertain=True)
+case("I05", "nullable_inventory", "NULL leltári szám mellett egyedi másodlagos kulcs működhet.",
+     {"item_code": "A"}, {"r1": {"item_code": "A", "inventory_number": None}},
+     ["r1"], unique=[["inventory_number"], ["item_code"]])
+case("I06", "inventory_leading_zero", "A vezető nullák megkülönböztetik az azonosítót.",
+     {"inventory_number": "L-001"}, {"r1": {"inventory_number": "L-1"}},
+     status="NO_MATCH", actions=REVIEW, review=True, unique=[["inventory_number"]])
+case("I07", "inventory_conflict", "Két azonosító külön rekordra mutat.",
+     {"inventory_number": "L-1", "item_code": "B"},
+     {"r1": {"inventory_number": "L-1", "item_code": "A"}, "r2": {"inventory_number": "L-2", "item_code": "B"}},
+     ["r1"], status="CONFLICTING_DATA", actions=REVIEW, review=True, uncertain=True, unique=[["inventory_number"]])
+case("I08", "inventory_service_tag", "Service Tag nem lehet belső leltári szám.",
+     [{"field": "inventory_number", "value": "TAG", "label": "Service Tag"}],
+     {"r1": {"inventory_number": "TAG"}}, ["r1"], status="CONFLICTING_DATA", actions=REVIEW,
+     review=True, uncertain=True, unique=[["inventory_number"]])
+case("I09", "inventory_key_missing", "Hiányzó leltári számnál a leíró adatok kereshetők, de nem bizonyítanak azonosságot.",
+     {"name": "Office Printer", "location": "KGK"},
+     {"r1": {"inventory_number": "L-1", "name": "Office Printer", "location": "KGK"}},
+     ["r1"], status="LIKELY_MATCH", actions=REVIEW, review=True, unique=[["inventory_number"]])
+case("I10", "inventory_fuzzy_fallback", "Névelírásból csak valószínű egyezés készül.",
+     {"name": "Dell Latitdue 5540", "location": "KGK"},
+     {"r1": {"inventory_number": "L-1", "name": "Dell Latitude 5540", "location": "KGK"}},
+     ["r1"], status="LIKELY_MATCH", actions=REVIEW, review=True, unique=[["inventory_number"]], deltas=[("r1", "name")])
+case("I11", "inventory_large_table", "4000 közös nevű és cikkszámú rekordból célzott egyedi találat.",
+     {"inventory_number": "L-1234", "item_code": "PRINTER", "sub_code": 0, "name": "Printer"},
+     {f"r{i}": {"inventory_number": f"L-{i}", "item_code": "PRINTER", "sub_code": 0, "name": "Printer"} for i in range(4000)},
+     ["r1234"], unique=[["inventory_number"]])
+case("I12", "inventory_partial_fuzzy", "Egyediség nélkül a részleges fuzzy keresés nem bizonyít globális hiányt.",
+     {"inventory_number": "L-0", "name": "Printer"},
+     {f"r{i}": {"inventory_number": f"L-{i}", "name": "Printer"} for i in range(1100)},
+     ["r0"], status="SEARCH_INCOMPLETE", actions=REVIEW, review=True, uncertain=True, unique=[])
+case("I13", "secondary_composite_priority", "Igazolt cikkszám és alszám másodlagos kulcs.",
+     {"item_code": "A", "sub_code": 2}, {"r1": {"item_code": "A", "sub_code": 1}, "r2": {"item_code": "A", "sub_code": 2}},
+     ["r2"], unique=[["item_code", "sub_code"]])
+case("I14", "invalid_primary_with_secondary", "Hibás elsődleges azonosítót nem ír felül egy másodlagos találat.",
+     [{"field": "inventory_number", "value": "L-1", "invalid": True}, {"field": "item_code", "value": "A"}],
+     {"r1": {"inventory_number": "L-1", "item_code": "A"}}, ["r1"],
+     status="CONFLICTING_DATA", actions=REVIEW, review=True, uncertain=True)
+case("I15", "inventory_new_after_full_search", "Új leltári szám és név, teljes keresés, nincs hasonló jelölt.",
+     {"inventory_number": "NEW", "name": "Office Printer"}, {},
+     status="NO_MATCH", actions=NEW, review=True, unique=[["inventory_number"]])
+case("I16", "inventory_alternate_candidate", "Hiányzó leltári szám mellett a névben egyező másik rekord blokkolja a létrehozást.",
+     {"inventory_number": "NEW", "name": "Office Printer"},
+     {"r1": {"inventory_number": "OLD", "name": "Office Printer"}},
+     status="NO_MATCH", actions=REVIEW, review=True, unique=[["inventory_number"]])
+
 dataset = {
-    "version": 1,
+    "version": 2,
     "description": "Kézzel tervezett szintetikus rekordegyeztetési esetek; nem valós üzleti adatok. Az elvárt kimenetek előzetes policy-címkék.",
-    "split_policy": "10 kalibrációs és 48 külön teszteset. A küszöbök nem optimalizáltak ezekre az esetekre; a végső mérést a test halmazon kell értelmezni.",
+    "split_policy": "10 kalibrációs és 64 teszteset. A korábbi 58 eset megmaradt; 16 új, kézzel címkézett leltáriszám-eset hozzáadva. Ismert fejlesztési regressziós készlet; nem független üzemi teszthalmaz.",
     "cases": cases,
 }
 if __name__ == "__main__":

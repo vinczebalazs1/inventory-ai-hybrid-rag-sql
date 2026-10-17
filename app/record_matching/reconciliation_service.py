@@ -75,6 +75,11 @@ def reconcile_document(processing_result: ProcessingResult, *, repository: Candi
         stage = "comparison"
         if decision.matched_record:
             output.field_comparisons = compare_fields(document, decision.matched_record, columns)
+        else:
+            # Candidate rank is a display reference, never an invented DB identity.
+            for candidate in decision.candidates:
+                if "inventory_number" in candidate.matching_fields:
+                    output.field_comparisons.extend(compare_fields(document, candidate, columns))
         stage = "suggestions"
         output.suggested_actions = suggest_actions(document, decision, output.field_comparisons,
                                                    search.metadata, columns, settings)

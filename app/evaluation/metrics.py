@@ -32,6 +32,8 @@ class Observation:
     examined_records: int = 0
     supplied_fields: int = 0
     search_complete: bool = False
+    search_path: str = "unknown"
+    inventory_unique_available: bool = False
     timings_ms: dict[str, list[float]] = field(default_factory=dict)
 
 
@@ -146,6 +148,7 @@ def compute_metrics(observations: list[Observation], ks: tuple[int, ...] = (1, 3
             "examined_rows": sum(o.examined_records for o in observations),
             "document_fields": sum(o.supplied_fields for o in observations),
         },
+        "search_paths": dict(sorted(Counter(o.search_path for o in observations).items())),
         "timings": {
             stage: _timing_summary([value for o in observations for value in o.timings_ms.get(stage, [])])
             for stage in stages

@@ -111,12 +111,19 @@ JSON-visszaolvasáshoz `ReconciliationResult.model_validate_json()` használhat�
 
 ## Adatbázisséma, rekordazonosság és keresés
 
-A 2026-10-10-i, kizárólag metaadatokat olvasó ellenőrzés eredménye:
-az `inventory_items` 11 oszlopa egyezik a sémafájllal; nincs PRIMARY KEY vagy
-teljes UNIQUE index. Gépi bizonyíték: [schema_audit.json](../evaluation/results/schema_audit.json).
-Ezért az aktuális üzleti táblából a rendszer nem ad igazolt `EXACT_MATCH`
-státuszt vagy konkrét rekordra irányuló csatolási/frissítési javaslatot.
-A lehetséges egyezéseket és eltéréseket továbbra is megmutatja.
+A kiválasztott elsődleges üzleti kulcs az **`inventory_number`**, a már meglévő
+leltári szám. Nem keletkezik új eszköz-ID, UUID vagy adatbázisoszlop. Ha ennek
+egyediségét megfelelő adatbázis-index garantálja, a stabil rekordhivatkozás például
+`{"inventory_number":"L-94279"}`. Más egyedi kulcs megléte esetén is ezt részesítjük előnyben.
+
+A **2026-10-17-i read-only audit** 1000 rekordot, 8 duplikált leltáriszám-csoportot
+(16 érintett sort), 0 NULL, 0 üres és 0 whitespace értéket talált. Nincs igazolt
+PRIMARY KEY vagy teljes UNIQUE index; a 11 oszlop megfelel a fájlsémának.
+Gépi bizonyíték: [inventory_number_audit.json](../evaluation/results/inventory_number_audit.json).
+Az aktuális üzleti táblán ezért nem igazolható EXACT rekordazonosság. A pontos
+értékegyezések, eltérések és csak ellenőrizendő frissítési lehetőségek láthatók.
+A [migrációs útmutató](inventory_number_migration.md) leírja a kézi adatellenőrzést
+és a külön jóváhagyással alkalmazható indexet. Az alkalmazás nem futtat migrációt.
 
 Minden keresés saját `REPEATABLE READ`, `READ ONLY` tranzakciót használ.
 A konfigurációból engedélyezett tábla és oszlopok `psycopg2.sql.Identifier`
@@ -133,17 +140,52 @@ RLS és hagyományos táblaöröklés mellett a teljes keresést nem állítjuk 
 
 Keresési lépések:
 
-1. `inventory_number` vagy `item_code` pontos egyezése, OR kapcsolattal,
-   hogy az egymásnak ellentmondó azonosítóhivatkozások is látszódjanak.
-2. Egyetlen, igazolt egyedi azonosítóegyezés lezárhatja az adott azonosság
-   keresését (`verified_identifier` scope). Ez nem a teljes tábla bejárása.
-3. Egyébként legfeljebb `max_scan_rows + 1` soros vizsgálat. A plusz sor jelzi
+1. Validált leltári szám esetén külön, paraméterezett `WHERE inventory_number = %s`
+   lekérdezés fut. A cikkszám nem bővíti OR feltétellel ezt a találati halmazt.
+2. Egyetlen, adatbázisban egyedi leltáriszám-találatnál ellenőrizzük a dokumentum
+   többi azonosítóját a sor értékeivel szemben. Ha összhangban vannak, a keresés
+   lezárul (`verified_identifier`). Másodlagos/fuzzy keresés nem fut. A név/modellek
+   biztonsági vétóit és az összes mező összehasonlítását ezután is alkalmazzuk.
+3. Egyébként külön cikkszámos keresés következik. Igazolt `(item_code, sub_code)`
+   kulcs és mindkét bemeneti érték esetén közvetlen összetett feltételt használunk.
+   Ellentmondó leltári szám és cikkszám jelöltjei megmaradnak; nem választunk önkényesen.
+4. Ha továbbra sincs igazolt találat, hibrid módban legfeljebb `max_scan_rows + 1` soros vizsgálat következik. A plusz sor jelzi
    a korlát túllépését. Kis táblán minden sort megvizsgálunk, majd jelöltet válogatunk.
-4. Nagyobb táblán SQL-szűrés: `item_code + sub_code`, `name + location`,
+5. Nagyobb táblán SQL-szűrés: `item_code + sub_code`, `name + location`,
    `name + activation_date`, valamint legfeljebb 8 névtoken `ILIKE` keresése.
    A LIKE metakarakterek escape-eltek. Ez a tartomány mindig részleges.
-5. A jelölteket pontos azonosító, összetett kód, névhasonlóság és stabil
+6. A jelölteket elsődlegesen pontos leltári szám, majd másodlagos azonosító,
+   összetett kód, névhasonlóság és stabil
    tartalmi rendezés sorolja előre. A végső rangsort a külön matcher számolja.
+
+Az átfedő lekérdezések nem többszörözik a sorokat, a valódi duplikált adatbázissorok
+viszont megmaradnak. Több leltáriszám-találat mindig bizonytalan; még igazolt
+másodlagos kulcs sem választ közülük automatikusan. A már megfigyelt duplikációt
+akkor is jelezzük, ha a jelöltlimit miatt csak a találatok egy része jelenik meg.
+
+### A keresés teljessége
+
+A régi `complete`, `scope`, `truncated` mezők megmaradtak. Új mezők:
+
+| Metadata | Jelentés |
+|---|---|
+| `inventory_lookup` | Elsődleges leltáriszám-keresés állapota |
+| `secondary_lookup` | Cikkszám vagy összetett kulcs keresésének állapota |
+| `fuzzy_search` | Teljes vizsgálat / korlátos névkeresés állapota |
+| `identity_verified` | A matcher ténylegesen EXACT azonosságot igazolt |
+| `absence_check_complete` | Befejezett globális hibrid keresés, jelöltvesztés nélkül |
+
+Mindhárom szakaszban: `attempted`, `complete`, `matching_rows`, `truncated`,
+`unique_constraint_verified`, `skipped_reason`, `duration_ms`. Korlátos eredménynél
+a sorok száma alsó becslés. Kihagyott szakasz nem jelent befejezett keresést.
+A `scanned_rows` a klienshez lekért sorok összege, nem az adatbázismotor által
+belsőleg érintett lapok/sorok száma.
+
+Egy igazolt leltáriszám-találatnál `complete=True`, `scope=verified_identifier`,
+`inventory_lookup.complete=True`, `fuzzy_search.attempted=False`,
+`absence_check_complete=False`. Ez a konkrét rekord azonosítására elég;
+globális rekordhiányt nem bizonyít. Új rekordot csak a teljes hibrid keresés
+és a további validációs/javaslati feltételek együtt alapozhatnak meg.
 
 A lekérdezések eredményét korlátozzuk, de a PostgreSQL végrehajtási terve
 index nélkül továbbra is bejárhatja/rendezheti a táblát. A statement timeout
@@ -177,6 +219,9 @@ Az alapképlet után alkalmazott, magyarázatban megjelenő szabályok:
 - Igazolt egyedi azonosítókulcs egyezése 1 pont. Összetett azonosítóhoz minden
   kulcsrész dokumentumbeli egyezése szükséges. Egyéb stabil DB-kulcs puszta
   létezése nem változtatja a névegyezést pontos azonosítóegyezéssé.
+  Az igazolt leltáriszám-egyezés stratégiája `inventory_number_exact`; ezt a
+  cikkszám/alszám további egyezése nem írja felül. Helyszínváltozás mellett is
+  ugyanaz a rekord azonosítható; az eltérés külön frissítési javaslatba kerül.
 - Nem igazoltan egyedi, de pontos azonosítóegyezés alsó pontkorlátja a likely
   küszöb. Egyediség nélkül minden pontszám legfeljebb `exact_threshold - 0,001`.
 - Ellentmondó azonosító vétó: 0 pont. Eltérő modellszámtokenek vagy nagyon
@@ -227,6 +272,10 @@ minden összehasonlításnál megmarad. LIKELY jelöltnél az eltérések tájé
   validált, visszakereshető bizonyítékkal. Ez továbbra is tanácsadó eredmény.
 - `UPDATE_CANDIDATE`: az előző feltételek mellett tényleges mezőeltérések.
   Mindig emberi felülvizsgálatot igényel. Pénzügyi/azonosítómezőn külön korlátjelzés.
+  Pontosan egyező, de nem igazolt leltári számnál a konfliktusmentes jelölt
+  nem azonosító jellegű eltérései külön ellenőrizendő lehetőségként jelenhetnek meg.
+  Ilyenkor `target_record=None`, `target_identity_verified=False`;
+  a `candidate_rank` csak a táblázat sorához kapcsolja a javaslatot.
 - `CREATE_RECORD_CANDIDATE`: teljes táblán befejezett hibrid keresés, NO_MATCH,
   validált név és legalább egy azonosító, evidencia, konfliktus és közeli névjelölt
   nélkül. Megadja a rendelkezésre álló és hiányzó mezőket; mindig review szükséges.
@@ -234,6 +283,10 @@ minden összehasonlításnál megmarad. LIKELY jelöltnél az eltérések tájé
   illetve minden módosítási/létrehozási javaslatnál.
 
 Minden javaslat `executable=False`; végrehajtó szolgáltatás nincs a modulban.
+Bizonytalan leltáriszám-találatoknál a mezőösszehasonlítás jelöltenként jelenik meg;
+a `FieldComparison.candidate_rank` megkülönbözteti az azonosító nélküli sorokat is.
+Az új mezőknek alapértékük van: a korábbi JSON kimenetek az új modellekkel
+olvashatók. A régi, többletmezőket tiltó külső kliensekhez modellfrissítés kell.
 
 ## Konfiguráció és hibakezelés
 
@@ -293,7 +346,9 @@ A szintetikus adatokon mért eredmények nem jelentenek üzemi pontossági garan
 venv\Scripts\python -m pytest -q
 venv\Scripts\python -m pytest -q --run-docling-pdf --run-matching-postgres
 venv\Scripts\python -m scripts.audit_matching_schema --output evaluation/results/schema_audit.json
+venv\Scripts\python -m scripts.audit_inventory_numbers --output evaluation/results/inventory_number_audit.json
 venv\Scripts\python -m scripts.evaluate_matching --repeats 5
+venv\Scripts\python -m scripts.verify_matching_report
 ```
 
 Az integrációs teszt új, ideiglenes PostgreSQL-klasztert indít, kizárólag

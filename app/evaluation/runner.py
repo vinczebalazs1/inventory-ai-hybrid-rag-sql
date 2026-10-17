@@ -5,17 +5,18 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import platform
+from datetime import datetime, timezone
 from importlib.metadata import version
 from time import perf_counter
 
 from app.document_processing.models import (ExtractedField, ExtractionResult, MappedField,
     MappingResult, ParsedDocument, ProcessingResult, ValidationIssue)
 from app.document_processing.validation_service import normalize
-from app.record_matching.candidate_service import select_candidates
+from app.record_matching.candidate_service import select_candidates, fuzzy_tokens
 from app.record_matching.config import MatchingSettings
 from app.record_matching.models import CandidateSearchResult, ComparisonStatus, SchemaInfo, SearchMetadata
 from app.record_matching.reconciliation_service import reconcile_document
-from app.record_matching.repository import record_from_row
+from app.record_matching.repository import InventoryRepository, record_from_row
 from app.services.schema_service import load_schema
 from .dataset import EvaluationCase, load_dataset
 from .metrics import Observation, compute_metrics
@@ -52,8 +53,8 @@ def processing_input(case: EvaluationCase) -> ProcessingResult:
             validation_issues=issues)
 
 
-class FixtureRepository:
-    """In-memory retrieval includes actual selection/limits but no PostgreSQL latency."""
+class FixtureRepository(InventoryRepository):
+    """Runs the production search stages; only SQL row reads are simulated."""
     def __init__(self, case: EvaluationCase):
         self.case = case
         self.columns = case_columns(case)
@@ -74,18 +75,31 @@ class FixtureRepository:
         start = perf_counter()
         if self.case.search_status == "error":
             raise ConnectionError("Simulated offline database failure")
-        records, truncated = select_candidates(self.rows, values, settings)
-        complete = self.case.search_status == "complete" and not truncated
-        if self.case.search_status in ("timeout", "schema_mismatch"):
-            records = []
-        scope = "full_table" if settings.strategy == "hybrid" else "exact_identifiers"
-        if not complete:
-            scope = "fixture_" + self.case.search_status
-        return CandidateSearchResult(records=records, metadata=SearchMetadata(schema_info=self.schema,
-            complete=complete, scope=scope, strategies=["offline_" + settings.strategy],
-            candidate_limit=settings.max_candidates, returned_candidates=len(records), scanned_rows=len(self.rows),
-            truncated=truncated or self.case.search_status == "partial", timed_out=self.case.search_status == "timeout",
-            duration_ms=(perf_counter() - start) * 1000))
+        metadata = SearchMetadata(schema_info=self.schema, candidate_limit=settings.max_candidates)
+        records = []
+        if self.case.search_status not in ("timeout", "schema_mismatch"):
+            records = self._search(None, values, expected_columns, settings, metadata)
+        if self.case.search_status != "complete":
+            metadata.complete = metadata.absence_check_complete = False
+            metadata.scope = "fixture_" + self.case.search_status
+            metadata.truncated = self.case.search_status == "partial"
+            metadata.timed_out = self.case.search_status == "timeout"
+        metadata.returned_candidates = len(records)
+        metadata.duration_ms = (perf_counter() - start) * 1000
+        return CandidateSearchResult(records=records, metadata=metadata)
+
+    def _identifier_rows(self, cursor, columns, key, values, limit, schema):
+        return [row for row in self.rows if all(row.values.get(name) == values[name] for name in key)][:limit]
+
+    def _table_rows(self, cursor, columns, limit, schema):
+        return self.rows[:limit]
+
+    def _filtered_rows(self, cursor, columns, values, expected, limit, schema):
+        tokens = fuzzy_tokens(str(values.get("name") or ""))
+        return [row for row in self.rows if
+                any(values.get(name) is not None and row.values.get(name) == values[name]
+                    for name in ("inventory_number", "item_code"))
+                or any(token in str(row.values.get("name") or "").lower() for token in tokens)][:limit]
 
 
 def evaluate_case(case: EvaluationCase, strategy: str, repeats: int = 3) -> Observation:
@@ -94,13 +108,19 @@ def evaluate_case(case: EvaluationCase, strategy: str, repeats: int = 3) -> Obse
     repository = FixtureRepository(case)
     processing = processing_input(case)
     settings = MatchingSettings(strategy=strategy)
-    timings = {"candidate_search": [], "scoring": [], "total": []}
+    timings = {"candidate_search": [], "scoring": [], "total": [], "inventory_lookup": [],
+               "secondary_lookup": [], "fuzzy_search": []}
     previous = None
     for _ in range(repeats):
         result = reconcile_document(processing, repository=repository, settings=settings, columns=repository.columns)
         stable = result.model_dump(mode="json")
         stable["processing_metadata"] = {key: value for key, value in stable["processing_metadata"].items() if not key.endswith("_ms")}
         stable["search_metadata"].pop("duration_ms")
+        for stage in ("inventory_lookup", "secondary_lookup", "fuzzy_search"):
+            stable["search_metadata"][stage].pop("duration_ms")
+            measured = getattr(result.search_metadata, stage)
+            if measured.attempted:
+                timings[stage].append(measured.duration_ms)
         if previous is not None and previous != stable:
             raise AssertionError(f"Nondeterministic decision for {case.id}/{strategy}")
         previous = stable
@@ -120,7 +140,17 @@ def evaluate_case(case: EvaluationCase, strategy: str, repeats: int = 3) -> Obse
         predicted_deltas=tuple(sorted({(selected, field.field) for field in result.field_comparisons
                                       if field.status == ComparisonStatus.DIFFERENT and selected is not None})),
         supplied_records=len(case.records), examined_records=result.search_metadata.scanned_rows,
-        supplied_fields=len(case.document_fields), search_complete=result.search_metadata.complete, timings_ms=timings)
+        supplied_fields=len(case.document_fields), search_complete=result.search_metadata.complete,
+        search_path=result.search_metadata.scope, inventory_unique_available=["inventory_number"] in case.unique_keys,
+        timings_ms=timings)
+
+
+def implementation_hashes(root: Path) -> tuple[str, dict[str, str]]:
+    sources = sorted((root / "app").rglob("*.py")) + sorted((root / "scripts").glob("*.py"))
+    sources += sorted((root / "config").glob("*")) + sorted((root / "migrations").glob("*.sql"))
+    manifest = {path.relative_to(root).as_posix(): sha256(path.read_bytes()).hexdigest()
+                for path in sources if path.is_file()}
+    return sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest(), manifest
 
 
 def run_evaluation(dataset_path: Path, output_dir: Path, repeats: int = 3) -> dict:
@@ -128,14 +158,18 @@ def run_evaluation(dataset_path: Path, output_dir: Path, repeats: int = 3) -> di
     observations = [evaluate_case(case, strategy, repeats) for strategy in ("exact_only", "hybrid") for case in dataset.cases]
     metrics = {split: {strategy: compute_metrics([o for o in observations if o.split == split and o.strategy == strategy])
                       for strategy in ("exact_only", "hybrid")} for split in ("calibration", "test")}
-    report = {"dataset_sha256": sha256(dataset_path.read_bytes()).hexdigest(), "python": platform.python_version(),
+    report = {"generated_at_utc": datetime.now(timezone.utc).isoformat(), "dataset_version": dataset.version,
+              "dataset_sha256": sha256(dataset_path.read_bytes()).hexdigest(), "python": platform.python_version(),
               "settings": {strategy: MatchingSettings(strategy=strategy).model_dump() for strategy in ("exact_only", "hybrid")},
               "repeats": repeats, "dataset_cases": len(dataset.cases), "metrics": metrics,
               "measurement_scope": "Offline synthetic retrieval and actual matching service; no LLM or PostgreSQL latency.",
               "reference_policy": "Frozen manual expectations may disagree with implementation; discrepancies are retained in CSV."}
     root = Path(__file__).resolve().parents[2]
-    sources = sorted((root / "app/record_matching").glob("*.py")) + sorted((root / "app/evaluation").glob("*.py"))
-    report["implementation_sha256"] = sha256(b"".join(path.name.encode() + path.read_bytes() for path in sources)).hexdigest()
+    report["implementation_sha256"], report["source_manifest"] = implementation_hashes(root)
+    report["test_cohorts"] = {group: {strategy: compute_metrics([o for o in observations
+        if o.split == "test" and o.strategy == strategy and o.inventory_unique_available == verified])
+        for strategy in ("exact_only", "hybrid")}
+        for group, verified in (("inventory_unique", True), ("no_inventory_unique", False))}
     report["libraries"] = {name: version(name) for name in ("rapidfuzz", "pydantic", "psycopg2-binary")}
     report["hybrid_minus_baseline"] = {}
     for split in ("calibration", "test"):
