@@ -1,0 +1,135 @@
+{
+  "environment": "isolated PostgreSQL, concurrent loaders, single run; not a general performance guarantee",
+  "count": 10000,
+  "generation_ms": 191.12459989264607,
+  "load_outcomes": [
+    {
+      "database": "inventory_ai_clean",
+      "operation": "load",
+      "dry_run": false,
+      "status": "loaded",
+      "record_count": 10000,
+      "planned_count": 10000,
+      "canonical_dataset_sha256": "d79050e42368cc08d12273df5a478c608eb5f60bf220ddf4daa660e98d30180c",
+      "duration_ms": 1376.650100108236
+    },
+    {
+      "database": "inventory_ai_clean",
+      "operation": "load",
+      "dry_run": false,
+      "status": "already_loaded",
+      "record_count": 10000,
+      "planned_count": 10000,
+      "canonical_dataset_sha256": "d79050e42368cc08d12273df5a478c608eb5f60bf220ddf4daa660e98d30180c",
+      "duration_ms": 1847.3077001981437
+    }
+  ],
+  "verification": {
+    "database": "inventory_ai_clean",
+    "read_only": true,
+    "schema_compatible": true,
+    "constraints_verified": true,
+    "checks": {
+      "clean_inventory_format": true,
+      "clean_quantity_one": true,
+      "clean_name_nonblank": true,
+      "clean_item_nonblank": true,
+      "clean_location_nonblank": true,
+      "clean_purchase_nonnegative": true,
+      "clean_depreciation_nonnegative": true,
+      "clean_current_nonnegative": true,
+      "clean_currency_code": true
+    },
+    "unique_keys": [
+      [
+        "inventory_number"
+      ]
+    ],
+    "not_null_columns": [
+      "activation_date",
+      "currency",
+      "current_value",
+      "depreciation",
+      "inventory_number",
+      "item_code",
+      "location",
+      "name",
+      "purchase_value",
+      "quantity",
+      "sub_code"
+    ],
+    "errors": [],
+    "validation_passed": true,
+    "record_count": 10000,
+    "unique_inventory_numbers": 10000,
+    "violations": {
+      "record_count": 0,
+      "duplicate_inventory_numbers": 0,
+      "invalid_inventory_numbers": 0,
+      "invalid_quantities": 0,
+      "invalid_names": 0,
+      "invalid_locations": 0,
+      "invalid_currencies": 0,
+      "financial_relationship": 0,
+      "catalog_mismatch": 0,
+      "price_band": 0,
+      "invalid_dates": 0,
+      "depreciation_rule": 0,
+      "canonical_identifiers": 0,
+      "category_distribution": 0
+    },
+    "category_counts": {
+      "laptop": 3000,
+      "desktop": 2000,
+      "monitor": 2000,
+      "printer": 1000,
+      "switch": 400,
+      "router": 300,
+      "network": 300,
+      "projector": 400,
+      "server": 300,
+      "office": 300
+    },
+    "model_counts": {
+      "Dell Latitude 5540": 600,
+      "Dell Latitude 5550": 600,
+      "Lenovo ThinkPad T14 Gen 4": 600,
+      "HP EliteBook 840 G10": 600,
+      "HP ProBook 450 G10": 600,
+      "Dell OptiPlex 7010": 667,
+      "Lenovo ThinkCentre M70q": 667,
+      "HP EliteDesk 800 G6": 666,
+      "Dell UltraSharp U2723QE": 667,
+      "Dell P2422H": 667,
+      "HP E24 G4": 666,
+      "HP LaserJet Pro M404dn": 334,
+      "HP LaserJet Pro M405dn": 333,
+      "Brother HL-L5200DW": 333,
+      "Cisco Catalyst 9200": 200,
+      "Cisco Catalyst 2960": 200,
+      "Cisco ISR 1100": 150,
+      "MikroTik RB4011": 150,
+      "Ubiquiti UniFi U6 Pro": 150,
+      "TP-Link Omada EAP245": 150,
+      "Epson EB-FH52": 200,
+      "BenQ MW550": 200,
+      "Dell PowerEdge R450": 150,
+      "HPE ProLiant DL360 Gen10": 150,
+      "Fujitsu ScanSnap S1300i": 150,
+      "APC Back-UPS Pro BR900": 150
+    },
+    "location_counts": {
+      "LIB": 1990,
+      "KGK": 2029,
+      "KANDÓ": 1968,
+      "BARK": 2023,
+      "NIK": 1990
+    },
+    "repeated_item_codes": 26,
+    "dataset_hash_verified": true,
+    "canonical_dataset_sha256": "d79050e42368cc08d12273df5a478c608eb5f60bf220ddf4daa660e98d30180c",
+    "duration_ms": 668.5999999754131
+  },
+  "exact_lookup_ms": 53.76690020784736,
+  "implementation_sha256": "184c273f346a4e9adda1019ef719c156e3c827a5116481af428d66e14c470036"
+}

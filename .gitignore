@@ -13,6 +13,7 @@ ENV/
 .env
 .env.*
 !.env.example
+!.env.clean.example
 
 # Test, coverage, and tooling cache
 .pytest_cache/

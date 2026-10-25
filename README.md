@@ -93,7 +93,7 @@ Igazolt UNIQUE kulcs és konfliktusmentes pontos találat esetén `EXACT_MATCH`
 keletkezik, teljes táblás fuzzy keresés nélkül. Helyszíneltérés ettől még lehet:
 ilyenkor a rendszer külön frissítési javaslatot mutat. Új eszköz-ID nem szükséges.
 
-**Aktuális adatbázishelyzet (2026-10-17):** 1000 sor, 8 duplikált leltári szám,
+**Történeti audit az `inventory` adatbázisról (2026-10-17):** 1000 sor, 8 duplikált leltári szám,
 16 érintett rekord, nincs igazolt UNIQUE index. A migráció elkészült, de az üzleti
 adatbázison nem futott le. Előbb kézi adatellenőrzés, majd explicit jóváhagyás kell.
 Az [audit és migrációs útmutató](docs/inventory_number_migration.md) tartalmazza
@@ -133,3 +133,28 @@ A teljes megvalósítási és elfogadási riport: [ellenőrzési riport](docs/re
 ## Notes
 
 Use `scripts/extract_schema.py` after database schema changes to refresh `config/schema.json`.
+
+## Reprodukálható clean tesztadatbázis
+
+Az új `app/test_data/` alrendszer 1000 szintetikus fizikai eszközt generál,
+26 modellből, 10 kategóriában. A `quantity=1`, a leltári szám egyedi;
+a cikkszám szándékosan ismétlődik. CSV, JSON, manifest és 16 forgatókönyv
+32 valódi PDF/DOCX dokumentuma a `data/synthetic/` könyvtárban található.
+
+```powershell
+venv\Scripts\python -m scripts.generate_inventory_data --seed 42 --count 1000 --output data/synthetic --documents
+venv\Scripts\python -m scripts.evaluate_clean_inventory --report evaluation/clean_inventory/matching_offline.json
+```
+
+A cél kizárólag **`inventory_ai_clean`**. A create/migrate/load külön parancs,
+alapból dry-run, íráshoz `--apply --confirm-db inventory_ai_clean` kell.
+A felhasználó helyi adatbázisa nincs automatikusan létrehozva/feltöltve;
+az `inventory`, a `.env` és a Qdrant tartalma változatlan.
+
+- [Windows + pgAdmin: telepítés és kipróbálás](docs/clean_inventory_database.md)
+- [Generátor, katalógus és dokumentumreferenciák](docs/synthetic_inventory_dataset.md)
+- [Tesztek, mérés és a két ismert státuszeltérés](docs/clean_inventory_testing.md)
+- [Részletes megvalósítási riport és Definition of Done](docs/clean_inventory_report.md)
+
+A clean mérés eredményei külön `evaluation/clean_inventory/` alatt vannak.
+A korábbi `evaluation/results/` auditok történeti bizonyítékok maradnak.

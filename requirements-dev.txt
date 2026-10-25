@@ -1,2 +1,5 @@
 -r requirements.txt
 pytest>=8,<9
+# Deterministic real PDF/DOCX test-document generation (no external service).
+python-docx==1.2.0
+reportlab==4.4.3

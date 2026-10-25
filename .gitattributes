@@ -1,0 +1,5 @@
+# Canonical fixtures must retain byte-identical hashes on Windows and Linux.
+/data/synthetic/*.json text eol=lf
+/data/synthetic/*.csv text eol=lf
+/data/synthetic/documents/*.pdf binary
+/data/synthetic/documents/*.docx binary

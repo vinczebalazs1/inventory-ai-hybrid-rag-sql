@@ -1,0 +1,10 @@
+{
+  "database": "inventory_ai_clean",
+  "operation": "load",
+  "dry_run": false,
+  "status": "loaded",
+  "record_count": 1000,
+  "planned_count": 1000,
+  "canonical_dataset_sha256": "3a990307ca2e38916cfad1eb3410b3da7609bedcc98e3f43d0717903cdb4982a",
+  "duration_ms": 450.80830017104745
+}

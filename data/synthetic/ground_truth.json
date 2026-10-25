@@ -1,0 +1,1337 @@
+{
+  "version": "1.0",
+  "reference_policy": "Business expectations fixed from source data and scenario edits, never copied from matching outputs.",
+  "canonical_dataset_sha256": "3a990307ca2e38916cfad1eb3410b3da7609bedcc98e3f43d0717903cdb4982a",
+  "scenarios": [
+    {
+      "document_id": "D01",
+      "scenario": "Teljesen egyező leltári adatlap",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "expected_review_requirement": false,
+      "files": {
+        "documents/D01.docx": "37119cbd7dba1026b5d0dcec6f2895b90c197e8a7691942916e02be8e72452dc",
+        "documents/D01.pdf": "58af8dd40ba768c5e65af2cec1b876f0833c35cce79a69fb8208f0c3d326d5f9"
+      }
+    },
+    {
+      "document_id": "D02",
+      "scenario": "Megváltozott helyszín",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "NIK",
+          "raw": "NIK"
+        }
+      ],
+      "expected_field_differences": [
+        {
+          "field": "location",
+          "database_value": "LIB",
+          "document_value": "NIK"
+        }
+      ],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT",
+        "UPDATE_CANDIDATE",
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D02.docx": "2d59b1c276503777149c0fe1853211282a3b96215451c1cc31c855229bc8d605",
+        "documents/D02.pdf": "70ade9abbf6123dd87107b2233c98710d4666cce064e09a0ef2489e045c29cd0"
+      }
+    },
+    {
+      "document_id": "D03",
+      "scenario": "Eltérő aktiválási dátum",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-13",
+          "raw": "2024-02-13"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [
+        {
+          "field": "activation_date",
+          "database_value": "2024-02-14",
+          "document_value": "2024-02-13"
+        }
+      ],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT",
+        "UPDATE_CANDIDATE",
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D03.docx": "c5d0044a968c6514291b56756184b2f831f7a4231d8fba095fb774d609b9978c",
+        "documents/D03.pdf": "e1dd5862aec1d93ad22ec9ec27344566b8e73679a5d16edd284afed5ac8780b5"
+      }
+    },
+    {
+      "document_id": "D04",
+      "scenario": "Eltérő pénzügyi értékek",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 327000,
+          "raw": "327000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 155694,
+          "raw": "155694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [
+        {
+          "field": "purchase_value",
+          "database_value": 326000,
+          "document_value": 327000
+        },
+        {
+          "field": "current_value",
+          "database_value": 154694,
+          "document_value": 155694
+        }
+      ],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT",
+        "UPDATE_CANDIDATE",
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D04.docx": "225d0c4ba82cb287fc25b4e29fbf6666fa935becc7e3b67ae109c19f07c830c0",
+        "documents/D04.pdf": "5f62993e96239f750f91e5bf5a6f1a9073e4b3896cc909bc5908ce07c1ac16bf"
+      }
+    },
+    {
+      "document_id": "D05",
+      "scenario": "Hiányzó leltári szám, több azonos típusú eszköz",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "AMBIGUOUS_MATCH",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D05.docx": "902567190a2e1fcd4a2f28df4bc7c8ad167d55f3ff77b03133ed32273740da97",
+        "documents/D05.pdf": "5ddadee8edab84753ef0be7fbdc8a9c9b14911932634c279a6abfd355dd7f3d9"
+      }
+    },
+    {
+      "document_id": "D06",
+      "scenario": "Hibás cikkszám, létező leltári szám",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "HIBAS-42",
+          "raw": "HIBAS-42"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [
+        {
+          "field": "item_code",
+          "database_value": "LAT5540",
+          "document_value": "HIBAS-42"
+        }
+      ],
+      "expected_match_category": "CONFLICTING_DATA",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D06.docx": "c9bf6385e0f586a8f7a88ba45b391708b5e3802ab25cb0883b12f4b9d8b80231",
+        "documents/D06.pdf": "d4e06e943d04979f92fadc2cb419b78a3731f6c427f59267aa4766a0b7094a28"
+      }
+    },
+    {
+      "document_id": "D07",
+      "scenario": "Elírt név, változatlan leltári szám",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitdue 5540",
+          "raw": "Dell Latitdue 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [
+        {
+          "field": "name",
+          "database_value": "Dell Latitude 5540",
+          "document_value": "Dell Latitdue 5540"
+        }
+      ],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT",
+        "UPDATE_CANDIDATE",
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D07.docx": "d3c21615ae2ccb5d9e7b72fc30d986dc5c25e3490108b7a885e1476d0aed312a",
+        "documents/D07.pdf": "6f96458549a707b4d7579c4059a44b0319ec9e02c40e0f8a93e9bd19833df9b0"
+      }
+    },
+    {
+      "document_id": "D08",
+      "scenario": "Új, a katalógusban nem szereplő eszköz",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "ZD421",
+          "raw": "ZD421"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Zebra ZD421",
+          "raw": "Zebra ZD421"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-90001",
+          "raw": "L-90001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "NO_MATCH",
+      "expected_suggested_actions": [
+        "CREATE_RECORD_CANDIDATE",
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D08.docx": "62f83652182f56ca3b342dd05e0d78b35a841a2909155ee4dfdc9025d85dedea",
+        "documents/D08.pdf": "3d23c28b06bed5710ce593e0879486592e78a2fbe6c0142923a738d3532e200e"
+      }
+    },
+    {
+      "document_id": "D09",
+      "scenario": "Azonos modell másik fizikai példánya",
+      "expected_inventory_number": "L-00006",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-09-20",
+          "raw": "2024-09-20"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 379000,
+          "raw": "379000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 153676,
+          "raw": "153676"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 225324,
+          "raw": "225324"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00006",
+          "raw": "L-00006"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "KANDÓ",
+          "raw": "KANDÓ"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "expected_review_requirement": false,
+      "files": {
+        "documents/D09.docx": "da4f24ab70d76fa20e04b93c70d8dbbafca254ad88344966ca8d7ebeaa64659d",
+        "documents/D09.pdf": "6931f0bd2fa95d4e0ce1ad45d6191a8e445168eec17ef6e80e1c5bd965d5e5d7"
+      }
+    },
+    {
+      "document_id": "D10",
+      "scenario": "Azonosításra alkalmatlan hiányos adatlap",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "NIK",
+          "raw": "NIK"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "INSUFFICIENT_DATA",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D10.docx": "ca4534a0cd0ba2f86b7644f2bf8e370e8da6efea77bab309b0043c2f8c7542ab",
+        "documents/D10.pdf": "eecfbbd0dda9c3bc98fb5804b81aa1325151a92c5b85bb83dce98327c9ada594"
+      }
+    },
+    {
+      "document_id": "D11",
+      "scenario": "Közös cikkszám több lehetséges rekordhoz",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "AMBIGUOUS_MATCH",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D11.docx": "518aafd2a7bb6edb391e85112793030bdcd7a6be00eaabe0312e90a428eb491b",
+        "documents/D11.pdf": "04185331edce2ecf2da10519f9e2e676c46cb5b454d57f0392ee93db6bbf5cc7"
+      }
+    },
+    {
+      "document_id": "D12",
+      "scenario": "Leltári szám mellett kritikus modellellentmondás",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5550",
+          "raw": "Dell Latitude 5550"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [
+        {
+          "field": "name",
+          "database_value": "Dell Latitude 5540",
+          "document_value": "Dell Latitude 5550"
+        }
+      ],
+      "expected_match_category": "CONFLICTING_DATA",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D12.docx": "8928a552e002b45d9663ebdeba1743a92534c6b2ccef40dd07c838bb522ef084",
+        "documents/D12.pdf": "b2bca7f4369223ca835cb835e33c78544f0975dbe37ab4f34224ca5798fd0407"
+      }
+    },
+    {
+      "document_id": "D13",
+      "scenario": "Magyar dátum-, szám- és pénznemformázás",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024.02.14."
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326 000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171 306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154 694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "Ft"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "expected_review_requirement": false,
+      "files": {
+        "documents/D13.docx": "e7aff124513199a05e5000e12f31cc04eb5f31a07e9fa8b95aaf369901d3fad8",
+        "documents/D13.pdf": "26eb0d2f2427b0035009f0818b2f33390248409ef230b5693efb789452636989"
+      }
+    },
+    {
+      "document_id": "D14",
+      "scenario": "Érvénytelen dátum a dokumentumban",
+      "expected_inventory_number": "L-00001",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2026-99-99",
+          "raw": "2026-99-99"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D14.docx": "074bf92c5e18c0457bd699c15b792b5da504ef1665442652fb1761cd809d0f33",
+        "documents/D14.pdf": "8386362563551521617bad3777b4e3a013570c623d79ede843c232b19e4d132b"
+      }
+    },
+    {
+      "document_id": "D15",
+      "scenario": "Két eszköz, tilos egy rekordba összevonni",
+      "expected_inventory_number": null,
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-02-14",
+          "raw": "2024-02-14"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 326000,
+          "raw": "326000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 171306,
+          "raw": "171306"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 154694,
+          "raw": "154694"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00001",
+          "raw": "L-00001"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "LIB",
+          "raw": "LIB"
+        },
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "LAT5540",
+          "raw": "LAT5540"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-09-20",
+          "raw": "2024-09-20"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Dell Latitude 5540",
+          "raw": "Dell Latitude 5540"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 379000,
+          "raw": "379000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 153676,
+          "raw": "153676"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 225324,
+          "raw": "225324"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00006",
+          "raw": "L-00006"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "KANDÓ",
+          "raw": "KANDÓ"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "CONFLICTING_DATA",
+      "expected_suggested_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "expected_review_requirement": true,
+      "files": {
+        "documents/D15.docx": "966c15544b37fe7cec4f37d55c2007856b4d9413e3d0865b51f2e30f32a9de4c",
+        "documents/D15.pdf": "518e47e616d808c2726b1fd3aee464f6a34389ddf47465d9dc693fb3276625b2"
+      }
+    },
+    {
+      "document_id": "D16",
+      "scenario": "Magyar címkék és ékezetes helyszín",
+      "expected_inventory_number": "L-00003",
+      "expected_fields": [
+        {
+          "field": "item_code",
+          "label": "Cikkszám",
+          "value": "T14G4",
+          "raw": "T14G4"
+        },
+        {
+          "field": "sub_code",
+          "label": "Alszám",
+          "value": 0,
+          "raw": "0"
+        },
+        {
+          "field": "activation_date",
+          "label": "Aktiválás dátuma",
+          "value": "2024-01-26",
+          "raw": "2024-01-26"
+        },
+        {
+          "field": "name",
+          "label": "Eszköz megnevezése",
+          "value": "Lenovo ThinkPad T14 Gen 4",
+          "raw": "Lenovo ThinkPad T14 Gen 4"
+        },
+        {
+          "field": "purchase_value",
+          "label": "Beszerzési érték",
+          "value": 593000,
+          "raw": "593000"
+        },
+        {
+          "field": "depreciation",
+          "label": "Felhalmozott értékcsökkenés",
+          "value": 317783,
+          "raw": "317783"
+        },
+        {
+          "field": "current_value",
+          "label": "Jelenlegi érték",
+          "value": 275217,
+          "raw": "275217"
+        },
+        {
+          "field": "currency",
+          "label": "Pénznem",
+          "value": "HUF",
+          "raw": "HUF"
+        },
+        {
+          "field": "quantity",
+          "label": "Darabszám",
+          "value": 1,
+          "raw": "1"
+        },
+        {
+          "field": "inventory_number",
+          "label": "Leltári szám",
+          "value": "L-00003",
+          "raw": "L-00003"
+        },
+        {
+          "field": "location",
+          "label": "Helyszín",
+          "value": "KANDÓ",
+          "raw": "KANDÓ"
+        }
+      ],
+      "expected_field_differences": [],
+      "expected_match_category": "EXACT_MATCH",
+      "expected_suggested_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "expected_review_requirement": false,
+      "files": {
+        "documents/D16.docx": "0364310104c029b011fa5fb5cc96dd2a2720476f87fcf30df1a040a70c783cf6",
+        "documents/D16.pdf": "ce3d4e75930c3d4d424907fe83afd91d3d0b5546db21f363ef94e60778123470"
+      }
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "status": "generated",
+  "dataset_version": "1.0",
+  "generator_version": "1.0",
+  "random_seed": 42,
+  "record_count": 1000,
+  "schema_version": "inventory_items_11_v1",
+  "schema_sha256": "bd2eb7ff996c65739ca1c3e90ccee5df5ec9bd45a4211e364d236aefd16ab6f9",
+  "generation_config": {
+    "seed": 42,
+    "count": 1000,
+    "locations": [
+      "NIK",
+      "KGK",
+      "LIB",
+      "BARK",
+      "KANDÓ"
+    ]
+  },
+  "generation_policy": {
+    "minimum_date": "2020-01-01",
+    "reference_date": "2026-09-30",
+    "depreciation": "purchase * min(age_days, catalog_useful_life_days) // catalog_useful_life_days",
+    "currency": "HUF",
+    "price_unit": "synthetic integer HUF; not market prices"
+  },
+  "generated_at": "2026-10-18T14:06:23.245599+00:00",
+  "canonical_dataset_sha256": "3a990307ca2e38916cfad1eb3410b3da7609bedcc98e3f43d0717903cdb4982a",
+  "quality": {
+    "validation_passed": true,
+    "record_count": 1000,
+    "unique_inventory_numbers": 1000,
+    "violations": {
+      "record_count": 0,
+      "duplicate_inventory_numbers": 0,
+      "invalid_inventory_numbers": 0,
+      "invalid_quantities": 0,
+      "invalid_names": 0,
+      "invalid_locations": 0,
+      "invalid_currencies": 0,
+      "financial_relationship": 0,
+      "catalog_mismatch": 0,
+      "price_band": 0,
+      "invalid_dates": 0,
+      "depreciation_rule": 0,
+      "canonical_identifiers": 0,
+      "category_distribution": 0
+    },
+    "category_counts": {
+      "laptop": 300,
+      "desktop": 200,
+      "monitor": 200,
+      "printer": 100,
+      "switch": 40,
+      "router": 30,
+      "network": 30,
+      "projector": 40,
+      "server": 30,
+      "office": 30
+    },
+    "model_counts": {
+      "Dell Latitude 5540": 60,
+      "Dell Latitude 5550": 60,
+      "Lenovo ThinkPad T14 Gen 4": 60,
+      "HP EliteBook 840 G10": 60,
+      "HP ProBook 450 G10": 60,
+      "Dell OptiPlex 7010": 67,
+      "Lenovo ThinkCentre M70q": 67,
+      "HP EliteDesk 800 G6": 66,
+      "Dell UltraSharp U2723QE": 67,
+      "Dell P2422H": 67,
+      "HP E24 G4": 66,
+      "HP LaserJet Pro M404dn": 34,
+      "HP LaserJet Pro M405dn": 33,
+      "Brother HL-L5200DW": 33,
+      "Cisco Catalyst 9200": 20,
+      "Cisco Catalyst 2960": 20,
+      "Cisco ISR 1100": 15,
+      "MikroTik RB4011": 15,
+      "Ubiquiti UniFi U6 Pro": 15,
+      "TP-Link Omada EAP245": 15,
+      "Epson EB-FH52": 20,
+      "BenQ MW550": 20,
+      "Dell PowerEdge R450": 15,
+      "HPE ProLiant DL360 Gen10": 15,
+      "Fujitsu ScanSnap S1300i": 15,
+      "APC Back-UPS Pro BR900": 15
+    },
+    "location_counts": {
+      "LIB": 209,
+      "KGK": 209,
+      "KANDÓ": 187,
+      "BARK": 196,
+      "NIK": 199
+    },
+    "repeated_item_codes": 26
+  },
+  "files": {
+    "inventory.json": "3a990307ca2e38916cfad1eb3410b3da7609bedcc98e3f43d0717903cdb4982a",
+    "inventory.csv": "00c17f9f95fbc9f3cc08b8ccbb467e331064198da7adc7c5c0f754170af8f0c9"
+  },
+  "documents": {
+    "ground_truth": "ground_truth.json",
+    "ground_truth_sha256": "0102dff4acb9d6417969611de737c513b4199a795c9c5d393ce41b04566e5413",
+    "scenario_count": 16,
+    "document_count": 32,
+    "libraries": {
+      "python-docx": "1.2.0",
+      "reportlab": "4.4.3"
+    }
+  }
+}

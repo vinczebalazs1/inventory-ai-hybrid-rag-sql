@@ -132,7 +132,7 @@ cikkszám/alszám-keresés, majd a korábbi fuzzy logika következik. A leltári
 a másodlagos kulcs és a fuzzy szakasz teljessége külön metaadat; a célzott találat
 nem állít teljes táblabejárást. A javaslatok és az eltérések jelöltenként is megjelennek.
 
-Az aktuális élő auditban 8 duplikált leltári szám akadályozza a UNIQUE indexet.
+A 2026-10-17-i történeti `inventory` auditban 8 duplikált leltári szám akadályozta a UNIQUE indexet.
 A kód ezt nem kerüli meg: adatjavítás és jóváhagyott migráció előtt nincs bizonyított
 azonosság ezen a táblán. Részletek: [audit és migráció](docs/inventory_number_migration.md).
 
@@ -143,6 +143,39 @@ módosítási és dokumentumkapcsolati adatmodell szükséges.
 
 Részletek: [rekordegyeztetés](docs/record_reconciliation.md),
 [offline kiértékelés](docs/record_matching_evaluation.md).
+
+## Elkülönített clean tesztadatok
+
+```text
+app/test_data/catalog.py + models.py
+    → generator.py → validation.py → artifacts.py
+    → data/synthetic/{inventory.csv,inventory.json,manifest.json}
+    → documents.py → 16 eset, 32 PDF/DOCX + ground_truth.json
+    → database.py → kizárólag inventory_ai_clean (külön jóváhagyott írás)
+    → evaluation.py → meglévő rekordegyeztető → külön mérési riport
+```
+
+| Új komponens | Feladat |
+|---|---|
+| `app/test_data/catalog.py` | 26 konzisztens termék, kategória, ársáv, szintetikus dátum/élettartam |
+| `app/test_data/models.py` | A meglévő 11 mező és a generálási konfiguráció szigorú szerződése |
+| `app/test_data/generator.py`, `validation.py` | Determinisztikus generálás és adatminőség |
+| `app/test_data/artifacts.py` | Kanonikus export, visszaolvasás, séma-/adat-/forráshash |
+| `app/test_data/documents.py` | Valódi PDF/DOCX és a kimenetektől független referencia |
+| `app/test_data/database.py` | Célvédelem, külön create/migrate, tranzakciós import, read-only verifier |
+| `app/test_data/evaluation.py` | A változatlan matching mérhető összevetése a referenciával |
+| `app/test_data/cli.py` | Közös CLI, explicit alkalmazás, env-konfliktus és biztonságos hibajelzés |
+| `scripts/*inventory*.py` | Generálás, előkészítés, betöltés, verifikáció, mérés és riportellenőrzés |
+| `migrations/clean/` | Csak az új clean adatbázishoz tartozó SQL; elkülönítve a régi üzleti migrációtól |
+| `.env.clean.example` | Titokmentes konfigurációminta; helyi admin/olvasó hozzáférés külön |
+| `data/synthetic/` | Hivatalos 1000 rekord és kontrollált dokumentumcsomag |
+| `evaluation/clean_inventory/` | Új teszt- és mérési eredmények; a régi auditok megmaradnak |
+
+Az alkalmazás továbbra is az `app.db.connection.get_connection()` függvényt
+és a meglévő `DB_*` beállításokat használja. A CLI-k külön célvédelme nem írja át
+az app környezetét. A leltárseedelés nem végez RAG-indexelést.
+Részletek: [clean DB útmutató](docs/clean_inventory_database.md),
+[adatkészlet](docs/synthetic_inventory_dataset.md), [tesztelés](docs/clean_inventory_testing.md).
 
 ## Honnan indul a user kerdes?
 
