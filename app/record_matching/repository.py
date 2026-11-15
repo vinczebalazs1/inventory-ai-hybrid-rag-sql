@@ -188,12 +188,27 @@ class InventoryRepository:
             raise RepositoryError("Az adatbázisséma ellenőrzése nem sikerült.") from exc
 
     def _rows(self, cursor, columns: list[str], condition, parameters: list,
-              limit: int, schema: SchemaInfo) -> list[DatabaseRecord]:
+              limit: int, schema: SchemaInfo, priority_values=None) -> list[DatabaseRecord]:
         identifiers = sql.SQL(", ").join(map(sql.Identifier, columns))
+        order, rank_parameters = [], []
+        # Rank before LIMIT, not after arbitrary lexical truncation. All values
+        # remain bound parameters; no extensions or schema changes are needed.
+        for key in ("inventory_number", "item_code", "name"):
+            if priority_values and key in columns and priority_values.get(key) is not None:
+                order.append(sql.SQL("({} = %s) DESC NULLS LAST").format(sql.Identifier(key)))
+                rank_parameters.append(priority_values[key])
+        support = []
+        for key in ("sub_code", "location", "activation_date", "purchase_value", "depreciation", "current_value"):
+            if priority_values and key in columns and priority_values.get(key) is not None:
+                support.append(sql.SQL("CASE WHEN {} = %s THEN 1 ELSE 0 END").format(sql.Identifier(key)))
+                rank_parameters.append(priority_values[key])
+        if support:
+            order.append(sql.SQL("({}) DESC").format(sql.SQL(" + ").join(support)))
+        order.append(identifiers)
         query = sql.SQL("SELECT {columns} FROM {table} WHERE {condition} ORDER BY {order} LIMIT %s").format(
             columns=identifiers, table=sql.Identifier(schema.table_schema, schema.table_name),
-            condition=condition, order=identifiers)
-        cursor.execute(query, (*parameters, limit))
+            condition=condition, order=sql.SQL(", ").join(order))
+        cursor.execute(query, (*parameters, *rank_parameters, limit))
         return [record_from_row(dict(zip(columns, row)), schema) for row in cursor.fetchall()]
 
     def search(self, values: dict[str, Scalar], expected_columns: dict[str, str],
@@ -237,10 +252,10 @@ class InventoryRepository:
             stage.unique_constraint_verified = ["inventory_number"] in schema.unique_keys
             metadata.strategies.append("inventory_number_exact")
             exact_records = self._lookup(cursor, columns, ["inventory_number"], values, settings, metadata, stage)
-            if stage.complete and stage.unique_constraint_verified and _verified_identity_lookup(exact_records, values, schema):
+            if stage.complete and stage.unique_constraint_verified and len(exact_records) == 1 and exact_records[0].record_id:
                 metadata.complete = True
                 metadata.scope = "verified_identifier"
-                metadata.secondary_lookup.skipped_reason = "primary_record_identifiers_consistent"
+                metadata.secondary_lookup.skipped_reason = "primary_record_found"
                 metadata.fuzzy_search.skipped_reason = "verified_inventory_lookup"
                 return exact_records
             if stage.truncated:
@@ -343,14 +358,14 @@ class InventoryRepository:
 
     def _identifier_rows(self, cursor, columns, key, values, limit, schema):
         condition = sql.SQL(" AND ").join(sql.SQL("{} = %s").format(sql.Identifier(name)) for name in key)
-        return self._rows(cursor, columns, condition, [values[name] for name in key], limit, schema)
+        return self._rows(cursor, columns, condition, [values[name] for name in key], limit, schema, values)
 
     def _table_rows(self, cursor, columns, limit, schema):
         return self._rows(cursor, columns, sql.SQL("TRUE"), [], limit, schema)
 
     def _filtered_rows(self, cursor, columns, values, expected, limit, schema):
         conditions, parameters, _ = _filtered_conditions(values, expected)
-        return self._rows(cursor, columns, sql.SQL(" OR ").join(conditions), parameters, limit, schema)
+        return self._rows(cursor, columns, sql.SQL(" OR ").join(conditions), parameters, limit, schema, values)
 
 
 def _validate_search_values(values, expected, settings):

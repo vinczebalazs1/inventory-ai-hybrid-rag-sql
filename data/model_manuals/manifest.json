@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-11-08",
+  "page_numbering": "1-based PDF page, not printed page label",
+  "documents": [
+    {
+      "name": "Dell P2422H",
+      "item_code": "P2422H",
+      "file": "P2422H.pdf",
+      "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+      "sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+      "page_count": 78,
+      "model_evidence": {"page": 1, "text": "P2422H"},
+      "scope": "Shared safety, cleaning and complete self-test procedure explicitly applicable to P2422H. Other models' specifications and stand variants excluded.",
+      "selections": [
+        {"page": 6, "section": "safety"},
+        {"page": 33, "section": "cleaning", "start": "Maintenance guidelines"},
+        {"page": 69, "section": "self-test-start"},
+        {"page": 70, "section": "self-test-completion"}
+      ]
+    },
+    {
+      "name": "Brother HL-L5200DW",
+      "item_code": "HLL5200",
+      "file": "HLL5200.pdf",
+      "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+      "sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+      "page_count": 20,
+      "model_evidence": {"page": 1, "text": "HL-L5200DW"},
+      "scope": "Reference Guide Version 0, OCE/ASA/SAF/GLF/TWN. Only shared paper-loading, initial problem identification and No Paper instructions; regional consumables and optional-tray-specific errors excluded. HL-L5200DW is listed on the cover and is a network model.",
+      "selections": [
+        {"page": 9, "section": "paper-loading"},
+        {"page": 11, "section": "identify-problem"},
+        {"page": 13, "section": "no-paper", "start": "No Paper The machine", "end": "No Paper Fed T2"}
+      ]
+    },
+    {
+      "name": "Epson EB-FH52",
+      "item_code": "EBFH52",
+      "file": "EBFH52.pdf",
+      "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+      "sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+      "page_count": 219,
+      "model_evidence": {"page": 11, "text": "EB-FH52"},
+      "scope": "User's Guide v7.0, linked by the EB-FH52 manufacturer support page. Shared maintenance safety, lens/case/filter cleaning only. Model-dependent 6000/10000-hour intervals and specifications excluded.",
+      "selections": [
+        {"page": 163, "section": "maintenance-safety"},
+        {"page": 164, "section": "lens-cleaning"},
+        {"page": 165, "section": "case-cleaning"},
+        {"page": 166, "section": "air-filter-cleaning", "start": "Cleaning the Air Filter and Vents", "end": "Replacing the Air Filter"}
+      ]
+    }
+  ]
+}

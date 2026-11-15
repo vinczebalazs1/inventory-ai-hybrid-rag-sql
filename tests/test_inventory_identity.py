@@ -99,12 +99,14 @@ def test_T09_stored_identifier_characters_and_leading_zeroes_are_not_collapsed(o
     assert A.ATTACH_DOCUMENT not in action_types(result)
 
 
-def test_T10_conflicting_identifiers_keep_both_candidates_and_block_exact():
+def test_T10_conflicting_identifiers_preserve_primary_identity_and_block_acceptance():
     result = reconcile({"inventory_number": "L-1", "item_code": "B"},
                        [{"inventory_number": "L-1", "item_code": "A"}, {"inventory_number": "L-2", "item_code": "B"}])
     assert result.match_status == S.CONFLICTING_DATA
-    assert len(result.candidates) == 2 and not result.search_metadata.identity_verified
-    assert result.search_metadata.secondary_lookup.attempted
+    assert len(result.candidates) == 1 and not result.search_metadata.identity_verified
+    assert result.identified_record.values["inventory_number"] == "L-1"
+    assert result.critical_conflict_fields == ["item_code"]
+    assert not result.search_metadata.secondary_lookup.attempted
 
 
 def test_T11_verified_secondary_composite_finishes_with_one_candidate():

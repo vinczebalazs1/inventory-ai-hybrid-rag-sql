@@ -22,7 +22,8 @@ def test_10000_rows_concurrent_import_and_exact_lookup(isolated_postgres, tmp_pa
     params = {key: dsn[key] for key in ("host", "port", "user")}
     config = ConnectionConfig(TARGET, params["user"], "unused", params["host"], int(params["port"]))
     def connect():
-        return psycopg2.connect(**params, dbname=TARGET, connect_timeout=5)
+        return psycopg2.connect(**params, dbname=TARGET, connect_timeout=5,
+                               options="-c default_transaction_read_only=off")  # Isolated cluster only.
     create_database(config, apply=True, confirm_db=TARGET, connection_factory=isolated_postgres)
     migrate(config, apply=True, confirm_db=TARGET, connection_factory=connect)
     generation = GenerationConfig(count=10000)

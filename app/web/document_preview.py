@@ -7,6 +7,7 @@ from app.document_processing.config import Settings
 from app.document_processing.processing_service import process_document
 from app.errors import AppError
 from app.web.reconciliation_preview import clear_reconciliation, render_reconciliation
+from app.web.document_exports import csv_bytes
 
 
 def _clear_preview() -> None:
@@ -46,6 +47,8 @@ def render_document_analysis(show_debug: bool = False) -> None:
                 if row.get("normalized_value") is not None:
                     row["normalized_value"] = str(row["normalized_value"])
             st.dataframe(rows, use_container_width=True, hide_index=True)
+            st.download_button(title + " – CSV", csv_bytes([f.model_dump(mode="json") for f in fields]),
+                               file_name=title.replace(" ", "_").lower() + ".csv", mime="text/csv", key="export_" + title)
         else:
             st.caption("Nincs.")
     render_reconciliation(result, show_debug=show_debug)

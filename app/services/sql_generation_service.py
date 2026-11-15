@@ -25,7 +25,7 @@ def clean_sql(sql: str) -> str:
     return sql.strip()
 
 
-def generate_sql(question: str) -> str:
+def generate_sql(question: str, *, require_model_identity: bool = False) -> str:
     """SQL generálása természetes nyelvű kérdésből, séma-alapú promptolással."""
     template = load_prompt()
     # A séma szöveg a modell egyetlen engedélyezett nézete az adatbázis szerkezetéről.
@@ -37,6 +37,11 @@ def generate_sql(question: str) -> str:
         question=question
     )
 
+    if require_model_identity:
+        prompt += "\nHYBRID documentation lookup: include the actual inventory_items.name and inventory_items.item_code " \
+                  "as name and item_code in each relevant result row, together with requested inventory facts. " \
+                  "Preserve their stored values and capitalization. For grouped model counts group by both columns. " \
+                  "Never invent identity values or change the requested population to obtain an identity."
     raw_sql = ask_llm(prompt)
     # A tisztítás nem biztonsági ellenőrzés. Az orchestration layer validátora
     # továbbra is ellenőrzi futtatás előtt, hogy az SQL biztonságos-e.

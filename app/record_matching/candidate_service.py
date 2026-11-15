@@ -9,12 +9,14 @@ from .models import DatabaseRecord, Scalar
 
 def _text(value: Scalar) -> str:
     import unicodedata
-    return " ".join(unicodedata.normalize("NFKC", str(value or "")).casefold().split())
+    return " ".join(unicodedata.normalize("NFKC", str(value if value is not None else "")).casefold().split())
 
 
 def name_similarity(left: Scalar, right: Scalar) -> float:
     """Full-string similarity avoids partial/subsequence-only perfect matches."""
     a, b = _text(left), _text(right)
+    if a and b and a.replace(" ", "") == b.replace(" ", ""):
+        return 1.0
     return max(ratio(a, b), token_sort_ratio(a, b)) / 100.0 if a and b else 0.0
 
 
@@ -26,7 +28,10 @@ def candidate_priority(record: DatabaseRecord, values: dict[str, Scalar]) -> tup
                      values["item_code"] == record.values.get("item_code") and
                      values["sub_code"] == record.values.get("sub_code"))
     inventory = bool(values.get("inventory_number") and values["inventory_number"] == record.values.get("inventory_number"))
-    return inventory, exact, composite, name_similarity(values.get("name"), record.values.get("name"))
+    support = sum(values.get(k) is not None and _text(values[k]) == _text(record.values.get(k))
+                  for k in ("location", "activation_date", "purchase_value", "depreciation", "current_value"))
+    typo = ratio(str(values.get("inventory_number") or ""), str(record.values.get("inventory_number") or "")) / 100.0
+    return inventory, exact, composite, name_similarity(values.get("name"), record.values.get("name")), support, typo
 
 
 def select_candidates(

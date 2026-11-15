@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import ConfigDict, Field
 
-from app.document_processing.models import Model, ValidationIssue
+from app.document_processing.models import Model, MappedField, Occurrence, ValidationIssue
 
 Scalar = str | int | float | bool | None
 
@@ -22,6 +22,7 @@ class MatchStatus(str, Enum):
     CONFLICTING_DATA = "CONFLICTING_DATA"
     SEARCH_INCOMPLETE = "SEARCH_INCOMPLETE"
     ERROR = "ERROR"
+    MULTIPLE_ASSETS = "MULTIPLE_ASSETS"
 
 
 class ComparisonStatus(str, Enum):
@@ -30,6 +31,8 @@ class ComparisonStatus(str, Enum):
     UNKNOWN = "UNKNOWN"
     INVALID = "INVALID"
     NOT_COMPARABLE = "NOT_COMPARABLE"
+    INTERNAL_CONFLICT = "INTERNAL_CONFLICT"
+    UNCERTAIN = "UNCERTAIN"
 
 
 class ActionType(str, Enum):
@@ -39,7 +42,7 @@ class ActionType(str, Enum):
     MANUAL_REVIEW = "MANUAL_REVIEW"
 
 
-class PreparedField(Contract):
+class PreparedField(MappedField):
     source_label: str
     raw_value: str
     target_field: str
@@ -47,7 +50,7 @@ class PreparedField(Contract):
     comparison_value: Scalar = None
     evidence: str | None = None
     page: int | None = None
-    validation_status: Literal["VALID", "INVALID", "EXPLICIT_EMPTY", "UNSUPPORTED", "CONFLICT"]
+    validation_status: Literal["VALID", "INVALID", "EXPLICIT_EMPTY", "MISSING", "EXPLICIT_UNKNOWN", "UNPARSEABLE", "UNSUPPORTED", "CONFLICT"]
     explanation: str = ""
 
 
@@ -60,6 +63,10 @@ class PreparedDocument(Contract):
     warnings: list[str] = Field(default_factory=list)
     validation_issues: list[ValidationIssue] = Field(default_factory=list)
     unmapped_count: int = 0
+    asset_group_id: str | None = None
+    internal_conflicts: list[str] = Field(default_factory=list)
+    business_warnings: list[str] = Field(default_factory=list)
+    extraction_review_required: bool = False
 
 
 class SchemaInfo(Contract):
@@ -144,7 +151,7 @@ class MatchDecision(Contract):
     review_required: bool = True
 
 
-class FieldComparison(Contract):
+class FieldComparison(Contract, Occurrence):
     field: str
     source_label: str | None = None
     raw_document_value: str | None = None
@@ -157,6 +164,7 @@ class FieldComparison(Contract):
     explanation: str
     record_id: str | None = None
     candidate_rank: int | None = None
+    validation_status: str | None = None
 
 
 class SuggestedAction(Contract):
@@ -171,6 +179,21 @@ class SuggestedAction(Contract):
     executable: Literal[False] = False
     candidate_rank: int | None = None
     target_identity_verified: bool = False
+    asset_group_id: str | None = None
+    changes: list[FieldComparison] = Field(default_factory=list)
+
+
+class OccurrenceCounts(Contract):
+    occurrences: int = 0
+    normalized_occurrences: int = 0
+    equal_occurrences: int = 0
+    differing_occurrences: int = 0
+    unique_differing_fields: int = 0
+    invalid_occurrences: int = 0
+    missing_or_unknown_occurrences: int = 0
+    internal_conflict_fields: int = 0
+    uncertain_occurrences: int = 0
+    unassigned_occurrences: int = 0
 
 
 class ValidationSummary(Contract):
@@ -183,7 +206,7 @@ class ValidationSummary(Contract):
 
 class ProcessingMetadata(Contract):
     strategy: str
-    algorithm_version: str = "1.1"
+    algorithm_version: str = "1.2"
     settings_fingerprint: str = ""
     reconciliation_ms: float = 0.0
     candidate_search_ms: float = 0.0
@@ -206,3 +229,11 @@ class ReconciliationResult(Contract):
     search_metadata: SearchMetadata = Field(default_factory=SearchMetadata)
     processing_metadata: ProcessingMetadata
     prepared_document: PreparedDocument | None = None
+    asset_group_id: str | None = None
+    asset_group_count: int = 1
+    group_results: list["ReconciliationResult"] = Field(default_factory=list)
+    unassigned_fields: list[MappedField] = Field(default_factory=list)
+    grouping_reasons: list[str] = Field(default_factory=list)
+    counts: OccurrenceCounts = Field(default_factory=OccurrenceCounts)
+    identified_record: CandidateRecord | None = None
+    critical_conflict_fields: list[str] = Field(default_factory=list)

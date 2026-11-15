@@ -17,3 +17,8 @@ class RagChunk:
     source: Optional[str] = None
     # Dokumentumtípus, például "device_txt", "pdf" vagy "txt".
     doc_type: str = "device_txt"
+    # Optional manufacturer provenance; old generic ingestion stays unchanged.
+    item_code: Optional[str] = None
+    source_url: Optional[str] = None
+    source_sha256: Optional[str] = None
+    page: Optional[int] = None

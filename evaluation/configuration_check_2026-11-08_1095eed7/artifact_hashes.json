@@ -1,0 +1,17 @@
+{
+  "evaluation/configuration_check_2026-11-08_1095eed7/file_changes.json": "1ca1b5250d51f72c872f23e572b61edbca9d67e5c11ca15549e1853ebdcd49c5",
+  "evaluation/configuration_check_2026-11-08_1095eed7/functional.log": "51ebf248255fef82d5f578c95d3b550b67bb57b37bd0ba59d5dc036ec5218d8e",
+  "evaluation/configuration_check_2026-11-08_1095eed7/functional_attempt_02/functional.log": "af617e807155f8250814854ee118e505969c6046a13545bd5858e33cd5416277",
+  "evaluation/configuration_check_2026-11-08_1095eed7/functional_attempt_02/functional_checks.json": "8a0f2216eab7d4c947b6ceb331ff7dbfc539630c63232c471b482906cf588080",
+  "evaluation/configuration_check_2026-11-08_1095eed7/functional_checks.json": "5c34b7c9ad47ea17be37740dfbbf5690e8b2a763a1b4d50d20600982a10d47c1",
+  "evaluation/configuration_check_2026-11-08_1095eed7/pytest.log": "491f457e832ae33d20dcf197f458eaf5807caa13ba3cd764d6f02d5aa840b1d8",
+  "evaluation/configuration_check_2026-11-08_1095eed7/pytest_exit_code.json": "a878c2a23b844f3ae1e5951b0cf6310cd97adfa7618ca6fa0e419f24299dc5cb",
+  "evaluation/configuration_check_2026-11-08_1095eed7/run_metadata.json": "591c85c10b93fd7fdafe3225c50a2f8a143409f4c9a1a74bbbbdda2e8244e5a5",
+  "evaluation/configuration_check_2026-11-08_1095eed7/run_tests.py": "79100308a396b1004e3e3625b17d922cac35b10c9e6d7a114c5e2484577b2627",
+  "evaluation/configuration_check_2026-11-08_1095eed7/test_results.xml": "9aa53a1cb152bda8657844a76cb416faeb52c95c97274cb617c74ad1b62fd671",
+  "evaluation/configuration_check_2026-11-08_1095eed7/tests_attempt_02/pytest.log": "703018238e2fb69c2230abf4ed247f59fd666eebc483cf277753f5baaedd795e",
+  "evaluation/configuration_check_2026-11-08_1095eed7/tests_attempt_02/pytest_exit_code.json": "2a2a987bd84e58dfea2a0c5226e820da48d94687117b4e8a7fc92bca8b949601",
+  "evaluation/configuration_check_2026-11-08_1095eed7/tests_attempt_02/test_results.xml": "b140518583ac9a84ea9c3238e6ea003d3c072f0a1e447fb7ba40a1cfc4a4f190",
+  "evaluation/configuration_check_2026-11-08_1095eed7/verify_functional.py": "46a55cce94c50799d8343fed25c73def5684239fb4d17b512e825e909a4f55a1",
+  "docs/thesis_database_configuration_check.md": "055a0c2f654bb5e71aecbea34476aa4713ab8027b703ba48dd6e13f28fd6ffa5"
+}

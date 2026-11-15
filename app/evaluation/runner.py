@@ -12,7 +12,7 @@ from time import perf_counter
 from app.document_processing.models import (ExtractedField, ExtractionResult, MappedField,
     MappingResult, ParsedDocument, ProcessingResult, ValidationIssue)
 from app.document_processing.validation_service import normalize
-from app.record_matching.candidate_service import select_candidates, fuzzy_tokens
+from app.record_matching.candidate_service import candidate_priority, select_candidates, fuzzy_tokens
 from app.record_matching.config import MatchingSettings
 from app.record_matching.models import CandidateSearchResult, ComparisonStatus, SchemaInfo, SearchMetadata
 from app.record_matching.reconciliation_service import reconcile_document
@@ -89,17 +89,19 @@ class FixtureRepository(InventoryRepository):
         return CandidateSearchResult(records=records, metadata=metadata)
 
     def _identifier_rows(self, cursor, columns, key, values, limit, schema):
-        return [row for row in self.rows if all(row.values.get(name) == values[name] for name in key)][:limit]
+        rows = [row for row in self.rows if all(row.values.get(name) == values[name] for name in key)]
+        return sorted(rows, key=lambda row: tuple(-float(v) for v in candidate_priority(row, values)))[:limit]
 
     def _table_rows(self, cursor, columns, limit, schema):
         return self.rows[:limit]
 
     def _filtered_rows(self, cursor, columns, values, expected, limit, schema):
         tokens = fuzzy_tokens(str(values.get("name") or ""))
-        return [row for row in self.rows if
+        rows = [row for row in self.rows if
                 any(values.get(name) is not None and row.values.get(name) == values[name]
                     for name in ("inventory_number", "item_code"))
-                or any(token in str(row.values.get("name") or "").lower() for token in tokens)][:limit]
+                or any(token in str(row.values.get("name") or "").lower() for token in tokens)]
+        return sorted(rows, key=lambda row: tuple(-float(v) for v in candidate_priority(row, values)))[:limit]
 
 
 def evaluate_case(case: EvaluationCase, strategy: str, repeats: int = 3) -> Observation:
@@ -113,11 +115,14 @@ def evaluate_case(case: EvaluationCase, strategy: str, repeats: int = 3) -> Obse
     previous = None
     for _ in range(repeats):
         result = reconcile_document(processing, repository=repository, settings=settings, columns=repository.columns)
-        stable = result.model_dump(mode="json")
-        stable["processing_metadata"] = {key: value for key, value in stable["processing_metadata"].items() if not key.endswith("_ms")}
-        stable["search_metadata"].pop("duration_ms")
+        def without_timings(value):
+            if isinstance(value, dict):
+                return {k: without_timings(v) for k,v in value.items() if not k.endswith("_ms")}
+            if isinstance(value, list):
+                return [without_timings(v) for v in value]
+            return value
+        stable = without_timings(result.model_dump(mode="json"))
         for stage in ("inventory_lookup", "secondary_lookup", "fuzzy_search"):
-            stable["search_metadata"][stage].pop("duration_ms")
             measured = getattr(result.search_metadata, stage)
             if measured.attempted:
                 timings[stage].append(measured.duration_ms)

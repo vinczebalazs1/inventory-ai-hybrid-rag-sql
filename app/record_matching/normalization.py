@@ -50,7 +50,7 @@ def comparison_value(value: Scalar, dtype: str, field: str) -> Scalar:
         return normalize(str(value), dtype, field)
     if not isinstance(value, str):
         raise ValueError("Expected text")
-    return text_key(value)
+    return re.sub(r"\s+", "", text_key(value)) if field == "name" else text_key(value)
 
 
 def raw_comparison_value(value: str, dtype: str, field: str) -> Scalar:
@@ -64,5 +64,7 @@ def model_tokens(value: str) -> frozenset[str]:
 
 
 def model_conflict(left: str, right: str) -> bool:
+    if re.sub(r"\s+", "", text_key(left)) == re.sub(r"\s+", "", text_key(right)):
+        return False
     left_tokens, right_tokens = model_tokens(left), model_tokens(right)
     return bool(left_tokens and right_tokens and left_tokens != right_tokens)

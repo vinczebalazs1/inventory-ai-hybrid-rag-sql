@@ -10,7 +10,10 @@ def suggest_actions(document: PreparedDocument, decision: MatchDecision,
                     comparisons: list[FieldComparison], search: SearchMetadata,
                     columns: dict[str, str], settings: MatchingSettings) -> list[SuggestedAction]:
     actions = []
-    clean = bool(document.fields) and all(field.validation_status == "VALID" and field.evidence for field in document.fields)
+    clean = (bool(document.fields) and not document.internal_conflicts and not document.business_warnings
+             and not document.extraction_review_required and not any(c.status == ComparisonStatus.UNCERTAIN for c in comparisons)
+             and all(field.validation_status == "VALID" and field.evidence and not field.extraction_uncertain
+                     for field in document.fields))
     record = decision.matched_record
     if (decision.status == MatchStatus.EXACT_MATCH and record and clean
             and stable_identity(record, search.schema_info)):
@@ -57,4 +60,9 @@ def suggest_actions(document: PreparedDocument, decision: MatchDecision,
     if decision.review_required or not clean or limited_comparison or any(action.review_required for action in actions) or not actions:
         actions.append(SuggestedAction(action_type=Action.MANUAL_REVIEW,
                        reason="; ".join(decision.reasons) or "A dokumentum és a rekordok ellenőrzése szükséges."))
+    for action in actions:
+        action.asset_group_id = document.asset_group_id
+        if action.action_type == Action.UPDATE_CANDIDATE:
+            action.changes = [c for c in comparisons if c.status == ComparisonStatus.DIFFERENT
+                              and c.field in action.affected_fields and c.candidate_rank == action.candidate_rank]
     return actions

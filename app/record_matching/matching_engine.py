@@ -1,7 +1,7 @@
 """Deterministic, missing-aware ranking with explicit vetoes and abstention."""
 import json
 
-from .candidate_service import name_similarity
+from .candidate_service import candidate_priority, name_similarity
 from .config import IDENTIFIER_FIELDS, MatchingSettings
 from .models import (CandidateRecord, CandidateSearchResult, DatabaseRecord, MatchDecision,
                      MatchStatus, PreparedDocument, SchemaInfo, ScoreContribution)
@@ -42,8 +42,8 @@ class MatchingEngine:
             similarity = float(right is not None and left == right)
             explanation = "Pontos mezőegyezés." if similarity else "Eltérő vagy hiányzó adatbázisérték."
             if name == "name" and right is not None:
-                similarity = name_similarity(left, right)
-                technical_conflict = model_conflict(str(left), str(right)) or similarity < settings.duplicate_threshold
+                similarity = name_similarity(value, record.values[name])
+                technical_conflict = model_conflict(str(value), str(record.values[name])) or similarity < settings.duplicate_threshold
                 explanation = "Teljes név ratio/token_sort_ratio hasonlósága; a modellszám külön ellenőrzött."
             if name in IDENTIFIER_FIELDS and right is not None and left != right:
                 conflicts.append(name)
@@ -85,7 +85,8 @@ class MatchingEngine:
             # A score of 1 for a name must never look like a proven exact identity.
             score = min(score, settings.exact_threshold - 0.001)
         if conflicts:
-            score = 0.0
+            # Conflict is an acceptance veto, not absence of ranking evidence.
+            score = sum(part.contribution for part in parts)
             reasons.append("Ellentmondó azonosító: " + ", ".join(conflicts) + ".")
         if technical_conflict:
             score = min(score, settings.model_conflict_cap)
@@ -108,7 +109,8 @@ class MatchingEngine:
             return MatchDecision(status=MatchStatus.INSUFFICIENT_DATA,
                                  reasons=["Nincs felhasználható azonosító vagy eszköznév az egyeztetéshez."])
         candidates = [self.score(document, record, search.metadata.schema_info, columns) for record in search.records]
-        candidates.sort(key=lambda row: (-row.similarity_score, row.record_id or "",
+        candidates.sort(key=lambda row: (-int("inventory_number" in row.matching_fields), -row.similarity_score,
+                                        *(-float(v) for v in candidate_priority(row, document.values)[4:]), row.record_id or "",
                                         json.dumps(row.values, sort_keys=True, ensure_ascii=False)))
         for rank, candidate in enumerate(candidates, 1):
             candidate.rank = rank
@@ -119,6 +121,10 @@ class MatchingEngine:
         inventory_matches = [row for row in candidates if "inventory_number" in row.matching_fields]
         if len(inventory_matches) > 1 or search.metadata.inventory_lookup.matching_rows > 1:
             return decision(MatchStatus.AMBIGUOUS_MATCH, "A leltári szám több rekordhoz tartozik; kézi adatellenőrzés szükséges.")
+        if inventory_matches and (document.internal_conflicts or inventory_matches[0].identifier_conflicts
+                                  or inventory_matches[0].technical_conflict):
+            return decision(MatchStatus.CONFLICTING_DATA,
+                            "Pontos leltáriszám-találat mellett kritikus vagy dokumentumon belüli ellentmondás; emberi ellenőrzés szükséges.")
         if (not search.metadata.complete or search.metadata.truncated or search.metadata.timed_out
                 or not search.metadata.schema_info or not search.metadata.schema_info.verified
                 or not search.metadata.schema_info.compatible):
@@ -133,6 +139,8 @@ class MatchingEngine:
                      or "inventory_number" in row.matching_fields]
         if any(row.identifier_conflicts or row.technical_conflict for row in exact):
             return decision(MatchStatus.CONFLICTING_DATA, "Az azonosítóegyezés mellett kritikus adatellentmondás található.")
+        if document.internal_conflicts:
+            return decision(MatchStatus.CONFLICTING_DATA, "; ".join(document.reasons))
         # A verified composite key may disambiguate repeated item_code values.
         verified = [row for row in exact if row.verified_identifier_match]
         if len(exact) > 1 and len(verified) != 1:
@@ -146,7 +154,9 @@ class MatchingEngine:
         if len(eligible) > 1 and best.similarity_score - eligible[1].similarity_score <= self.settings.ambiguity_margin:
             return decision(MatchStatus.AMBIGUOUS_MATCH, "A vezető jelöltek pontszáma túl közel van egymáshoz.")
         if best.verified_identifier_match and best.similarity_score >= self.settings.exact_threshold:
-            clean = all(field.validation_status == "VALID" and field.evidence for field in document.fields)
+            clean = (not document.business_warnings and not document.internal_conflicts and not document.extraction_review_required and
+                     all(field.validation_status == "VALID" and field.evidence and not field.extraction_uncertain
+                         for field in document.fields))
             best.review_required = not clean
             return decision(MatchStatus.EXACT_MATCH, "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül.", best, not clean)
         return decision(MatchStatus.LIKELY_MATCH, "A legjobb jelölt hasonló; emberi rekordazonosítás szükséges.", best)

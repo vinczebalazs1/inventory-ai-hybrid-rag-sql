@@ -1,0 +1,14 @@
+{
+  "clean_inventory/matching_postgres.json": "5107e0469646432707d339686afb8582b7d366cfc20d39a14838242bf0f45862",
+  "clean_inventory/postgres_verification.json": "1c0e2f399f71d91c3eba0aa2f8c2e1c95e532579fea02078d3290a0c77daf618",
+  "clean_inventory/scalability.json": "877973d7f4c00fbae4e60d23efd58d612f3518e308906da0b8f2b33443ddf672",
+  "inventory_search_benchmark.json": "d439df51ef86442f45df2742428088c831ba77081c46f2ed92c7318b67f329f2",
+  "matching/matching_cases.csv": "ffed103a4776f3fcc29cdfc708a07df3e6e5b45fa6164e13d6654c2045e6758f",
+  "matching/matching_metrics.json": "8598d75852bd562bcad737ffe5fec0c43aca8bf06fe25004534910d4f897f02d",
+  "pdf_checks.json": "c12fdb85ec12895a50b15c5d32aebd333f9ef74d8cf852854dc1cf6b8de219d7",
+  "performance.json": "65ca61987cd6ccb2b6afe7b627ae842dae711c22c5179fb0ae5f28672bea2660",
+  "readonly_cases.json": "3ad25f96acb0c13ebeffc26092e080c828aa1cd2750476e4082178c67ec71d58",
+  "source_environment.json": "5b03f9a79a1e053c7aa06e5616e3166bf5045ff45e8f9fcd8cfc2b8042d53c3a",
+  "test_results.xml": "327471ca77a07b4fa18d01c52e08599067f44eb703d649b93cc1ea8e9f70f934",
+  "verification.json": "ac7d891ca0ac8587460c039a936ad56fae2e943c51d02744dbd16c8c8c1af947"
+}

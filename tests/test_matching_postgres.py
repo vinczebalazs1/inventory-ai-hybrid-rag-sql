@@ -48,7 +48,8 @@ def isolated_postgres(request, tmp_path_factory):
                         "-o", f"-h 127.0.0.1 -p {port} -c fsync=off", "start"],
                        stdout=control, stderr=subprocess.STDOUT, check=True, **control_kwargs)
     def connect():
-        return psycopg2.connect(host="127.0.0.1", port=port, dbname="postgres", user="matching_test", connect_timeout=5)
+        return psycopg2.connect(host="127.0.0.1", port=port, dbname="postgres", user="matching_test", connect_timeout=5,
+                                options="-c default_transaction_read_only=off")  # Disposable fixture setup only.
     try:
         yield connect
     finally:

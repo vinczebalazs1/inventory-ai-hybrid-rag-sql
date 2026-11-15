@@ -88,7 +88,7 @@ def test_sql_injection_is_only_a_bound_value():
                                MatchingSettings(strategy="exact_only"))
     query, parameters = cursor.calls[-1]
     assert attack not in repr(query)
-    assert parameters == (attack, 101)
+    assert parameters == (attack, attack, 101)  # WHERE and safe pre-LIMIT ranking
     assert result.metadata.complete
 
 
@@ -164,7 +164,7 @@ def test_large_table_filtered_empty_is_still_incomplete():
     assert result.records == []
     assert not result.metadata.complete
     assert result.metadata.scope == "filtered_subset"
-    assert cursor.calls[-1][1] == ("%printer%", 2)
+    assert cursor.calls[-1][1] == ("%printer%", "Printer", 2)
 
 
 def test_timeout_is_incomplete_and_always_releases_resources():

@@ -29,7 +29,10 @@ def test_existing_routes(monkeypatch, route):
         assert execute.call_args.args[0].startswith("SELECT")
         assert "LIMIT" in execute.call_args.args[0]
     if route == "HYBRID":
-        assert hybrid.call_args.args[1] == ["laptop"]
+        assert hybrid.call_args.args[1] == ["Laptop"]
+        assert sql.call_args.kwargs == {"require_model_identity": True}
+    elif route == "SQL":
+        assert sql.call_args.kwargs == {}
 
 
 def test_existing_rag_upload(monkeypatch):

@@ -1,0 +1,51 @@
+{
+  "status": "failed",
+  "error_type": "AttributeError",
+  "stack": [
+    {
+      "file": "verify_functional.py",
+      "line": 176,
+      "function": "<module>"
+    },
+    {
+      "file": "verify_functional.py",
+      "line": 125,
+      "function": "run"
+    },
+    {
+      "file": "ingestion_service.py",
+      "line": 88,
+      "function": "ingest_uploaded_document"
+    },
+    {
+      "file": "ingestion_service.py",
+      "line": 42,
+      "function": "upsert_chunks"
+    },
+    {
+      "file": "qdrant_client.py",
+      "line": 69,
+      "function": "upsert_points"
+    },
+    {
+      "file": "qdrant_client.py",
+      "line": 944,
+      "function": "upsert"
+    },
+    {
+      "file": "qdrant_local.py",
+      "line": 559,
+      "function": "upsert"
+    },
+    {
+      "file": "local_collection.py",
+      "line": 2554,
+      "function": "upsert"
+    },
+    {
+      "file": "local_collection.py",
+      "line": 2489,
+      "function": "_upsert_point"
+    }
+  ]
+}

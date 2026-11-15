@@ -1,0 +1,6 @@
+{
+  "source_sha256": "dedffbfdabc6fb7f227681f5913248919ec45274c626bfe60da24f8cd248a3a0",
+  "endpoint_fingerprint": "f42f90901293666b7bac0bc988397670f17d3a3786b7436ea091090f282eedd0",
+  "source": "app/rag/data/devices.txt",
+  "expected_points": 40
+}

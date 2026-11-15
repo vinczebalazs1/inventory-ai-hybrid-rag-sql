@@ -1,0 +1,26 @@
+[
+  {
+    "pages": 1,
+    "occurrences": 11,
+    "mean_ms": 7.756959972903132,
+    "max_ms": 8.774900110438466,
+    "repeats": 5,
+    "scope": "synthetic repeated-page occurrences, fixture repository, no parser/LLM/network"
+  },
+  {
+    "pages": 10,
+    "occurrences": 110,
+    "mean_ms": 26.460959995165467,
+    "max_ms": 37.904900033026934,
+    "repeats": 5,
+    "scope": "synthetic repeated-page occurrences, fixture repository, no parser/LLM/network"
+  },
+  {
+    "pages": 100,
+    "occurrences": 1100,
+    "mean_ms": 205.84924002178013,
+    "max_ms": 211.51870000176132,
+    "repeats": 5,
+    "scope": "synthetic repeated-page occurrences, fixture repository, no parser/LLM/network"
+  }
+]

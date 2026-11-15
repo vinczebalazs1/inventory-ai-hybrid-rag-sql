@@ -1,0 +1,1849 @@
+{
+  "generated_at": "2026-11-14T21:43:58.493423+00:00",
+  "mode": "isolated_postgres",
+  "pipeline_scope": "Known structured fields -> real validation, preparation, repository search, matching, deltas and suggestions; no LLM.",
+  "canonical_dataset_sha256": "3a990307ca2e38916cfad1eb3410b3da7609bedcc98e3f43d0717903cdb4982a",
+  "implementation_sha256": "ef4c6b8a9f140db5220f5879573d0107130a09e0af82d2e7520bfa09b9dea9ed",
+  "source_manifest": {
+    "app/db/connection.py": "fd390dd7797175c9297bf4dba60a9ce3a4a0ea60bfb58b02c1cce1172f55d724",
+    "app/db/executor.py": "b5d4b3eb06c5c91a5feba10e10a8ff3cdb8d7e1db296bcb085396049209513cb",
+    "app/document_processing/__init__.py": "ceb5757d553b63820c9bfea9ba0a3d0beb960e04d282a407d2e3844249f32f91",
+    "app/document_processing/config.py": "3fa7daedc5f2251fd1ce75aeeab1bd7bd6160a5f133c9e91744ada58304b95ea",
+    "app/document_processing/docling_parser.py": "283ee9a7b4b752455567c36f1aa6c57946b86804937345d68e478a9c3be046cf",
+    "app/document_processing/extraction_service.py": "77a2798d61f27143b86730f47eef63c903edf57a3834f56db634e9c7ef688119",
+    "app/document_processing/field_labels.py": "55a19d7733834e6d3ecbb85f147a00dd00a792f8af006c476d975948d5b25424",
+    "app/document_processing/field_mapper.py": "3cbc10762f2304faeaa2da8b26ebcc05703ec8a0d7c4acb9885c2e15daadb92f",
+    "app/document_processing/llm_json.py": "5fa8873fd2406f246ac0a8a400d974ef20764538df75f2ad91580818b24856f1",
+    "app/document_processing/models.py": "c2b4282e29750b8a4ec5f4476d0f3ddd1cf7c73b2bb519d5fca876ada1dcba4e",
+    "app/document_processing/processing_service.py": "59f328ba7ac78bd033c5493dde33aac21dbeff9471968de5db677066123d39e1",
+    "app/document_processing/provenance.py": "521619f805b6d3d8cfa9894accf996ba6a3ba0b5ff3c9d3e8d7e9f0e9babbc9b",
+    "app/document_processing/validation_service.py": "0ecfd7c1e1ad5aa33a250a1185b07d8ba035d84e3e9287031e8e9dfd512868a5",
+    "app/errors.py": "841bc3efe80884c54c9ff6c24af2c397fe3f31562e216919af4604476428edec",
+    "app/evaluation/__init__.py": "300e04116d0e7ae52e64a254180d20c7c0ed9581af4a7a13948673168eb520f6",
+    "app/evaluation/_build_fixture.py": "24c72a9c8ca983b64fef1b67d1fc92cb84d1b918b8f00fd356c340e2348c47e6",
+    "app/evaluation/dataset.py": "0240f2f552bf0ad801608ece2407f199be2e134d755c53028d6fd1b148554fce",
+    "app/evaluation/metrics.py": "87378a71e499d9ca9e9c44d346785a6746f8ec43ec2e51b9b4aa1d8c7705638f",
+    "app/evaluation/runner.py": "2d19ab06a70882a6ddb033389b0b644be2fcb0cea4b4cd31b0acadd772b38f6e",
+    "app/orchestration/orchestrator.py": "513a408a66eaa5281d865e787d04ea585685de10780f817da08f465b3e9dc518",
+    "app/rag/embedding/embedding_service.py": "1f45f1bd7dc6e488d1265f5d5d56b0b489de36a0f2d27c41f1ac7fc6a6da81f6",
+    "app/rag/ingestion/chunker.py": "19a4ddd4d97efd253377266db45b6c73f0b80d4eb54613948e9cca123becbe06",
+    "app/rag/ingestion/document_parser.py": "596a016648b25e6781c71d7d0dc6f4622e90cf1023bab942de92dc1da72e5698",
+    "app/rag/ingestion/ingestion_service.py": "75a793be49a0866550aa61b03e4a1c7ebddd8202acff34a090fc7d6aae58cd7d",
+    "app/rag/ingestion/parser.py": "4b744f5d611277b7696d4dffbee13e77573c66aeb2d67ed64e57c79e95a847e6",
+    "app/rag/manuals.py": "b7c1d355d37b6c9e241ace5a183fb1c231e60b2f7fd6645b53138a62d2fd5e51",
+    "app/rag/models/rag_models.py": "634435b3e5736d75fdd37280723d87a87481c9672ea7e7365af972a2cb94cfac",
+    "app/rag/retrieval/rag_service.py": "4170891b04b027155852bf7068dc7f3091f753210ff313172f75a7622d661522",
+    "app/rag/retrieval/retriever.py": "cae15a56baf4b0b614a0e1ad2efac5cde73aa420e9844c5cb5e5f1462858cc4e",
+    "app/rag/vector_store/qdrant_client.py": "70bccf3b871b5c059060a77b5fa37f92dfd398f7e2a3fcdeb3e100615d41db62",
+    "app/record_matching/__init__.py": "3615c329fb53c2a965ad7884a7332a4566f0064b872a511deb760ca7778e5aa2",
+    "app/record_matching/candidate_service.py": "2436dee61d11e7c64b8a350ed5789e5fe2b2f6a076c17221691dc6c484b3873e",
+    "app/record_matching/comparison_service.py": "b5a953c697c7d25d7d2dcbb2be5bd528a8c7a52823756a90b5acc39cd2976a42",
+    "app/record_matching/config.py": "cc9b61c026919d5da0e795011d013a8010bbeebcc88471ca7f38511f91822654",
+    "app/record_matching/grouping.py": "8322d55a0d4d53b6a13b634d17aa74cf7385e557266a4c57ed8bc23f8ef15ff0",
+    "app/record_matching/inventory_audit.py": "3a3de1b2a82cc7924cc353b5dfba760ff666d6a06e66e6b4b549cdcafa8834f5",
+    "app/record_matching/matching_engine.py": "61d58c24a227c40a7822e6ad0eec0a17720bfed49fed32a8cad635a7a675cc3f",
+    "app/record_matching/models.py": "b9b758556211a87fb9640c6d907de74eed6cd5a92626a3fd9464490cc9a7b679",
+    "app/record_matching/normalization.py": "a1708b4c5cc8daa4be37f1194302371ea23d3594fa6b8b4620a816a32ed4eb48",
+    "app/record_matching/preparation.py": "39eb8177ac51b045853f57097ff7c609e166ca5f4e85206046a31797452c59cc",
+    "app/record_matching/reconciliation_service.py": "c06224c3d75be904be2b78aa9877cf8393f3648eab9a16246500b4916414bda6",
+    "app/record_matching/repository.py": "a1c6d6e3ab953d99eb7d9b04e8c846fdb7f32d5f977a4c5fed05c680ec8433f3",
+    "app/record_matching/suggestion_engine.py": "2e469081aa66ae4cdb6e23db7cec43c368511e594e54081227c0089a07d6160f",
+    "app/security/guardrails.py": "ee3d37e8b13766b427e1ec918dba37055156db3e03f3e890a9dd89107ec1792d",
+    "app/security/injection_checks.py": "feba420d24f93c33adf8bf547ec3921038434239b5933d07108ddca41f1ac9f2",
+    "app/security/sql_validator.py": "5c12a4792dae0a15f14d52277a072e65d1a5c736afebfa530fb8a0933e809a20",
+    "app/services/answer_service.py": "fcf9fb2b8b1a998d85081baa2438d9fc992dd4eb1477116ae31ac3fa21af5aa8",
+    "app/services/llm_service.py": "d366626fe609ab15c9454b55825dc219a6dd9a68c5e5950cdac0bc5b6b3dd34f",
+    "app/services/routing_service.py": "5e3a8acac1afae6c468d6e1cf24ff854c01337ab802c586c09838c6457b1164f",
+    "app/services/schema_service.py": "40c7d435c2a8000e70165d8d28db778ef24d916ee4883f84c87398f5e90c4868",
+    "app/services/sql_generation_service.py": "efc2a4d84caf252450c3e4e6b86ad8a5ddd3128fb6cedda6247f574839964a17",
+    "app/test_data/__init__.py": "df6e4e5f5dbdee9364fbf93b646157ee6d1517bad31880584fcaef61b91b6b14",
+    "app/test_data/artifacts.py": "3cc00d27ec007485e836f34483b9c79dc3eaaa16a012d7f95c0224adb82cc5be",
+    "app/test_data/catalog.py": "728be3e4f2ae14312fdf211821496374b6d529af1cd2280a9b6e87824ac285a2",
+    "app/test_data/cli.py": "bcbc81d98ef7239e1b74595e0f6c5e513d55475815a389d737bd39dd31197379",
+    "app/test_data/database.py": "927d6bfb703a6954a701d11b49143cb0c1897fd3baf7b10dfa74717a66c969d1",
+    "app/test_data/documents.py": "f85cf1e07e5190deab57671701da9a94dc2e6e94dcb155f40bb8e6956416ce6f",
+    "app/test_data/evaluation.py": "3e65aa0ad952d338c788072221489e1589f05db4edebaaf0d54f2d3500e23164",
+    "app/test_data/generator.py": "967310b0abc261162be54d3d5e3673c02c5d1570c719c95740a3ce8a60a309e7",
+    "app/test_data/models.py": "a09d6a98ebdfabb3b9b4a8f37e9481c419d299f19de134ed18ece58e9258c1ee",
+    "app/test_data/validation.py": "16710e20af1f6671393617d924ffc0ab1979c9b2b53da34af36da10c78c223d2",
+    "app/web/__init__.py": "9d975f23d1e192a593dddca637d530127638ccaf5fd7d8d2564ede2a0a128357",
+    "app/web/document_exports.py": "0937740e622342d66a6b8b1ac3c94e8045e01d6b8f7f3cb7fac6bd370263d9c2",
+    "app/web/document_preview.py": "eb9f7129b0397d95d20a7b2aae966c5914701a0175180c2bd2207155a9fb3513",
+    "app/web/reconciliation_preview.py": "2c09800bb675579683b9c32af5d26586f925ee6707cc0a77526f7b3a765aedf8",
+    "app/web/simple_server.py": "ef9731897fc8af5a5dfaa374a9e6ddbf45b93c9be6c8d0bb2bff7a84c34900d5",
+    "scripts/audit_inventory_numbers.py": "5c2cb70a3c3d2b71a480d98e4dbf53895e1a83553a075133bfb35ff6cb785530",
+    "scripts/audit_matching_schema.py": "ac3656ee215aebb21fda2035372504db2e0dc2940aac9ba62b50db4f0e091ee2",
+    "scripts/evaluate_clean_inventory.py": "0587598d61a58ccf126951ec0f92b88c4417d34433e2b4dbb7c73436bbfe01de",
+    "scripts/evaluate_matching.py": "80bfcfffc87b0b023fe4beb867c5778d15b8fa45116b93d06e8b73048d5a42ef",
+    "scripts/extract_schema.py": "dc1f5ab37cf131f53ba1dafd53f5fbe4ef3e3ea013448af837b9159f85a5844c",
+    "scripts/generate_inventory_data.py": "e7f9b429640f2dee4cd47ebe56287567d5c9658f4e1e82f70fd29d3e737ddd44",
+    "scripts/ingest_model_manuals.py": "5284fbf2835895be75e926ecf76d71a5af66f282fc30ecb0f9207f4f97f7542f",
+    "scripts/load_inventory_data.py": "c0b207781fbf3aa7295b8bd92d381b14b3f547c881345cdde5214e19d167a3cb",
+    "scripts/prepare_docling_models.py": "4e1f353894b434aec9a013afb6f366ea8552ebdcd67248ec16f45dc155c854cb",
+    "scripts/prepare_inventory_database.py": "ff0ae5b15d325c1a36b85ce74aa88664575fd3cb41c12a6fd5b01988550a6290",
+    "scripts/run_webapp.py": "ca1d3476e26ff82b64297ec42d70fa160b0cdd79ebbd677b295df391bf0dac9c",
+    "scripts/verify_clean_inventory_report.py": "034ef27388c15a8a210e3030bb8561114ac02186d63c5257ec5761e1235b5f79",
+    "scripts/verify_inventory_data.py": "8fa8eddec6beaf986935e9cf3580c1b52f080383870c39ecc661625882545a77",
+    "scripts/verify_matching_report.py": "4378ad9b6faac74bcb12f8da7915f45903d02920437be96bee4e8a00b585bb15",
+    "config/column_mapping.yaml": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "config/schema.json": "8195648a26fc5bf0a85329c4240b8a0f133c8af4e3230e7f3a040a9390970a7e",
+    "config/schema_descriptions.yaml": "714f049c9d2cbf007009fbe91ef035db663171cc51c744f56bb1a74a12092afc",
+    "migrations/001_inventory_number_unique.sql": "a04347b85bfd8faae7fa2c5512ba45d3a598952c9caf633688cb54faef49601a",
+    "migrations/001_inventory_number_unique_rollback.sql": "7b2befa565cac58411739e2a7195c3183617701ef65541773f365f1546cff99e",
+    "migrations/clean/001_create_inventory_items.sql": "b7c81ae63949d85f9a4f43f8b3797371d7d971a1db4d62096b5e4a1585e98b41",
+    "migrations/clean/002_add_inventory_constraints.sql": "1121cbba1e9ef40e248ad3bf669cec8fa0dcc084f21e2503d46e8b61df5ca809",
+    "migrations/clean/create_database.sql": "907a10acf31d42a1eea3cef1ff64231ac0b1186d6812b1b9b08e5acd726f09ab",
+    "requirements.txt": "8eab82f34f3ddfd5342e58b1414d5e42f53993c04e32718210d439a01c6b3994",
+    "requirements-dev.txt": "5db75c0524617c465009cfd230e3b20346b6e0cd1f755673b8e1140ea145a849"
+  },
+  "settings": {
+    "target_schema": "public",
+    "target_table": "inventory_items",
+    "strategy": "hybrid",
+    "max_candidates": 100,
+    "max_scan_rows": 1000,
+    "query_timeout_ms": 3000,
+    "connect_timeout_seconds": 5,
+    "max_field_length": 1000,
+    "exact_threshold": 0.95,
+    "likely_threshold": 0.72,
+    "ambiguity_margin": 0.05,
+    "duplicate_threshold": 0.45,
+    "model_conflict_cap": 0.4,
+    "inventory_number_weight": 0.5,
+    "item_code_weight": 0.4,
+    "sub_code_weight": 0.1,
+    "name_weight": 0.3,
+    "location_weight": 0.1,
+    "activation_date_weight": 0.1
+  },
+  "passed": 14,
+  "failed": 2,
+  "cases": [
+    {
+      "document_id": "D01",
+      "scenario": "Teljesen egyező leltári adatlap",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "review_required": false,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 57.17429984360933,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.8186001107096672
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 60.28770003467798
+    },
+    {
+      "document_id": "D02",
+      "scenario": "Megváltozott helyszín",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [
+        "location"
+      ],
+      "actual_delta_values": [
+        {
+          "field": "location",
+          "database_value": "LIB",
+          "document_value": "NIK"
+        }
+      ],
+      "actual_actions": [
+        "ATTACH_DOCUMENT",
+        "MANUAL_REVIEW",
+        "UPDATE_CANDIDATE"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 55.64070004038513,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.706399954855442
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 58.307499857619405
+    },
+    {
+      "document_id": "D03",
+      "scenario": "Eltérő aktiválási dátum",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [
+        "activation_date"
+      ],
+      "actual_delta_values": [
+        {
+          "field": "activation_date",
+          "database_value": "2024-02-14",
+          "document_value": "2024-02-13"
+        }
+      ],
+      "actual_actions": [
+        "ATTACH_DOCUMENT",
+        "MANUAL_REVIEW",
+        "UPDATE_CANDIDATE"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 54.992200108245015,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 2.0568000618368387
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 57.7695001848042
+    },
+    {
+      "document_id": "D04",
+      "scenario": "Eltérő pénzügyi értékek",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [
+        "current_value",
+        "purchase_value"
+      ],
+      "actual_delta_values": [
+        {
+          "field": "purchase_value",
+          "database_value": 326000,
+          "document_value": 327000
+        },
+        {
+          "field": "current_value",
+          "database_value": 154694,
+          "document_value": 155694
+        }
+      ],
+      "actual_actions": [
+        "ATTACH_DOCUMENT",
+        "MANUAL_REVIEW",
+        "UPDATE_CANDIDATE"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 56.89179990440607,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.6868000384420156
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 59.53629990108311
+    },
+    {
+      "document_id": "D05",
+      "scenario": "Hiányzó leltári szám, több azonos típusú eszköz",
+      "passed": false,
+      "checks": {
+        "match_category": false,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "AMBIGUOUS_MATCH",
+      "actual_category": "SEARCH_INCOMPLETE",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "full_table",
+      "search_complete": false,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": false,
+        "scope": "full_table",
+        "strategies": [
+          "item_code_exact",
+          "bounded_table_scan"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 100,
+        "scanned_rows": 1060,
+        "truncated": true,
+        "timed_out": false,
+        "warnings": [
+          "A teljes táblán végzett keresés eredménye meghaladja a kandidánskorlátot."
+        ],
+        "duration_ms": 131.31799991242588,
+        "inventory_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "no_usable_inventory_number",
+          "duration_ms": 0.0
+        },
+        "secondary_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 60,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 4.720999859273434
+        },
+        "fuzzy_search": {
+          "attempted": true,
+          "complete": false,
+          "matching_rows": 101,
+          "truncated": true,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 71.31500006653368
+        },
+        "identity_verified": false,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 0.949,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00011",
+          "score": 0.9,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00021",
+          "score": 0.9,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00031",
+          "score": 0.9,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00051",
+          "score": 0.9,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "A keresés teljessége vagy a séma érvényessége nem igazolt."
+      ],
+      "duration_ms": 165.52109993062913
+    },
+    {
+      "document_id": "D06",
+      "scenario": "Hibás cikkszám, létező leltári szám",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "CONFLICTING_DATA",
+      "actual_category": "CONFLICTING_DATA",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [
+        "item_code"
+      ],
+      "actual_delta_values": [
+        {
+          "field": "item_code",
+          "database_value": "LAT5540",
+          "document_value": "HIBAS-42"
+        }
+      ],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 154.46470002643764,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.9136001355946064
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": false,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 0.73333333,
+          "identifier_conflicts": [
+            "item_code"
+          ],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Pontos leltáriszám-találat mellett kritikus vagy dokumentumon belüli ellentmondás; emberi ellenőrzés szükséges."
+      ],
+      "duration_ms": 157.45669999159873
+    },
+    {
+      "document_id": "D07",
+      "scenario": "Elírt név, változatlan leltári szám",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [
+        "name"
+      ],
+      "actual_delta_values": [
+        {
+          "field": "name",
+          "database_value": "Dell Latitude 5540",
+          "document_value": "Dell Latitdue 5540"
+        }
+      ],
+      "actual_actions": [
+        "ATTACH_DOCUMENT",
+        "MANUAL_REVIEW",
+        "UPDATE_CANDIDATE"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 55.39359990507364,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.7535998485982418
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 58.15930012613535
+    },
+    {
+      "document_id": "D08",
+      "scenario": "Új, a katalógusban nem szereplő eszköz",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "NO_MATCH",
+      "actual_category": "NO_MATCH",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "CREATE_RECORD_CANDIDATE",
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "full_table",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "full_table",
+        "strategies": [
+          "inventory_number_exact",
+          "item_code_exact",
+          "bounded_table_scan"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 0,
+        "scanned_rows": 1000,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 119.35789999552071,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.682099886238575
+        },
+        "secondary_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.8097998797893524
+        },
+        "fuzzy_search": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 61.80389993824065
+        },
+        "identity_verified": false,
+        "absence_check_complete": true
+      },
+      "leading_candidates": [],
+      "reasons": [
+        "A teljes vizsgált keresési tartományban nincs elfogadható egyezés."
+      ],
+      "duration_ms": 121.25179986469448
+    },
+    {
+      "document_id": "D09",
+      "scenario": "Azonos modell másik fizikai példánya",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00006",
+      "actual_inventory_number": "L-00006",
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "review_required": false,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 163.15510007552803,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.901600044220686
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00006",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 165.76970019377768
+    },
+    {
+      "document_id": "D10",
+      "scenario": "Azonosításra alkalmatlan hiányos adatlap",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "INSUFFICIENT_DATA",
+      "actual_category": "INSUFFICIENT_DATA",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "not_searched",
+      "search_complete": false,
+      "search_metadata": {
+        "schema_info": null,
+        "complete": false,
+        "scope": "not_searched",
+        "strategies": [],
+        "candidate_limit": 100,
+        "returned_candidates": 0,
+        "scanned_rows": 0,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 0.0,
+        "inventory_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.0
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.0
+        },
+        "identity_verified": false,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [],
+      "reasons": [
+        "Nincs felhasználható azonosító vagy eszköznév az egyeztetéshez."
+      ],
+      "duration_ms": 0.6248001009225845
+    },
+    {
+      "document_id": "D11",
+      "scenario": "Közös cikkszám több lehetséges rekordhoz",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "AMBIGUOUS_MATCH",
+      "actual_category": "AMBIGUOUS_MATCH",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "full_table",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "full_table",
+        "strategies": [
+          "item_code_exact",
+          "bounded_table_scan"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 60,
+        "scanned_rows": 1060,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 213.5071000084281,
+        "inventory_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "no_usable_inventory_number",
+          "duration_ms": 0.0
+        },
+        "secondary_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 60,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 4.104600055143237
+        },
+        "fuzzy_search": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 60,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 47.5057999137789
+        },
+        "identity_verified": false,
+        "absence_check_complete": true
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 0.949,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00006",
+          "score": 0.949,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00011",
+          "score": 0.949,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00016",
+          "score": 0.949,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        },
+        {
+          "inventory_number": "L-00021",
+          "score": 0.949,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Több rekord azonosítója egyezik; a név nem igazol egyediséget."
+      ],
+      "duration_ms": 223.53540011681616
+    },
+    {
+      "document_id": "D12",
+      "scenario": "Leltári szám mellett kritikus modellellentmondás",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "CONFLICTING_DATA",
+      "actual_category": "CONFLICTING_DATA",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [
+        "name"
+      ],
+      "actual_delta_values": [
+        {
+          "field": "name",
+          "database_value": "Dell Latitude 5540",
+          "document_value": "Dell Latitude 5550"
+        }
+      ],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 58.61619999632239,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.7419999931007624
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": false,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 0.4,
+          "identifier_conflicts": [],
+          "technical_conflict": true
+        }
+      ],
+      "reasons": [
+        "Pontos leltáriszám-találat mellett kritikus vagy dokumentumon belüli ellentmondás; emberi ellenőrzés szükséges."
+      ],
+      "duration_ms": 61.50229997001588
+    },
+    {
+      "document_id": "D13",
+      "scenario": "Magyar dátum-, szám- és pénznemformázás",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "review_required": false,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 60.599299846217036,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 5.125500028952956
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 63.69840004481375
+    },
+    {
+      "document_id": "D14",
+      "scenario": "Érvénytelen dátum a dokumentumban",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00001",
+      "actual_inventory_number": "L-00001",
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 87.82140002585948,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 2.2358999121934175
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00001",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 90.39819985628128
+    },
+    {
+      "document_id": "D15",
+      "scenario": "Két eszköz, tilos egy rekordba összevonni",
+      "passed": false,
+      "checks": {
+        "match_category": false,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "CONFLICTING_DATA",
+      "actual_category": "MULTIPLE_ASSETS",
+      "expected_inventory_number": null,
+      "actual_inventory_number": null,
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "MANUAL_REVIEW"
+      ],
+      "review_required": true,
+      "search_scope": "asset_groups",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": null,
+        "complete": true,
+        "scope": "asset_groups",
+        "strategies": [],
+        "candidate_limit": 0,
+        "returned_candidates": 0,
+        "scanned_rows": 2,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 0.0,
+        "inventory_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.0
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": null,
+          "duration_ms": 0.0
+        },
+        "identity_verified": false,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [],
+      "reasons": [
+        "2 külön eszközcsoport; az értékek és javaslatok csoportonként értendők."
+      ],
+      "duration_ms": 110.91880011372268
+    },
+    {
+      "document_id": "D16",
+      "scenario": "Magyar címkék és ékezetes helyszín",
+      "passed": true,
+      "checks": {
+        "match_category": true,
+        "identity": true,
+        "field_differences": true,
+        "actions": true,
+        "review": true
+      },
+      "expected_category": "EXACT_MATCH",
+      "actual_category": "EXACT_MATCH",
+      "expected_inventory_number": "L-00003",
+      "actual_inventory_number": "L-00003",
+      "actual_differences": [],
+      "actual_delta_values": [],
+      "actual_actions": [
+        "ATTACH_DOCUMENT"
+      ],
+      "review_required": false,
+      "search_scope": "verified_identifier",
+      "search_complete": true,
+      "search_metadata": {
+        "schema_info": {
+          "table_schema": "public",
+          "table_name": "inventory_items",
+          "columns": {
+            "item_code": "text",
+            "sub_code": "integer",
+            "activation_date": "date",
+            "name": "text",
+            "purchase_value": "integer",
+            "depreciation": "integer",
+            "current_value": "integer",
+            "currency": "text",
+            "quantity": "integer",
+            "inventory_number": "text",
+            "location": "text"
+          },
+          "primary_key": [],
+          "unique_keys": [
+            [
+              "inventory_number"
+            ]
+          ],
+          "verified": true,
+          "compatible": true,
+          "differences": []
+        },
+        "complete": true,
+        "scope": "verified_identifier",
+        "strategies": [
+          "inventory_number_exact"
+        ],
+        "candidate_limit": 100,
+        "returned_candidates": 1,
+        "scanned_rows": 1,
+        "truncated": false,
+        "timed_out": false,
+        "warnings": [],
+        "duration_ms": 56.40159989707172,
+        "inventory_lookup": {
+          "attempted": true,
+          "complete": true,
+          "matching_rows": 1,
+          "truncated": false,
+          "unique_constraint_verified": true,
+          "skipped_reason": null,
+          "duration_ms": 1.8543999176472425
+        },
+        "secondary_lookup": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "primary_record_found",
+          "duration_ms": 0.0
+        },
+        "fuzzy_search": {
+          "attempted": false,
+          "complete": false,
+          "matching_rows": 0,
+          "truncated": false,
+          "unique_constraint_verified": false,
+          "skipped_reason": "verified_inventory_lookup",
+          "duration_ms": 0.0
+        },
+        "identity_verified": true,
+        "absence_check_complete": false
+      },
+      "leading_candidates": [
+        {
+          "inventory_number": "L-00003",
+          "score": 1.0,
+          "identifier_conflicts": [],
+          "technical_conflict": false
+        }
+      ],
+      "reasons": [
+        "Igazolt egyedi azonosítóegyezés, kritikus konfliktus nélkül."
+      ],
+      "duration_ms": 59.051200048998
+    }
+  ],
+  "duration_ms": 1589.6038999781013
+}

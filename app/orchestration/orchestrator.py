@@ -28,13 +28,13 @@ NAME_COLUMN_HINTS = {
 }
 
 
-def _run_sql_pipeline(question: str) -> tuple[str, dict]:
+def _run_sql_pipeline(question: str, *, hybrid: bool = False) -> tuple[str, dict]:
     """
     SQL generálása, validálása és futtatása egy kérdéshez.
     """
     # Az LLM kimenetét nem tekintjük megbízhatónak. Validáción és guardrailokon
     # kell átmennie, mielőtt eljut az adatbázis executorhoz.
-    raw_sql = generate_sql(question)
+    raw_sql = generate_sql(question, require_model_identity=True) if hybrid else generate_sql(question)
     validated_sql = validate_sql(raw_sql)
     safe_sql = ensure_limit(validated_sql)
     result = execute_query(safe_sql)
@@ -68,7 +68,7 @@ def _extract_names_from_sql_result(result: dict) -> List[str]:
             if idx < len(row):
                 value = row[idx]
                 if isinstance(value, str) and value.strip():
-                    names.append(value.strip().lower())
+                    names.append(value)
 
     return sorted(set(names))
 
@@ -98,7 +98,7 @@ def handle_question(question: str) -> dict:
             }
 
         # Az SQL és a HYBRID ág is ugyanazzal az SQL feldolgozási lánccal indul.
-        safe_sql, result = _run_sql_pipeline(question)
+        safe_sql, result = _run_sql_pipeline(question, hybrid=route == "HYBRID")
 
         if route == "SQL":
             # Csak SQL flow: a végső válasz kizárólag DB eredményre épül.
@@ -127,6 +127,7 @@ def handle_question(question: str) -> dict:
             "answer": rag_response["answer"],
             "matched_names": matched_names,
             "sources": rag_response["sources"],
+            "documentation_status": rag_response.get("documentation_status", []),
         }
     except PromptInjectionError as exc:
         # Az input-biztonsági hibák a felhasználó által javíthatók, ezért konkrét,

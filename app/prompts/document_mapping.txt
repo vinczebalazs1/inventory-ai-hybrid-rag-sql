@@ -6,6 +6,9 @@ Warranty have no match unless the actual target schema explicitly supports their
 Examples: Leltári szám / Inventory No. -> inventory_number, Location -> location,
 Eszköz neve / Asset Name -> name, but only when these columns exist in the target schema.
 Preserve every input index exactly once. Do not modify values or invent fields.
+Use the evidence to distinguish recorded values from formulas and model-level descriptions.
+Calculation operands/results and percentages are not recorded monetary amounts: use null.
+A generic record reference is not necessarily an inventory number or item code.
 Return JSON only satisfying: {schema}
 Target columns, types and descriptions: {targets}
 Extracted fields with indexes: {fields}

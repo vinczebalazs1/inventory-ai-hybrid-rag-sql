@@ -1,0 +1,124 @@
+{
+  "status": "passed",
+  "embedding_attempts": 0,
+  "embedding_successes": 0,
+  "embedding_tokens": 0,
+  "automatic_retries": 0,
+  "mode": "dry_run",
+  "planned": 11,
+  "already_present": 0,
+  "new_points": 11,
+  "count_before": 40,
+  "points": [
+    {
+      "id": "91885253-42b0-543b-bbda-c27abd0d8005",
+      "name": "Dell P2422H",
+      "item_code": "P2422H",
+      "page": 6,
+      "section": "safety/chunk-1",
+      "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+      "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+      "text_sha256": "795e59f157d68da76aecd2446707bbc745a055ed1460b1323a1c5a8ea0761eb2"
+    },
+    {
+      "id": "652c704a-0a79-5f30-9a6f-416cb7760b07",
+      "name": "Dell P2422H",
+      "item_code": "P2422H",
+      "page": 33,
+      "section": "cleaning/chunk-1",
+      "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+      "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+      "text_sha256": "2c291b25496f053b97f4e6962fe2c9fddd056c03f818570873ef0b7110e09d70"
+    },
+    {
+      "id": "17483362-ddf0-54e9-a003-49c9f6418153",
+      "name": "Dell P2422H",
+      "item_code": "P2422H",
+      "page": 69,
+      "section": "self-test-start/chunk-1",
+      "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+      "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+      "text_sha256": "c84e56436543fdd905abb50ef6f6ccc67caa5e2af38c94f9b6e5787c8b15298d"
+    },
+    {
+      "id": "6ad51c0a-dcc7-5e7f-b2e3-b33cde9f6fce",
+      "name": "Dell P2422H",
+      "item_code": "P2422H",
+      "page": 70,
+      "section": "self-test-completion/chunk-1",
+      "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+      "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+      "text_sha256": "e8a8b33b054444a683a320f8ff30e911c6a1bfa2f93f1197f7705db58730e38d"
+    },
+    {
+      "id": "33d74570-621d-5bcf-bbad-00f67db71e25",
+      "name": "Brother HL-L5200DW",
+      "item_code": "HLL5200",
+      "page": 9,
+      "section": "paper-loading/chunk-1",
+      "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+      "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+      "text_sha256": "57f36398302d5ddc89a37ca61e195471230f2b90001913601e81abde5b18e20c"
+    },
+    {
+      "id": "fc78ee79-9b8e-5881-ad2b-106b1c57b54f",
+      "name": "Brother HL-L5200DW",
+      "item_code": "HLL5200",
+      "page": 11,
+      "section": "identify-problem/chunk-1",
+      "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+      "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+      "text_sha256": "fbd44236d83442a20700976449d594263e9434fe2eb8f7fa9c744279128c5b51"
+    },
+    {
+      "id": "931ecd83-ae1c-5eba-8613-741635108144",
+      "name": "Brother HL-L5200DW",
+      "item_code": "HLL5200",
+      "page": 13,
+      "section": "no-paper/chunk-1",
+      "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+      "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+      "text_sha256": "519dc0a467f6c61581065974ed938512c5d83ce34231ba27930a0228586ae3ed"
+    },
+    {
+      "id": "06eca1dd-cc8a-501e-9497-49e363532158",
+      "name": "Epson EB-FH52",
+      "item_code": "EBFH52",
+      "page": 163,
+      "section": "maintenance-safety/chunk-1",
+      "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+      "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+      "text_sha256": "76ff30f6a5e87f1055bc7ca6af7e020af67b64c5d55cb4da480192f1185ebe29"
+    },
+    {
+      "id": "7be44a71-bcdd-5585-adfa-c711c9f76d27",
+      "name": "Epson EB-FH52",
+      "item_code": "EBFH52",
+      "page": 164,
+      "section": "lens-cleaning/chunk-1",
+      "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+      "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+      "text_sha256": "4cef3ab04ef2554fa2a3de0560dcd08d454ed80dd4acc37506f7ec81bdaf89b6"
+    },
+    {
+      "id": "661fb1bf-f1a3-5b7d-a184-1c1c719e621b",
+      "name": "Epson EB-FH52",
+      "item_code": "EBFH52",
+      "page": 165,
+      "section": "case-cleaning/chunk-1",
+      "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+      "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+      "text_sha256": "bca868d275ac59527338b1dca5c7858001110be07d2cd5f54af71035d63fe91f"
+    },
+    {
+      "id": "72811f77-8419-5ccc-8408-340df12052ad",
+      "name": "Epson EB-FH52",
+      "item_code": "EBFH52",
+      "page": 166,
+      "section": "air-filter-cleaning/chunk-1",
+      "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+      "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+      "text_sha256": "3dd9e27cc49bcdf68492a4a05c27028dda647584902b935c240bf03487375b45"
+    }
+  ]
+}

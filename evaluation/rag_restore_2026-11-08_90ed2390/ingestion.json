@@ -1,0 +1,277 @@
+{
+  "date": "2026-11-08",
+  "source": "app/rag/data/devices.txt",
+  "embedding_model": "text-embedding-3-large",
+  "embedding_requests_attempted": 40,
+  "embedding_requests_succeeded": 40,
+  "embedding_tokens": 950,
+  "ingestion_invocations": 1,
+  "automatic_retries": 0,
+  "client_version": "1.20.0",
+  "server_version": "1.20.0",
+  "collections_before": [],
+  "expected_devices": 10,
+  "expected_points": 40,
+  "ingest_returned_points": 40,
+  "status": "succeeded",
+  "verified_points": 40,
+  "payloads_exactly_match_source": true,
+  "vector_size": 3072,
+  "distance": "Cosine",
+  "name_index": "keyword",
+  "source_sha256": "dedffbfdabc6fb7f227681f5913248919ec45274c626bfe60da24f8cd248a3a0",
+  "device_names": [
+    "desk",
+    "docking station",
+    "laptop",
+    "microphone",
+    "monitor",
+    "nas",
+    "printer",
+    "server",
+    "smartphone",
+    "switch"
+  ],
+  "points": [
+    {
+      "id": "0b274e46-df8f-5d69-8a8c-e3ded266b5fb",
+      "name": "microphone",
+      "section": "description",
+      "payload_sha256": "94036c2f7c08e927dc46b73b46cad94645ff4ab42b448b905b0a164de65029a2"
+    },
+    {
+      "id": "10ba7a33-be5c-5ced-b6c6-3cb094a108be",
+      "name": "docking station",
+      "section": "usage",
+      "payload_sha256": "036cd2fdecada776d3409f58c5166128b4ebc95b6d61134f72018327aab28baf"
+    },
+    {
+      "id": "17458a34-9cb4-56aa-b355-da6a0871733e",
+      "name": "switch",
+      "section": "description",
+      "payload_sha256": "7f66fe68951f7b4ded416f66c15c30ea4fc511f642e89ce69df892f575321e29"
+    },
+    {
+      "id": "1a146415-e679-56fa-85ff-19ef9a644946",
+      "name": "nas",
+      "section": "troubleshooting",
+      "payload_sha256": "384b92b52040ee588123fdfb6d28d03937558173a49a0bd31fe038dbdbce9dea"
+    },
+    {
+      "id": "1a3f2a5e-95cf-5aa6-b171-37e93fa6aeb4",
+      "name": "desk",
+      "section": "troubleshooting",
+      "payload_sha256": "ee5c0b2f1f1262e302e375426ed0e246d1136ca99824aad8e798e30280d67966"
+    },
+    {
+      "id": "1df4b44a-822e-55b0-8879-81d98117e3f3",
+      "name": "laptop",
+      "section": "usage",
+      "payload_sha256": "d241780004f246a04a0fd17d18a35ed46a4afb0c840dc0683685499b08df8f87"
+    },
+    {
+      "id": "2061c66f-bb02-5ab7-9a65-0673af43304d",
+      "name": "smartphone",
+      "section": "notes",
+      "payload_sha256": "1aedec14cc4ebbc8f9fff0472f5e70a83a251ec2cbdb1f2491d94ecb5d2916c6"
+    },
+    {
+      "id": "2c58fb0f-a2b1-5a4a-a386-e08f69721077",
+      "name": "docking station",
+      "section": "notes",
+      "payload_sha256": "b6e8ad307d75c4990248a1999009a28124aeac62fbf56d3a3c4ed768370bef24"
+    },
+    {
+      "id": "4b58fe1b-099c-54a0-96c7-3b90294ab93e",
+      "name": "desk",
+      "section": "description",
+      "payload_sha256": "db7d9bcffbed52cea96c196e5048c8de4a3fa85b517025330fbfe8de4121534d"
+    },
+    {
+      "id": "4fdac15c-1c0f-5f2b-8765-882c7b504c8c",
+      "name": "server",
+      "section": "troubleshooting",
+      "payload_sha256": "2038bff2dbba5766eff2237c5df689e7058226105ae38df041e7aad59449fdac"
+    },
+    {
+      "id": "510365f0-dba0-5a67-8384-8ae61e5b986b",
+      "name": "smartphone",
+      "section": "usage",
+      "payload_sha256": "6b9f2f709dde3631122f1c041417f6634beb8eee62f1ae9b185ce628e7993841"
+    },
+    {
+      "id": "540c6d30-15d0-5879-b9f3-7b69b95c366b",
+      "name": "laptop",
+      "section": "description",
+      "payload_sha256": "bb9d006358fa1514f83093dda302a20752836a465c6819f98dd2d7bd71ca422f"
+    },
+    {
+      "id": "576a1317-094b-5e83-9554-eea223f72308",
+      "name": "docking station",
+      "section": "description",
+      "payload_sha256": "cf49aae99fb7dc59e8b7aa673464bafd5040facfb61a13f1d8e1dd01c55d2d29"
+    },
+    {
+      "id": "5d61fa2b-2e74-5f99-915e-f835c40a7998",
+      "name": "nas",
+      "section": "usage",
+      "payload_sha256": "a06364d2a656cc8a582bc986c308885143daa2a9136670b8948d848dd10876b7"
+    },
+    {
+      "id": "638ee600-e0d8-56b8-bf7f-fbae707e99c1",
+      "name": "laptop",
+      "section": "troubleshooting",
+      "payload_sha256": "04e888a4425bb12a2dd3f1dc251d887f5b67c89d3d336a5e4a2a2743a2deb32e"
+    },
+    {
+      "id": "65adba39-c8a1-559b-9c2c-9c38688a665d",
+      "name": "smartphone",
+      "section": "troubleshooting",
+      "payload_sha256": "c08c2757fe43723afdb3ba0d2d847b65cc66f5e0dee36e900c2a060df9637b5d"
+    },
+    {
+      "id": "6a80b963-5af9-57ec-90b2-83df10460ebf",
+      "name": "switch",
+      "section": "troubleshooting",
+      "payload_sha256": "ca1f5e1c64b4a5a19b83c3c6132976e0a5985b78abc4530d65a1fbec8b6d80d9"
+    },
+    {
+      "id": "705638a4-d344-573d-b891-a41dd5ccd9f3",
+      "name": "printer",
+      "section": "troubleshooting",
+      "payload_sha256": "dfb76c4bea87744c25b15ac9b3a78b58d405905462654fcd524d093e16c3342d"
+    },
+    {
+      "id": "7973f8d6-af0f-59e6-bdc6-db8a1a9cef00",
+      "name": "switch",
+      "section": "usage",
+      "payload_sha256": "96648279141ae03fbeaef22aa7189ebc1b552da5f36e6c6386c049dc4a750e02"
+    },
+    {
+      "id": "7a909610-37aa-541d-b0e2-303334c1f261",
+      "name": "monitor",
+      "section": "usage",
+      "payload_sha256": "9fcc027c9008755bf4a6e6dde5cd359a6fe200250678e5f64ce0a664728c09cf"
+    },
+    {
+      "id": "7eb65c3e-ceac-55fb-a9c5-31c272c423bd",
+      "name": "server",
+      "section": "description",
+      "payload_sha256": "30aeff2247676066587c09dc6bfc2786229ad758ae5b92bc3a06d36910536d27"
+    },
+    {
+      "id": "884dccb3-468a-5779-941e-b47856b32d6c",
+      "name": "docking station",
+      "section": "troubleshooting",
+      "payload_sha256": "3049fa767c8e54fa8f06e6ff5edd2489b3ba2a243e4481b529fbb4f50e6c14b2"
+    },
+    {
+      "id": "8adc7378-291c-5037-a046-e4684fdad610",
+      "name": "printer",
+      "section": "notes",
+      "payload_sha256": "ecbd20dd2562e332ac658fee612b91cf42add1c22c8ab882b187fd9ca8c596cb"
+    },
+    {
+      "id": "8da8a56f-a155-5f26-abae-41f1fd9e09a7",
+      "name": "monitor",
+      "section": "troubleshooting",
+      "payload_sha256": "1e57a77ed3f4316fa429e95c8ab0644af7169aa2d98deae67c2b3427d44905d6"
+    },
+    {
+      "id": "9ad76a42-5357-59a8-9173-15f29f864f99",
+      "name": "monitor",
+      "section": "description",
+      "payload_sha256": "970c50f1aba41b69ab97002f353d6c0d0d262354ba4bf1ff290319a8f2cdd49b"
+    },
+    {
+      "id": "a81aba20-61f0-5000-985b-b5546830944d",
+      "name": "printer",
+      "section": "description",
+      "payload_sha256": "f95f20e0bb897dedb11b627aa6a4f11cf270314cb85ec83697582eb5525cfecb"
+    },
+    {
+      "id": "b11032a0-5956-5db7-8a42-04ee84cd2b11",
+      "name": "nas",
+      "section": "notes",
+      "payload_sha256": "483b9acf529734c701a0b7898f7957c53bf791db3a1eac15a15e4a9f77fe8a0a"
+    },
+    {
+      "id": "b1ffd82f-62f5-585d-ab18-afcd02e15423",
+      "name": "printer",
+      "section": "usage",
+      "payload_sha256": "db6b1809712dd5a1ab22280535ead610db4a79d872de272deca2d9c3ae44b41f"
+    },
+    {
+      "id": "b3bd8a28-1142-5984-a0dc-20975ab94f2a",
+      "name": "nas",
+      "section": "description",
+      "payload_sha256": "5deca79a0a86cc14d8656a96004fed3e1f872ed56f42e73ffad4bf1e85b543b0"
+    },
+    {
+      "id": "b877e020-67bf-5ada-af45-70964826e282",
+      "name": "monitor",
+      "section": "notes",
+      "payload_sha256": "e41e0267c4d3da01e9f52ebdfc4a51e0e2ee765a64affb31f57d3da50865c1b7"
+    },
+    {
+      "id": "b9b69208-4602-5362-812a-f0510bc4c6e1",
+      "name": "microphone",
+      "section": "notes",
+      "payload_sha256": "851c4a3f7e077d8c1681ecfe949fd632b8665dd37628f8d516d345c811472a11"
+    },
+    {
+      "id": "bb6e88fa-54ed-5b74-a9e8-4a3d985b2d86",
+      "name": "microphone",
+      "section": "usage",
+      "payload_sha256": "577b68e634cca8d59577b96fa009e3262c9180cca8e398f95f1e12d36fb65b8d"
+    },
+    {
+      "id": "c651ca51-a285-5505-9682-bc042d6518e3",
+      "name": "desk",
+      "section": "notes",
+      "payload_sha256": "75d09872b07191b91e6bc11b17f77f2a9fb785a1453e79e089ec839b8d8c3815"
+    },
+    {
+      "id": "c7a5c0f4-456c-5d5c-bff6-965685155bae",
+      "name": "microphone",
+      "section": "troubleshooting",
+      "payload_sha256": "7dab6cf6f1c17892f2238b059ad34164a468127741db99e336b12480da6abfb5"
+    },
+    {
+      "id": "d0ae6f00-ce23-529c-9c37-66454177af52",
+      "name": "desk",
+      "section": "usage",
+      "payload_sha256": "e6beb8722faa0ebbf62279066bafd62dfbbcd7e709aec61aebf60314fe95dd4d"
+    },
+    {
+      "id": "d41efdf1-fe72-5847-9244-8f78765dc4cb",
+      "name": "server",
+      "section": "usage",
+      "payload_sha256": "cfb9141ff3b2f043fdad94f4392d6116b5806f74c54ffbf99e5410974d1a2a67"
+    },
+    {
+      "id": "e44599f5-4133-5aa7-bd47-ef4d831c290b",
+      "name": "smartphone",
+      "section": "description",
+      "payload_sha256": "278a571ab1dfa9d7b6c23f9c68ff6f3e71dd7f09fb1b548d173560801b72ac8b"
+    },
+    {
+      "id": "eb0406d9-cf47-5c8b-b335-56b11be57819",
+      "name": "switch",
+      "section": "notes",
+      "payload_sha256": "7f392e8a8626f889ae9bd2678073595d5e1e34cb0bc2e12457c77c0f4f161303"
+    },
+    {
+      "id": "f28aadbd-df2a-507f-9f14-d061ff06dc54",
+      "name": "laptop",
+      "section": "notes",
+      "payload_sha256": "4f20f2a08bd9b2bce5440b3286c6aeba2db8b2b04a428f5a9fbedc0592c30a5e"
+    },
+    {
+      "id": "fd13941e-d857-599a-88d4-e511299d487d",
+      "name": "server",
+      "section": "notes",
+      "payload_sha256": "c7d5368e2724bf8b50354d129da5594a6d876eb435c5cd35a90562fd85f404c4"
+    }
+  ]
+}

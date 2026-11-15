@@ -9,6 +9,7 @@ from app.record_matching.models import (
 )
 
 logger = logging.getLogger(__name__)
+from .document_exports import csv_bytes, reconciliation_rows
 
 RESULT_KEY = "document_reconciliation"
 ERROR_KEY = "document_reconciliation_error"
@@ -22,6 +23,7 @@ STATUS_LABELS = {
     MatchStatus.CONFLICTING_DATA: "Ellentmondó adatok",
     MatchStatus.SEARCH_INCOMPLETE: "A keresés nem teljes",
     MatchStatus.ERROR: "Egyeztetési hiba",
+    MatchStatus.MULTIPLE_ASSETS: "Több külön eszköz, csoportonkénti eredmények",
 }
 ACTION_LABELS = {
     ActionType.ATTACH_DOCUMENT: "Dokumentumcsatolás javaslata",
@@ -43,6 +45,8 @@ STRATEGY_LABELS = {"inventory_number_exact": "Pontos leltáriszám-egyezés",
 COMPARISON_LABELS = {ComparisonStatus.EQUAL: "Egyezik", ComparisonStatus.DIFFERENT: "Eltér",
                      ComparisonStatus.UNKNOWN: "Ismeretlen", ComparisonStatus.INVALID: "Hibás adat",
                      ComparisonStatus.NOT_COMPARABLE: "Nem összehasonlítható"}
+COMPARISON_LABELS.update({ComparisonStatus.INTERNAL_CONFLICT: "Belső ellentmondás",
+                          ComparisonStatus.UNCERTAIN: "Bizonytalan kinyerés"})
 
 
 def clear_reconciliation() -> None:
@@ -124,10 +128,14 @@ def _render_comparisons(result: ReconciliationResult) -> None:
         comparison.status == ComparisonStatus.DIFFERENT
         for comparison in result.field_comparisons
     )
-    st.caption(f"Eltérő mezők száma: {differences}")
+    unique = len({comparison.field for comparison in result.field_comparisons
+                  if comparison.status == ComparisonStatus.DIFFERENT})
+    st.caption(f"Eltérő mezőelőfordulások: {differences} · Egyedi eltérő mezők: {unique}")
     st.dataframe([
         {
             "Jelölt": comparison.candidate_rank,
+            "Eszközcsoport": _value(comparison.asset_group_id),
+            "Előfordulás": _value(comparison.occurrence_id),
             "Mező": FIELD_LABELS.get(comparison.field, comparison.field),
             "Eltérés": comparison.status == ComparisonStatus.DIFFERENT,
             "Forráscímke": _value(comparison.source_label),
@@ -137,6 +145,9 @@ def _render_comparisons(result: ReconciliationResult) -> None:
             "Státusz": COMPARISON_LABELS[comparison.status],
             "Bizonyíték": _value(comparison.evidence),
             "Oldal": _value(comparison.page),
+            "Validáció": _value(comparison.validation_status),
+            "Kinyerés": comparison.extraction_method,
+            "Felismerési pontszám": _value(comparison.recognition_confidence),
             "Magyarázat": comparison.explanation,
         }
         for comparison in result.field_comparisons
@@ -170,6 +181,19 @@ def _render_actions(result: ReconciliationResult) -> None:
 
 def _render_result(result: ReconciliationResult, show_debug: bool) -> None:
     st.subheader("Egyeztetési összefoglaló")
+    if result.group_results:
+        st.write(STATUS_LABELS[result.match_status])
+        st.caption(f"Eszközcsoportok száma: {result.asset_group_count}")
+        st.caption(f"Összes eltérő előfordulás: {result.counts.differing_occurrences}; "
+                   f"egyedi csoport–mező eltérés: {result.counts.unique_differing_fields}")
+        for group in result.group_results:
+            with st.expander("Eszköz: " + (group.asset_group_id or "nem azonosított"), expanded=True):
+                _render_result(group, show_debug)
+        if result.unassigned_fields:
+            st.warning("Nem hozzárendelhető mezők; emberi ellenőrzés szükséges.")
+            st.dataframe([f.model_dump(mode="json") for f in result.unassigned_fields], hide_index=True)
+        return
+    st.caption("Eszközcsoport: " + (result.asset_group_id or "nem azonosított"))
     primary_exact = (result.match_status == MatchStatus.EXACT_MATCH and result.matched_record
                      and result.matched_record.strategy == "inventory_number_exact")
     st.write("Pontos leltáriszám-egyezés" if primary_exact else STATUS_LABELS[result.match_status])
@@ -186,6 +210,20 @@ def _render_result(result: ReconciliationResult, show_debug: bool) -> None:
         st.warning("Az eredmény emberi ellenőrzést igényel.")
     else:
         st.success("Az egyeztetés nem jelzett további ellenőrzési igényt.")
+    if result.identified_record:
+        st.text("Leltári szám alapján azonosított rekord: " + str(result.identified_record.values.get("inventory_number")))
+        st.caption("Azonosítás típusa: pontos azonosító-találat. A mezőkonfliktus ettől külön vizsgált.")
+    if result.critical_conflict_fields:
+        st.warning("Kritikus mezőkonfliktus: " + ", ".join(result.critical_conflict_fields) + ". Automatikus elfogadás nincs.")
+    if result.prepared_document:
+        if result.prepared_document.internal_conflicts:
+            st.warning("Dokumentumon belüli ellentmondás: " + ", ".join(result.prepared_document.internal_conflicts))
+        with st.expander("Eszközcsoport mezői és validáció"):
+            st.dataframe([{**f.model_dump(mode="json"), "normalized_value": _value(f.normalized_value),
+                           "comparison_value": _value(f.comparison_value)} for f in result.prepared_document.fields], hide_index=True)
+        st.caption(f"Előfordulások: {result.counts.occurrences}; normalizált: {result.counts.normalized_occurrences}; "
+                   f"hibás: {result.counts.invalid_occurrences}; hiányzó/ismeretlen: {result.counts.missing_or_unknown_occurrences}; "
+                   f"bizonytalan kinyerés: {result.counts.uncertain_occurrences}")
     for reason in result.reasons:
         st.text(reason)
     if not result.search_metadata.complete:
@@ -232,3 +270,8 @@ def render_reconciliation(processing_result: ProcessingResult, show_debug: bool 
     result = st.session_state.get(RESULT_KEY)
     if result is not None:
         _render_result(result, show_debug)
+        for kind, label in (("fields", "Eszközcsoportok mezői"), ("comparisons", "Mezőösszehasonlítás"), ("candidates", "Rangsorolt rekordjelöltek")):
+            rows = reconciliation_rows(result, kind)
+            if rows:
+                st.download_button(label + " – CSV", csv_bytes(rows), file_name=f"reconciliation_{kind}.csv",
+                                   mime="text/csv", key=f"export_reconciliation_{kind}")

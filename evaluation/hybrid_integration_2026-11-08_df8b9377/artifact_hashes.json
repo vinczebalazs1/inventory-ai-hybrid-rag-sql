@@ -1,0 +1,36 @@
+{
+  "files": {
+    "data/model_manuals/manifest.json": "70d3b1cdb7990abfb0ae299aa7c45d291723e8fb5c6fd7eb3e5de9b26486bf21",
+    "data/model_manuals/README.md": "2a199c4f488013395686ad55d3ab2616a93ae879b7c85b30e328d70b7a4b015e",
+    "docs/thesis_hybrid_integration_result.md": "b1dc859d53facd3cd17cb1fb2d43a742b6139d24b25222ae7e193dd67ccbfc22",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/baseline.json": "e3528af4950e5fc939ed131bd8dd79db9c307dfb5a5cace158011794d4b0fcc1",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/dry_run.json": "43925fab0bb1a45068c039269118f737feb0725167a9095b058fe7f689e4db25",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/final_test_environment.json": "de4cbfb5e3fc507f0ad5b822737a8f973b4eb438c0d31737a7a3e306c46308dd",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/final_verification.json": "cdbd72d6fff78e3e0633efc73ed32e9054bd3b7d86ee18227705e176801402d4",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/idempotence.json": "5b5b4824c0fbf955c34143b4559339a3ccef04bdfb18499d94c1400c71b44826",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/ingestion.json": "e321efca659deedaafa7adc42513f27666a2defc64779f32d7ad63b246dccc30",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/live_checks.json": "e242a80d251f9ea547fa6f16eecc5c146b2a028ec3d8b9022887414da47edd23",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/live_checks.py": "fc81b094b686dc680835391e53f24cecb9b519ca4a6cc7196daa9fe44feed045",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/offline_final.xml": "49e13c5fb1d3cb3aad5f7108d647c8fb873673192fa34428ac19d6e012ed93d2",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/offline_tests.xml": "96524fa478c0782bf8e01529e31467a18b8bc79dc439ff59f00c4e89cc06316a",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/regression_final.xml": "cb612b31d3e3cb2f70f7f4dcce90c9f2c83d269a66b8f0dab338195c662b093c",
+    "evaluation/hybrid_integration_2026-11-08_df8b9377/regression_tests.xml": "47c669737f581407310d42188a85cd420d07f38311d8f34fa7c45e96bf9524b6"
+  },
+  "verification": {
+    "final_test_sources_unchanged": true,
+    "regression": {
+      "tests": 331,
+      "skipped": 81,
+      "failures": 0,
+      "errors": 0,
+      "passed": 250
+    },
+    "skip_reasons": {
+      "Enable --run-matching-postgres for an isolated real PostgreSQL cluster": 81
+    },
+    "old_reports_unchanged": true,
+    "public_artifacts_secret_scan_passed": true,
+    "pdfs_git_ignored": true,
+    "idempotence_no_new_api_calls": true
+  }
+}

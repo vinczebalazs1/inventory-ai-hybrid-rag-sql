@@ -1,0 +1,248 @@
+{
+  "date": "2026-11-08",
+  "chat_requests": 8,
+  "chat_succeeded": 8,
+  "chat_tokens": 2247,
+  "embedding_requests": 4,
+  "embedding_succeeded": 4,
+  "embedding_tokens": 83,
+  "limits": {
+    "chat_requests": 8,
+    "embedding_requests": 4
+  },
+  "live_calls": true,
+  "automatic_retries": 0,
+  "routes": [
+    {
+      "expected_route": "SQL",
+      "question": "How many inventory items are stored in the database?",
+      "route_correct": true,
+      "result": {
+        "ok": true,
+        "question": "How many inventory items are stored in the database?",
+        "route": "SQL",
+        "sql": "SELECT COUNT(*) AS inventory_item_count FROM inventory_items LIMIT 50",
+        "result": {
+          "columns": [
+            "inventory_item_count"
+          ],
+          "rows": [
+            [
+              1000
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "Az adatbázisban 1000 készletcikk található.",
+        "matched_names": [],
+        "sources": []
+      },
+      "retrieval_trace": []
+    },
+    {
+      "expected_route": "RAG",
+      "question": "How can I troubleshoot a printer that is not responding?",
+      "route_correct": true,
+      "result": {
+        "ok": true,
+        "question": "How can I troubleshoot a printer that is not responding?",
+        "route": "RAG",
+        "sql": null,
+        "result": {
+          "columns": [],
+          "rows": [],
+          "row_count": 0
+        },
+        "answer": "Check the printer’s power, cables, and network connection.",
+        "matched_names": [],
+        "sources": [
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "printer",
+            "doc_type": "device_txt",
+            "confidence": 62.3,
+            "text": "- Printer not responding: check power, cables, and\nnetwork connection - Poor print quality: clean print heads or replace\nink/toner - Paper jams: carefully remove jammed paper and check\nrollers - Driver issues: reinstall or update drivers"
+          },
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "switch",
+            "doc_type": "device_txt",
+            "confidence": 36.8,
+            "text": "- No connectivity: check cables and ports - Slow\nnetwork: inspect bandwidth usage - Configuration errors: reset or\nreconfigure"
+          },
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "docking station",
+            "doc_type": "device_txt",
+            "confidence": 34.4,
+            "text": "- Not detected: check compatibility - Ports not\nworking: update drivers - Power issues: verify adapter"
+          }
+        ]
+      },
+      "retrieval_trace": [
+        {
+          "method": "semantic_fallback_or_rag",
+          "names": [
+            "printer",
+            "switch",
+            "docking station"
+          ],
+          "hits": 3
+        }
+      ]
+    },
+    {
+      "expected_route": "HYBRID",
+      "question": "Where is inventory item L-00001 located, what is its name, and how should I troubleshoot the laptop if it will not turn on?",
+      "route_correct": true,
+      "result": {
+        "ok": true,
+        "question": "Where is inventory item L-00001 located, what is its name, and how should I troubleshoot the laptop if it will not turn on?",
+        "route": "HYBRID",
+        "sql": "SELECT location, name FROM inventory_items WHERE inventory_number = 'L-00001' LIMIT 10",
+        "result": {
+          "columns": [
+            "location",
+            "name"
+          ],
+          "rows": [
+            [
+              "LIB",
+              "Dell Latitude 5540"
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "Inventory item **L-00001** is located in **LIB** and is a **Dell Latitude 5540**. If it won’t turn on, check the battery and charger.",
+        "matched_names": [
+          "dell latitude 5540"
+        ],
+        "sources": [
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "laptop",
+            "doc_type": "device_txt",
+            "confidence": 45.1,
+            "text": "- Won’t turn on: check battery and charger -\nOverheating: clean fans and vents - Slow performance: upgrade RAM or\nswitch to SSD - Screen issues: check display settings or hardware"
+          },
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "docking station",
+            "doc_type": "device_txt",
+            "confidence": 35.0,
+            "text": "- Not detected: check compatibility - Ports not\nworking: update drivers - Power issues: verify adapter"
+          },
+          {
+            "source": "devices.txt",
+            "section": "description",
+            "name": "laptop",
+            "doc_type": "device_txt",
+            "confidence": 34.7,
+            "text": "A laptop is a portable personal computer with an integrated\nscreen, keyboard, battery, and hardware components. It is designed for\nmobility and can perform most tasks of a desktop computer."
+          }
+        ]
+      },
+      "retrieval_trace": [
+        {
+          "method": "name_filter",
+          "name": "dell latitude 5540",
+          "hits": 0
+        },
+        {
+          "method": "semantic_fallback_or_rag",
+          "names": [
+            "laptop",
+            "docking station",
+            "laptop"
+          ],
+          "hits": 3
+        }
+      ]
+    }
+  ],
+  "postgres": {
+    "columns": [
+      "database",
+      "read_only",
+      "records"
+    ],
+    "rows": [
+      [
+        "inventory_ai_clean",
+        "on",
+        1000
+      ]
+    ],
+    "row_count": 1
+  },
+  "reference_inventory_record": {
+    "columns": [
+      "inventory_number",
+      "name",
+      "location"
+    ],
+    "rows": [
+      [
+        "L-00001",
+        "Dell Latitude 5540",
+        "LIB"
+      ]
+    ],
+    "row_count": 1
+  },
+  "hybrid_name_analysis": {
+    "clean_distinct_names": 26,
+    "knowledge_names": [
+      "desk",
+      "docking station",
+      "laptop",
+      "microphone",
+      "monitor",
+      "nas",
+      "printer",
+      "server",
+      "smartphone",
+      "switch"
+    ],
+    "exact_name_intersection": [],
+    "live_full_model_filter": {
+      "name": "dell latitude 5540",
+      "hits": 0
+    }
+  },
+  "semantic_search": {
+    "question": "My printer is not responding. What should I check?",
+    "hits": [
+      {
+        "name": "printer",
+        "section": "troubleshooting",
+        "source": "devices.txt",
+        "doc_type": "device_txt",
+        "score": 0.6484557
+      },
+      {
+        "name": "switch",
+        "section": "troubleshooting",
+        "source": "devices.txt",
+        "doc_type": "device_txt",
+        "score": 0.37956876
+      },
+      {
+        "name": "docking station",
+        "section": "troubleshooting",
+        "source": "devices.txt",
+        "doc_type": "device_txt",
+        "score": 0.36425832
+      }
+    ],
+    "printer_rank_one": true
+  },
+  "provider_errors": [],
+  "status": "passed",
+  "points_after_checks": 40
+}

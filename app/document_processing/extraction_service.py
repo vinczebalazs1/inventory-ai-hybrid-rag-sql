@@ -6,6 +6,7 @@ from collections.abc import Iterator
 from .config import Settings
 from .llm_json import prompt, request_json
 from .models import ExtractedField, ExtractionResult, Model, ParsedDocument
+from .provenance import ground, spans
 
 logger = logging.getLogger(__name__)
 
@@ -52,17 +53,17 @@ def extract_fields(document: ParsedDocument, settings: Settings) -> ExtractionRe
             if result.document_type and result.document_type not in document_types:
                 document_types.append(result.document_type)
             for field in result.fields:
-                evidence = field.evidence
-                if not evidence or _whitespace(evidence) not in _whitespace(chunk):
-                    evidence = None
-                checked = field.model_copy(update={
-                    "evidence": evidence,
-                    "page": page if evidence is not None else None,
-                })
-                key = (checked.label, checked.value, checked.evidence)
-                if key not in seen:
-                    seen.add(key)
-                    fields.append(checked)
+                checked = ground(field, document, page, chunk)
+                source = document.pages.get(page, "") if page is not None else document.extraction_text
+                locations = spans(source, checked.context or checked.evidence) or [None]
+                for location in locations:
+                    occurrence = checked.model_copy(update={"source_span": location})
+                    key = (page, location, occurrence.label, occurrence.value,
+                           occurrence.evidence, occurrence.context, occurrence.value_origin)
+                    if key not in seen:
+                        seen.add(key)
+                        occurrence.occurrence_id = f"occurrence-{len(fields) + 1}"
+                        fields.append(occurrence)
     logger.info("Extraction completed: chunks=%d fields=%d", count, len(fields))
     return ExtractionResult(
         source_name=document.source_name,

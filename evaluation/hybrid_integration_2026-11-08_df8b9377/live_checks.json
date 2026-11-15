@@ -1,0 +1,749 @@
+{
+  "status": "passed",
+  "chat_attempts": 16,
+  "chat_successes": 16,
+  "chat_tokens": 9059,
+  "embedding_attempts": 4,
+  "embedding_successes": 4,
+  "embedding_tokens": 97,
+  "automatic_retries": 0,
+  "cases": [
+    {
+      "expected_route": "SQL",
+      "expected_item_code": null,
+      "question": "How many inventory items are stored in the database?",
+      "result": {
+        "ok": true,
+        "question": "How many inventory items are stored in the database?",
+        "route": "SQL",
+        "sql": "SELECT COUNT(*) AS inventory_item_count FROM inventory_items LIMIT 50",
+        "result": {
+          "columns": [
+            "inventory_item_count"
+          ],
+          "rows": [
+            [
+              1000
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "1000 készletcikk van az adatbázisban.",
+        "matched_names": [],
+        "sources": []
+      },
+      "retrieval": [],
+      "checks_passed": true
+    },
+    {
+      "expected_route": "RAG",
+      "expected_item_code": null,
+      "question": "How can I troubleshoot a docking station whose ports are not working?",
+      "result": {
+        "ok": true,
+        "question": "How can I troubleshoot a docking station whose ports are not working?",
+        "route": "RAG",
+        "sql": null,
+        "result": {
+          "columns": [],
+          "rows": [],
+          "row_count": 0
+        },
+        "answer": "The general documentation recommends updating the drivers when a docking station’s ports are not working. This is general advice, not model-specific manufacturer guidance.",
+        "matched_names": [],
+        "sources": [
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "docking station",
+            "doc_type": "device_txt",
+            "confidence": 53.0,
+            "text": "- Not detected: check compatibility - Ports not\nworking: update drivers - Power issues: verify adapter",
+            "item_code": null,
+            "source_url": null,
+            "source_sha256": null,
+            "page": null,
+            "source_kind": "general"
+          },
+          {
+            "source": "devices.txt",
+            "section": "description",
+            "name": "docking station",
+            "doc_type": "device_txt",
+            "confidence": 47.1,
+            "text": "A docking station expands the connectivity of a laptop,\nallowing connection to multiple peripherals.",
+            "item_code": null,
+            "source_url": null,
+            "source_sha256": null,
+            "page": null,
+            "source_kind": "general"
+          },
+          {
+            "source": "devices.txt",
+            "section": "troubleshooting",
+            "name": "switch",
+            "doc_type": "device_txt",
+            "confidence": 40.9,
+            "text": "- No connectivity: check cables and ports - Slow\nnetwork: inspect bandwidth usage - Configuration errors: reset or\nreconfigure",
+            "item_code": null,
+            "source_url": null,
+            "source_sha256": null,
+            "page": null,
+            "source_kind": "general"
+          }
+        ]
+      },
+      "retrieval": [
+        {
+          "method": "semantic_rag",
+          "hits": [
+            {
+              "name": "docking station",
+              "section": "troubleshooting",
+              "source": "devices.txt",
+              "doc_type": "device_txt",
+              "score": 0.5297763,
+              "text_sha256": "8ba1ad6cff1490010af6da3d19dfb9c8a6e7f5da0fa03475411ec5125c63a17c"
+            },
+            {
+              "name": "docking station",
+              "section": "description",
+              "source": "devices.txt",
+              "doc_type": "device_txt",
+              "score": 0.4706872,
+              "text_sha256": "40294acce74bdb31151bb425530e812963f09127ea7c315a3491144fdefcc73e"
+            },
+            {
+              "name": "switch",
+              "section": "troubleshooting",
+              "source": "devices.txt",
+              "doc_type": "device_txt",
+              "score": 0.40933105,
+              "text_sha256": "ee5df16dfaf11cd3c9caebcd4cc83242587675379e978e6b0fb0707ad2429a2a"
+            }
+          ]
+        }
+      ],
+      "checks_passed": true
+    },
+    {
+      "expected_route": "HYBRID",
+      "expected_item_code": "P2422H",
+      "question": "Where is inventory item L-00502, what are its name and item_code, and how do I perform its monitor self-test?",
+      "result": {
+        "ok": true,
+        "question": "Where is inventory item L-00502, what are its name and item_code, and how do I perform its monitor self-test?",
+        "route": "HYBRID",
+        "sql": "SELECT location, name, item_code FROM inventory_items WHERE inventory_number = 'L-00502' LIMIT 20",
+        "result": {
+          "columns": [
+            "location",
+            "name",
+            "item_code"
+          ],
+          "rows": [
+            [
+              "KANDÓ",
+              "Dell P2422H",
+              "P2422H"
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "Inventory item **L-00502** is at **KANDÓ**. Its name is **Dell P2422H**, and its item_code is **P2422H**.\n\nTo run its self-test:\n\n1. Follow the monitor’s safety instructions first.\n2. Turn off both the computer and monitor.\n3. Disconnect all video cables from the monitor.\n4. Turn on the monitor.\n\nIf the monitor is working properly but detects no video signal, a dialog should appear against a black background; the power LED remains white. After the test, turn off the monitor, reconnect the video cable, then turn on both the computer and monitor. If the screen is still blank, check the computer and video controller. **(Dell P2422H User’s Guide, PDF pp. 6, 69–70.)**",
+        "matched_names": [
+          "Dell P2422H"
+        ],
+        "sources": [
+          {
+            "source": "P2422H.pdf",
+            "section": "self-test-start/chunk-1",
+            "name": "Dell P2422H",
+            "doc_type": "manufacturer_manual",
+            "confidence": 36.9,
+            "text": "Troubleshooting  │  69\nTroubleshooting\nWARNING: Before you begin any of the procedures in this section,\nfollow the Safety instructions.\nSelf-Test\nYour monitor provides a self-test feature that allows you to check if your monitor is\nfunction",
+            "item_code": "P2422H",
+            "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+            "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+            "page": 69,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "P2422H.pdf",
+            "section": "self-test-completion/chunk-1",
+            "name": "Dell P2422H",
+            "doc_type": "manufacturer_manual",
+            "confidence": 31.5,
+            "text": "70  │  Troubleshooting\nNo DP Cable\nThe display will go into Standby mode in 4 minutes.\nwww.dell.com/P2X22H\n4. This box also appears during normal system operation, if the video cable\nbecomes disconnected or damaged.\n5. Turn Off your monitor",
+            "item_code": "P2422H",
+            "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+            "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+            "page": 70,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "P2422H.pdf",
+            "section": "cleaning/chunk-1",
+            "name": "Dell P2422H",
+            "doc_type": "manufacturer_manual",
+            "confidence": 31.5,
+            "text": "Maintenance guidelines\nCleaning your monitor\nWARNING: Before cleaning the monitor, unplug the monitor power\ncable from the electrical outlet.\nCAUTION: Read and follow the Safety instructions before cleaning the\nmonitor.\nFor best practices, ",
+            "item_code": "P2422H",
+            "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+            "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+            "page": 33,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "P2422H.pdf",
+            "section": "safety/chunk-1",
+            "name": "Dell P2422H",
+            "doc_type": "manufacturer_manual",
+            "confidence": 30.2,
+            "text": "6  │  Safety instructions\nSafety instructions\nUse the following safety guidelines to protect your monitor from potential damage\nand to ensure your personal safety. Unless otherwise noted, each procedure\nincluded in this document assumes tha",
+            "item_code": "P2422H",
+            "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+            "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+            "page": 6,
+            "source_kind": "manufacturer"
+          }
+        ],
+        "documentation_status": [
+          {
+            "name": "Dell P2422H",
+            "item_code": "P2422H",
+            "status": "matched"
+          }
+        ]
+      },
+      "retrieval": [
+        {
+          "method": "exact_model",
+          "name": "Dell P2422H",
+          "item_code": "P2422H",
+          "hits": [
+            {
+              "name": "Dell P2422H",
+              "section": "self-test-start/chunk-1",
+              "source": "P2422H.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "P2422H",
+              "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+              "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+              "page": 69,
+              "score": 0.3691293,
+              "text_sha256": "c84e56436543fdd905abb50ef6f6ccc67caa5e2af38c94f9b6e5787c8b15298d"
+            },
+            {
+              "name": "Dell P2422H",
+              "section": "self-test-completion/chunk-1",
+              "source": "P2422H.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "P2422H",
+              "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+              "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+              "page": 70,
+              "score": 0.3151461,
+              "text_sha256": "e8a8b33b054444a683a320f8ff30e911c6a1bfa2f93f1197f7705db58730e38d"
+            },
+            {
+              "name": "Dell P2422H",
+              "section": "cleaning/chunk-1",
+              "source": "P2422H.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "P2422H",
+              "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+              "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+              "page": 33,
+              "score": 0.3148411,
+              "text_sha256": "2c291b25496f053b97f4e6962fe2c9fddd056c03f818570873ef0b7110e09d70"
+            },
+            {
+              "name": "Dell P2422H",
+              "section": "safety/chunk-1",
+              "source": "P2422H.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "P2422H",
+              "source_url": "https://dl.dell.com/content/manual716384-p2422h-monitor-user-s-guide.pdf?language=en-us",
+              "source_sha256": "fc8a6b1bf8f639d84d36fea14ea728c63f02e05204f76a402fb6b4f63677f020",
+              "page": 6,
+              "score": 0.30201536,
+              "text_sha256": "795e59f157d68da76aecd2446707bbc745a055ed1460b1323a1c5a8ea0761eb2"
+            }
+          ]
+        }
+      ],
+      "checks_passed": true
+    },
+    {
+      "expected_route": "HYBRID",
+      "expected_item_code": "HLL5200",
+      "question": "Where is inventory item L-00703, what are its name and item_code, and what should I do when the printer displays No Paper?",
+      "result": {
+        "ok": true,
+        "question": "Where is inventory item L-00703, what are its name and item_code, and what should I do when the printer displays No Paper?",
+        "route": "HYBRID",
+        "sql": "SELECT name, item_code, location FROM inventory_items WHERE inventory_number = 'L-00703' LIMIT 50",
+        "result": {
+          "columns": [
+            "name",
+            "item_code",
+            "location"
+          ],
+          "rows": [
+            [
+              "Brother HL-L5200DW",
+              "HLL5200",
+              "KANDÓ"
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "Inventory item **L-00703** is located at **KANDÓ**. Its name is **Brother HL-L5200DW** and its item_code is **HLL5200**.\n\nIf it displays **“No Paper,”** refill the paper tray, or remove and reload the paper if it is already there. In either case, make sure the paper guides are set to the correct size, and do not overfill the tray. *(Brother HL-L5200DW manufacturer manual, HLL5200.pdf, p. 13.)*",
+        "matched_names": [
+          "Brother HL-L5200DW"
+        ],
+        "sources": [
+          {
+            "source": "HLL5200.pdf",
+            "section": "no-paper/chunk-1",
+            "name": "Brother HL-L5200DW",
+            "doc_type": "manufacturer_manual",
+            "confidence": 44.4,
+            "text": "No Paper The machine is out of\npaper, or paper is not\nloaded correctly in the\npaper tray.\n• Refill paper in the paper tray. Make\nsure the paper guides are set to\nthe correct size.\n• If paper is in the tray, remove it and\nload it again. Make",
+            "item_code": "HLL5200",
+            "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+            "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+            "page": 13,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "HLL5200.pdf",
+            "section": "paper-loading/chunk-1",
+            "name": "Brother HL-L5200DW",
+            "doc_type": "manufacturer_manual",
+            "confidence": 37.2,
+            "text": "Load Paper in the\nPaper Tray\nUse the paper tray when printing on the\nfollowing media:\nPlain paper\nThin paper\nRecycled paper\nLetterhead\nColoured paper\nThick paper 1\n• Adjust the guides\n• Fan the paper\nFor more information, see the Online Use",
+            "item_code": "HLL5200",
+            "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+            "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+            "page": 9,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "HLL5200.pdf",
+            "section": "identify-problem/chunk-1",
+            "name": "Brother HL-L5200DW",
+            "doc_type": "manufacturer_manual",
+            "confidence": 33.5,
+            "text": "Use this section to resolve problems you may encounter when using your Brother machine.\nIdentify the Problem\nEven if there seems to be a problem with your machine, you can correct most problems yourself.\nFirst, check the following:\n• The ma",
+            "item_code": "HLL5200",
+            "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+            "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+            "page": 11,
+            "source_kind": "manufacturer"
+          }
+        ],
+        "documentation_status": [
+          {
+            "name": "Brother HL-L5200DW",
+            "item_code": "HLL5200",
+            "status": "matched"
+          }
+        ]
+      },
+      "retrieval": [
+        {
+          "method": "exact_model",
+          "name": "Brother HL-L5200DW",
+          "item_code": "HLL5200",
+          "hits": [
+            {
+              "name": "Brother HL-L5200DW",
+              "section": "no-paper/chunk-1",
+              "source": "HLL5200.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "HLL5200",
+              "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+              "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+              "page": 13,
+              "score": 0.44411564,
+              "text_sha256": "519dc0a467f6c61581065974ed938512c5d83ce34231ba27930a0228586ae3ed"
+            },
+            {
+              "name": "Brother HL-L5200DW",
+              "section": "paper-loading/chunk-1",
+              "source": "HLL5200.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "HLL5200",
+              "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+              "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+              "page": 9,
+              "score": 0.37173063,
+              "text_sha256": "57f36398302d5ddc89a37ca61e195471230f2b90001913601e81abde5b18e20c"
+            },
+            {
+              "name": "Brother HL-L5200DW",
+              "section": "identify-problem/chunk-1",
+              "source": "HLL5200.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "HLL5200",
+              "source_url": "https://download.brother.com/welcome/doc100478/cv_hll5000d_asoce_rg.pdf",
+              "source_sha256": "bf9d241b41a384999537de8e7e078a356faa0b49c6183ae93a05d046615ede88",
+              "page": 11,
+              "score": 0.33531082,
+              "text_sha256": "fbd44236d83442a20700976449d594263e9434fe2eb8f7fa9c744279128c5b51"
+            }
+          ]
+        }
+      ],
+      "checks_passed": true
+    },
+    {
+      "expected_route": "HYBRID",
+      "expected_item_code": "EBFH52",
+      "question": "Where is inventory item L-00901, what are its name and item_code, and how should I clean its projector air filter?",
+      "result": {
+        "ok": true,
+        "question": "Where is inventory item L-00901, what are its name and item_code, and how should I clean its projector air filter?",
+        "route": "HYBRID",
+        "sql": "SELECT name, item_code, inventory_number, location FROM inventory_items WHERE inventory_number = 'L-00901' LIMIT 20",
+        "result": {
+          "columns": [
+            "name",
+            "item_code",
+            "inventory_number",
+            "location"
+          ],
+          "rows": [
+            [
+              "Epson EB-FH52",
+              "EBFH52",
+              "L-00901",
+              "LIB"
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "Inventory item **L-00901** is in **LIB**. Its name is **Epson EB-FH52** and its item code is **EBFH52**. (SQL result)\n\nTo clean its air filter: **turn off the projector and unplug the power cord**, then gently remove dust with a small computer vacuum or a very soft brush. The filter can be removed to clean both sides. **Do not rinse it or use detergent, solvent, or canned air.** If dust is difficult to remove or the filter is damaged, replace it. (Epson EB-FH52 manufacturer manual, PDF p. 166)",
+        "matched_names": [
+          "Epson EB-FH52"
+        ],
+        "sources": [
+          {
+            "source": "EBFH52.pdf",
+            "section": "air-filter-cleaning/chunk-1",
+            "name": "Epson EB-FH52",
+            "doc_type": "manufacturer_manual",
+            "confidence": 56.0,
+            "text": "Cleaning the Air Filter and Vents\nClean the projector's air filter  or vents if they get dusty, or if you see a message\ntelling you to clean them.\na Turn off the projector and unplug the power cord.\nb Gen\ntly remove the dust using a small v",
+            "item_code": "EBFH52",
+            "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+            "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+            "page": 166,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "EBFH52.pdf",
+            "section": "maintenance-safety/chunk-1",
+            "name": "Epson EB-FH52",
+            "doc_type": "manufacturer_manual",
+            "confidence": 52.8,
+            "text": "Y ou may need to clean the projector's lens periodically, and clean the air\nfilt er\nand air vents to prevent the projector from overheating due to blocked\nventilation.\nThe only parts you should replace are the lamp, air filter, and remote c",
+            "item_code": "EBFH52",
+            "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+            "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+            "page": 163,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "EBFH52.pdf",
+            "section": "lens-cleaning/chunk-1",
+            "name": "Epson EB-FH52",
+            "doc_type": "manufacturer_manual",
+            "confidence": 47.9,
+            "text": "Clean the projector's lens periodically, or whenever you notice dust or smudges\non th\ne surface.\n• To remove dust or smudges, gently wipe the lens with clean and dry lens-\ncleaning paper.\n• If the lens is dusty, blow off dust using a blower",
+            "item_code": "EBFH52",
+            "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+            "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+            "page": 164,
+            "source_kind": "manufacturer"
+          },
+          {
+            "source": "EBFH52.pdf",
+            "section": "case-cleaning/chunk-1",
+            "name": "Epson EB-FH52",
+            "doc_type": "manufacturer_manual",
+            "confidence": 44.4,
+            "text": "Before cleaning the projector case, turn off  t he projector and unplug the power\ncord.\n• To remove dust or dirt, use a soft, dry, lint-free cloth.\n• To remove stubborn dirt, use a soft cloth moistened with water and mild\nsoap. Do not spray",
+            "item_code": "EBFH52",
+            "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+            "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+            "page": 165,
+            "source_kind": "manufacturer"
+          }
+        ],
+        "documentation_status": [
+          {
+            "name": "Epson EB-FH52",
+            "item_code": "EBFH52",
+            "status": "matched"
+          }
+        ]
+      },
+      "retrieval": [
+        {
+          "method": "exact_model",
+          "name": "Epson EB-FH52",
+          "item_code": "EBFH52",
+          "hits": [
+            {
+              "name": "Epson EB-FH52",
+              "section": "air-filter-cleaning/chunk-1",
+              "source": "EBFH52.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "EBFH52",
+              "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+              "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+              "page": 166,
+              "score": 0.56038404,
+              "text_sha256": "3dd9e27cc49bcdf68492a4a05c27028dda647584902b935c240bf03487375b45"
+            },
+            {
+              "name": "Epson EB-FH52",
+              "section": "maintenance-safety/chunk-1",
+              "source": "EBFH52.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "EBFH52",
+              "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+              "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+              "page": 163,
+              "score": 0.52795446,
+              "text_sha256": "76ff30f6a5e87f1055bc7ca6af7e020af67b64c5d55cb4da480192f1185ebe29"
+            },
+            {
+              "name": "Epson EB-FH52",
+              "section": "lens-cleaning/chunk-1",
+              "source": "EBFH52.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "EBFH52",
+              "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+              "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+              "page": 164,
+              "score": 0.47871807,
+              "text_sha256": "4cef3ab04ef2554fa2a3de0560dcd08d454ed80dd4acc37506f7ec81bdaf89b6"
+            },
+            {
+              "name": "Epson EB-FH52",
+              "section": "case-cleaning/chunk-1",
+              "source": "EBFH52.pdf",
+              "doc_type": "manufacturer_manual",
+              "item_code": "EBFH52",
+              "source_url": "https://download.epson-europe.com/pub/download/6635/epson663507eu.pdf",
+              "source_sha256": "0b5b21ca652553cb02f721deade72ec497a95c160c64fc55bc11bdfa04ca7a9e",
+              "page": 165,
+              "score": 0.4442925,
+              "text_sha256": "bca868d275ac59527338b1dca5c7858001110be07d2cd5f54af71035d63fe91f"
+            }
+          ]
+        }
+      ],
+      "checks_passed": true
+    },
+    {
+      "expected_route": "HYBRID",
+      "expected_item_code": "LAT5540",
+      "question": "Where is inventory item L-00001, what are its name and item_code, and how should I troubleshoot its battery?",
+      "result": {
+        "ok": true,
+        "question": "Where is inventory item L-00001, what are its name and item_code, and how should I troubleshoot its battery?",
+        "route": "HYBRID",
+        "sql": "SELECT name, item_code, inventory_number, location FROM inventory_items WHERE inventory_number = 'L-00001' LIMIT 10",
+        "result": {
+          "columns": [
+            "name",
+            "item_code",
+            "inventory_number",
+            "location"
+          ],
+          "rows": [
+            [
+              "Dell Latitude 5540",
+              "LAT5540",
+              "L-00001",
+              "LIB"
+            ]
+          ],
+          "row_count": 1
+        },
+        "answer": "Dell Latitude 5540 (LAT5540): Nincs ehhez a modellhez ellenőrzött, betöltött gyártói dokumentáció.\nSQL-találatok:\nname: Dell Latitude 5540; item_code: LAT5540; inventory_number: L-00001; location: LIB",
+        "matched_names": [
+          "Dell Latitude 5540"
+        ],
+        "sources": [],
+        "documentation_status": [
+          {
+            "name": "Dell Latitude 5540",
+            "item_code": "LAT5540",
+            "status": "undocumented_model"
+          }
+        ]
+      },
+      "retrieval": [],
+      "checks_passed": true
+    }
+  ],
+  "limits": {
+    "chat": 20,
+    "embedding": 6
+  },
+  "source_manifest": {
+    "app/db/connection.py": "fd390dd7797175c9297bf4dba60a9ce3a4a0ea60bfb58b02c1cce1172f55d724",
+    "app/db/executor.py": "b5d4b3eb06c5c91a5feba10e10a8ff3cdb8d7e1db296bcb085396049209513cb",
+    "app/document_processing/__init__.py": "ceb5757d553b63820c9bfea9ba0a3d0beb960e04d282a407d2e3844249f32f91",
+    "app/document_processing/config.py": "3fa7daedc5f2251fd1ce75aeeab1bd7bd6160a5f133c9e91744ada58304b95ea",
+    "app/document_processing/docling_parser.py": "d7ff71215194bb92e4085df555b82cdca844432730a2d6805a74394ad9adf868",
+    "app/document_processing/extraction_service.py": "31963f1e081142623e6427eebdd557668f76496549338b74aa3881e021f2a778",
+    "app/document_processing/field_mapper.py": "67e1e3df226d65bb1cfebd55afef31352e062ef641aaa1b17b0381edbbefec70",
+    "app/document_processing/llm_json.py": "5fa8873fd2406f246ac0a8a400d974ef20764538df75f2ad91580818b24856f1",
+    "app/document_processing/models.py": "88c2481984cf84d24051514fddf9c756bc6f4dcac6cb54cccbef6db83c73373c",
+    "app/document_processing/processing_service.py": "59f328ba7ac78bd033c5493dde33aac21dbeff9471968de5db677066123d39e1",
+    "app/document_processing/validation_service.py": "d489c2dc934a9b296e4e36832e73be81d5762d4578c882a4a71129a0539d6100",
+    "app/errors.py": "841bc3efe80884c54c9ff6c24af2c397fe3f31562e216919af4604476428edec",
+    "app/evaluation/__init__.py": "300e04116d0e7ae52e64a254180d20c7c0ed9581af4a7a13948673168eb520f6",
+    "app/evaluation/_build_fixture.py": "24c72a9c8ca983b64fef1b67d1fc92cb84d1b918b8f00fd356c340e2348c47e6",
+    "app/evaluation/dataset.py": "0240f2f552bf0ad801608ece2407f199be2e134d755c53028d6fd1b148554fce",
+    "app/evaluation/metrics.py": "87378a71e499d9ca9e9c44d346785a6746f8ec43ec2e51b9b4aa1d8c7705638f",
+    "app/evaluation/runner.py": "a1b68c3913bea79bd378f781de2c13587b63221f0e189093d6a16a6a9f6b07a3",
+    "app/orchestration/orchestrator.py": "513a408a66eaa5281d865e787d04ea585685de10780f817da08f465b3e9dc518",
+    "app/prompts/answer_generation.txt": "8c0529e9389a0423223a462d715578857fd3d32b24261c7cc9728f4f7fdc21e3",
+    "app/prompts/document_extraction.txt": "02add1a4e9e7c4c38169554894bec555565477d812725a81de477bc8a47fb069",
+    "app/prompts/document_mapping.txt": "4703ab3d84747a2952db8f05d3eb522982da5b4c6348e659012b7d3c7e26eaf6",
+    "app/prompts/document_repair.txt": "9e4e03debe75683d75804862664a2579971630efecf5932e02156380279e7ae3",
+    "app/prompts/text_to_sql.txt": "ac9429cd08300ca32add01ac680be966b2d27aa1bb0fc5bca3c5eb2ce6963b31",
+    "app/rag/embedding/embedding_service.py": "1f45f1bd7dc6e488d1265f5d5d56b0b489de36a0f2d27c41f1ac7fc6a6da81f6",
+    "app/rag/ingestion/chunker.py": "19a4ddd4d97efd253377266db45b6c73f0b80d4eb54613948e9cca123becbe06",
+    "app/rag/ingestion/document_parser.py": "596a016648b25e6781c71d7d0dc6f4622e90cf1023bab942de92dc1da72e5698",
+    "app/rag/ingestion/ingestion_service.py": "75a793be49a0866550aa61b03e4a1c7ebddd8202acff34a090fc7d6aae58cd7d",
+    "app/rag/ingestion/parser.py": "4b744f5d611277b7696d4dffbee13e77573c66aeb2d67ed64e57c79e95a847e6",
+    "app/rag/manuals.py": "b7c1d355d37b6c9e241ace5a183fb1c231e60b2f7fd6645b53138a62d2fd5e51",
+    "app/rag/models/rag_models.py": "634435b3e5736d75fdd37280723d87a87481c9672ea7e7365af972a2cb94cfac",
+    "app/rag/retrieval/rag_service.py": "4170891b04b027155852bf7068dc7f3091f753210ff313172f75a7622d661522",
+    "app/rag/retrieval/retriever.py": "cae15a56baf4b0b614a0e1ad2efac5cde73aa420e9844c5cb5e5f1462858cc4e",
+    "app/rag/vector_store/qdrant_client.py": "70bccf3b871b5c059060a77b5fa37f92dfd398f7e2a3fcdeb3e100615d41db62",
+    "app/record_matching/__init__.py": "3615c329fb53c2a965ad7884a7332a4566f0064b872a511deb760ca7778e5aa2",
+    "app/record_matching/candidate_service.py": "c889ebd03dd7c77191453b5fcb3be6d3e6d8f4bc36eff14b67a1dad3115232e6",
+    "app/record_matching/comparison_service.py": "515e9fb2b767f9d741fdb8fc52d2acda79303446fa3abdfe43698b8ab9933da2",
+    "app/record_matching/config.py": "cc9b61c026919d5da0e795011d013a8010bbeebcc88471ca7f38511f91822654",
+    "app/record_matching/inventory_audit.py": "3a3de1b2a82cc7924cc353b5dfba760ff666d6a06e66e6b4b549cdcafa8834f5",
+    "app/record_matching/matching_engine.py": "ec5e20c195801271a85e204c71b689a61bfe4ffb0d00bb6a3d17fa796e4bc7e3",
+    "app/record_matching/models.py": "488712b35893fde97068a13e8b4943cdeae3976c9ed02afd47091d359e0124a8",
+    "app/record_matching/normalization.py": "1c01621dcdeee29f8e7301ce607c596c0ae3013a7a241341c475ca9f401640ff",
+    "app/record_matching/preparation.py": "4d0b407daab3ddba4c6e4110db3b6964084e786219a8142fb469f61a6f2e1284",
+    "app/record_matching/reconciliation_service.py": "b95d81b0bd210fc2eba054f5d591a7e2da030de184ba79523b07150cbc371cd1",
+    "app/record_matching/repository.py": "56d0a2bfa40facffa5a57ae7e4fd76580172326ad5ba611add0b1c85bfe83b1d",
+    "app/record_matching/suggestion_engine.py": "95f41c7277d3a97b67f02cf975496ea4b3f054d980801ee0ff17a1526e8d29d7",
+    "app/security/guardrails.py": "ee3d37e8b13766b427e1ec918dba37055156db3e03f3e890a9dd89107ec1792d",
+    "app/security/injection_checks.py": "feba420d24f93c33adf8bf547ec3921038434239b5933d07108ddca41f1ac9f2",
+    "app/security/sql_validator.py": "5c12a4792dae0a15f14d52277a072e65d1a5c736afebfa530fb8a0933e809a20",
+    "app/services/answer_service.py": "fcf9fb2b8b1a998d85081baa2438d9fc992dd4eb1477116ae31ac3fa21af5aa8",
+    "app/services/llm_service.py": "d366626fe609ab15c9454b55825dc219a6dd9a68c5e5950cdac0bc5b6b3dd34f",
+    "app/services/routing_service.py": "5e3a8acac1afae6c468d6e1cf24ff854c01337ab802c586c09838c6457b1164f",
+    "app/services/schema_service.py": "40c7d435c2a8000e70165d8d28db778ef24d916ee4883f84c87398f5e90c4868",
+    "app/services/sql_generation_service.py": "efc2a4d84caf252450c3e4e6b86ad8a5ddd3128fb6cedda6247f574839964a17",
+    "app/test_data/__init__.py": "df6e4e5f5dbdee9364fbf93b646157ee6d1517bad31880584fcaef61b91b6b14",
+    "app/test_data/artifacts.py": "3cc00d27ec007485e836f34483b9c79dc3eaaa16a012d7f95c0224adb82cc5be",
+    "app/test_data/catalog.py": "728be3e4f2ae14312fdf211821496374b6d529af1cd2280a9b6e87824ac285a2",
+    "app/test_data/cli.py": "bcbc81d98ef7239e1b74595e0f6c5e513d55475815a389d737bd39dd31197379",
+    "app/test_data/database.py": "927d6bfb703a6954a701d11b49143cb0c1897fd3baf7b10dfa74717a66c969d1",
+    "app/test_data/documents.py": "f85cf1e07e5190deab57671701da9a94dc2e6e94dcb155f40bb8e6956416ce6f",
+    "app/test_data/evaluation.py": "3e65aa0ad952d338c788072221489e1589f05db4edebaaf0d54f2d3500e23164",
+    "app/test_data/generator.py": "967310b0abc261162be54d3d5e3673c02c5d1570c719c95740a3ce8a60a309e7",
+    "app/test_data/models.py": "a09d6a98ebdfabb3b9b4a8f37e9481c419d299f19de134ed18ece58e9258c1ee",
+    "app/test_data/validation.py": "16710e20af1f6671393617d924ffc0ab1979c9b2b53da34af36da10c78c223d2",
+    "app/web/__init__.py": "9d975f23d1e192a593dddca637d530127638ccaf5fd7d8d2564ede2a0a128357",
+    "app/web/document_preview.py": "bad07d674a9ef89ae0d5ee53afe797b09f2accf227c0afaa288dc951ac557ebe",
+    "app/web/reconciliation_preview.py": "644576368ca7846ef010eadd9ce3659e3709454b86d75b6c4e56531802950d7e",
+    "app/web/simple_server.py": "e9e2ed785da9898521ca968321c262c1161c54d46c30a9f92a0bcfd7440a4a15",
+    "data/model_manuals/manifest.json": "70d3b1cdb7990abfb0ae299aa7c45d291723e8fb5c6fd7eb3e5de9b26486bf21",
+    "main.py": "1789fb044aeec48fb4cc2c01a6ebd2a2dcce10ef82592788556fa9f1a8605af6",
+    "requirements-dev.txt": "5db75c0524617c465009cfd230e3b20346b6e0cd1f755673b8e1140ea145a849",
+    "requirements.txt": "8eab82f34f3ddfd5342e58b1414d5e42f53993c04e32718210d439a01c6b3994",
+    "scripts/audit_inventory_numbers.py": "5c2cb70a3c3d2b71a480d98e4dbf53895e1a83553a075133bfb35ff6cb785530",
+    "scripts/audit_matching_schema.py": "ac3656ee215aebb21fda2035372504db2e0dc2940aac9ba62b50db4f0e091ee2",
+    "scripts/evaluate_clean_inventory.py": "0587598d61a58ccf126951ec0f92b88c4417d34433e2b4dbb7c73436bbfe01de",
+    "scripts/evaluate_matching.py": "80bfcfffc87b0b023fe4beb867c5778d15b8fa45116b93d06e8b73048d5a42ef",
+    "scripts/extract_schema.py": "dc1f5ab37cf131f53ba1dafd53f5fbe4ef3e3ea013448af837b9159f85a5844c",
+    "scripts/generate_inventory_data.py": "e7f9b429640f2dee4cd47ebe56287567d5c9658f4e1e82f70fd29d3e737ddd44",
+    "scripts/ingest_model_manuals.py": "5284fbf2835895be75e926ecf76d71a5af66f282fc30ecb0f9207f4f97f7542f",
+    "scripts/load_inventory_data.py": "c0b207781fbf3aa7295b8bd92d381b14b3f547c881345cdde5214e19d167a3cb",
+    "scripts/prepare_docling_models.py": "4e1f353894b434aec9a013afb6f366ea8552ebdcd67248ec16f45dc155c854cb",
+    "scripts/prepare_inventory_database.py": "ff0ae5b15d325c1a36b85ce74aa88664575fd3cb41c12a6fd5b01988550a6290",
+    "scripts/run_webapp.py": "ca1d3476e26ff82b64297ec42d70fa160b0cdd79ebbd677b295df391bf0dac9c",
+    "scripts/verify_clean_inventory_report.py": "034ef27388c15a8a210e3030bb8561114ac02186d63c5257ec5761e1235b5f79",
+    "scripts/verify_inventory_data.py": "8fa8eddec6beaf986935e9cf3580c1b52f080383870c39ecc661625882545a77",
+    "scripts/verify_matching_report.py": "4378ad9b6faac74bcb12f8da7915f45903d02920437be96bee4e8a00b585bb15",
+    "tests/conftest.py": "3629e8744253209b6143753a7e40c68f6e823cb2ab2314ddd0e94b27b249a733",
+    "tests/test_candidate_search.py": "e24536387fb7a568672d4ec1d92c6dd6016cbd701ed7ece80d4b9d961ccf17ac",
+    "tests/test_chunker.py": "5d787804740f6e1b15b63e8202b1f73d63a46cfd6670d45d9aaf8a87d34bc999",
+    "tests/test_docling_pdf_smoke.py": "b87d21ec061de325d3fd791cf7a6323907af822f8257050b2a6d5c0717bcba0e",
+    "tests/test_document_ingestion.py": "8b362ca34f7843115ed88dc0d0777fb3e697839ddef97456ab959befdeb38568",
+    "tests/test_document_processing.py": "b239e6b2d50dc8255b73a317f1e0b0bd0160e2e206d7433bc7ca992ffd69ac2f",
+    "tests/test_document_regression.py": "66d817963e047416ce8f5e41af33183ac00dff92756e80009403f9acdc5b4e91",
+    "tests/test_guardrails.py": "8129e3e33c5a189421851377198a62b81ced9a4ae763f162b284205dd98dbd16",
+    "tests/test_ingestion.py": "5b71e1d15c70089a5f6a878743e3fc0622f888612151254db3175fdb7d203687",
+    "tests/test_injection_cases.py": "e8010a6763f5b4c1d18eb739e59b307d0459c1895d675f31cc1fa662e01db843",
+    "tests/test_inventory_clean_integration.py": "6a117da7ab1f660d1250592fbc2eab96d1fa90a0fd961e37c3b955c97acec273",
+    "tests/test_inventory_data_generator.py": "9bca3ca7f360f5502d90d6784af5423a4dd5856591d07f24cfffebddab119a80",
+    "tests/test_inventory_identity.py": "8b8c08bcbafbe44be9bcd4214a1c802c5f54ba3e71901871c2142de15a57d743",
+    "tests/test_inventory_scalability.py": "c8a722cbe29b263ece9f9ae25b0a035a5324e9221b9ce6b2e854a19698b26eaa",
+    "tests/test_inventory_seed_loader.py": "e2426df995c382f255da89b054a9ebeda96d7c58f00e1e6a53346aef10083999",
+    "tests/test_llm_service.py": "a457068464475d99b5a6d7c71f9c525fc683da456e0bd8427cdbd92c3d0385db",
+    "tests/test_matching_evaluation.py": "69b823dd4af12e93873ba9893faaf9ed8eb8e9f8c3effe8fa652585131aa9f80",
+    "tests/test_matching_evaluation_metrics.py": "23bed6b87a2867d7b08ee70c79af9be88db33245feb8f99543248c7b95fa8ef8",
+    "tests/test_matching_postgres.py": "a4949bb37d81d04a6d6738d005f170dc6f0a4b527d5ba3559c8926880cf43479",
+    "tests/test_model_manuals.py": "0464242ce43944fa71cb5e6c36acc0603ae8d68788ff6c18ab0be83883c00a7a",
+    "tests/test_parser.py": "7455239e947d11c5d52f0d0e084bc077592df2ffebf163e81d113cd296a22cab",
+    "tests/test_rag.py": "436b74c902d9320f1d1b51a69ebf89e0f78be98260f858b4bc500244c946843f",
+    "tests/test_reconciliation_domain.py": "516003d45999f93774303f23420ace3ddb2fc834fb5545c7038d06f35f73cd70",
+    "tests/test_reconciliation_ui.py": "7f0735513be25f0fc435b08f67f00537a5e631689e840a12116384b5e92679e0",
+    "tests/test_record_repository.py": "7e0ad34d9e4a4ac46e58ff7e7784978a03632828b78df6d34b8f598aa57578dc",
+    "tests/test_retriever.py": "eaf57f5bb3dd066f5348c07eb299914939d10539be45902ad2042026081062f3",
+    "tests/test_router.py": "9eaa45fa203357be8a0d542f0a856300afea9b68930cde234408db5a3ac9b23c",
+    "tests/test_sql_validator.py": "2cf862712b29c2d7514974e1b67ca680e211686bbb134c2f8bee61b7e03ed05b"
+  },
+  "database": {
+    "columns": [
+      "current_database",
+      "current_setting",
+      "count"
+    ],
+    "rows": [
+      [
+        "inventory_ai_clean",
+        "on",
+        1000
+      ]
+    ],
+    "row_count": 1
+  },
+  "negative_pair": {
+    "input_origin": "deliberately invalid test fixture; no database mutation",
+    "name": "Dell P2422H",
+    "item_code": "HLL5200",
+    "result": {
+      "answer": "Dell P2422H (HLL5200): A név–cikkszám kombináció nem egyezik a dokumentumjegyzékkel; dokumentum nem kapcsolható hozzá.\nSQL-találatok:\nname: Dell P2422H; item_code: HLL5200",
+      "sources": [],
+      "documentation_status": [
+        {
+          "name": "Dell P2422H",
+          "item_code": "HLL5200",
+          "status": "identifier_conflict"
+        }
+      ]
+    },
+    "checks_passed": true
+  },
+  "provider_errors": [],
+  "qdrant_points": 51
+}

@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "arguments": [
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--run-docling-pdf",
+    "--junitxml=C:\\Users\\vincz\\Desktop\\inventory-ai\\evaluation\\configuration_check_2026-11-08_1095eed7\\tests_attempt_02\\test_results.xml",
+    "--basetemp=C:\\Users\\vincz\\Desktop\\inventory-ai\\.cache\\configuration_checks\\configuration_check_2026-11-08_1095eed7\\pytest_tmp"
+  ],
+  "external_http_blocked": true,
+  "live_database_connections_blocked": true,
+  "postgres_opt_in_enabled": false
+}

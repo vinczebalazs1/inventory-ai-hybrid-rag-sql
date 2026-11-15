@@ -81,7 +81,8 @@ def test_merge_duplicates_keeps_different_values(monkeypatch):
     mock_llm(monkeypatch, *([response] * count))
     fields = extract_fields(parsed(content), Settings(chunk_size=80, chunk_overlap=30)).fields
     assert {f.value for f in fields} == {"Budapest", "London"}
-    assert len(fields) == 2
+    assert len(fields) == 8  # Four actual occurrences of each value; overlap is deduplicated.
+    assert len({f.source_span for f in fields}) == 8
 
 
 def test_chunk_size_coverage_and_overlap():
@@ -94,10 +95,11 @@ def test_chunk_size_coverage_and_overlap():
         list(chunks(text, 10, 10))
 
 
-def test_duplicate_across_pages_keeps_first_page(monkeypatch):
+def test_duplicate_across_pages_preserves_each_occurrence(monkeypatch):
     mock_llm(monkeypatch, payload(), payload())
     result = extract_fields(parsed(pages={1: "Location: Budapest", 2: "Location: Budapest"}), Settings())
-    assert len(result.fields) == 1 and result.fields[0].page == 1
+    assert len(result.fields) == 2 and [f.page for f in result.fields] == [1, 2]
+    assert len({f.occurrence_id for f in result.fields}) == 2
 
 
 def test_schema_load_independent_of_cwd(monkeypatch, tmp_path):
@@ -160,7 +162,10 @@ def test_normalization(value, dtype, field, expected):
 def test_invalid_value_preserves_raw(value, dtype, field):
     mapping = MappingResult(mapped_fields=[MappedField(source_label="x", raw_value=value, target_field=field)])
     issues = validate_fields(mapping, [{"column": field, "type": dtype}])
-    assert len(issues) == 1
+    if value.strip():
+        assert len(issues) == 1
+    else:
+        assert not issues and mapping.mapped_fields[0].normalization_status == "MISSING"
     assert mapping.mapped_fields[0].raw_value == value
     assert mapping.mapped_fields[0].normalized_value is None
 

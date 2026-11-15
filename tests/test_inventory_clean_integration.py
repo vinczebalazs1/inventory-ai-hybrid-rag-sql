@@ -30,7 +30,8 @@ def clean_environment(isolated_postgres, tmp_path_factory):
     admin.close()
     params = {key: params[key] for key in ("host", "port", "user")}
     def connect(dbname=TARGET):
-        return psycopg2.connect(**params, dbname=dbname, connect_timeout=5)
+        return psycopg2.connect(**params, dbname=dbname, connect_timeout=5,
+                               options="-c default_transaction_read_only=off")  # Isolated cluster only.
     # A sentinel old inventory exists only inside this disposable cluster.
     conn = connect("postgres")
     try:
@@ -212,7 +213,7 @@ def test_sql_hybrid_rag_and_streamlit_smoke_with_external_ai_stubs(clean_environ
     from app.web import reconciliation_preview as preview
     _, connect, _, _, truth, _ = clean_environment
     monkeypatch.setattr(executor, "get_connection", connect)
-    monkeypatch.setattr(orchestrator, "generate_sql", lambda _: "SELECT inventory_number, name FROM inventory_items WHERE inventory_number = 'L-00001'")
+    monkeypatch.setattr(orchestrator, "generate_sql", lambda _, **kwargs: "SELECT inventory_number, name FROM inventory_items WHERE inventory_number = 'L-00001'")
     monkeypatch.setattr(orchestrator, "generate_natural_answer", lambda *args: "Tesztválasz")
     monkeypatch.setattr(orchestrator, "route_query", lambda _: "SQL")
     result = orchestrator.handle_question("Hol van az L-00001 eszköz?")
@@ -221,7 +222,7 @@ def test_sql_hybrid_rag_and_streamlit_smoke_with_external_ai_stubs(clean_environ
     hybrid = Mock(return_value={"answer": "Dokumentációs tesztválasz", "sources": []})
     monkeypatch.setattr(orchestrator, "answer_hybrid_details", hybrid)
     result = orchestrator.handle_question("Hol van az L-00001 és hogyan működik?")
-    assert result["ok"] and result["matched_names"] == ["dell latitude 5540"]
+    assert result["ok"] and result["matched_names"] == ["Dell Latitude 5540"]
     assert hybrid.call_count == 1
     monkeypatch.setattr(orchestrator, "route_query", lambda _: "RAG")
     monkeypatch.setattr(orchestrator, "answer_rag_details", lambda _: {"answer": "RAG teszt", "sources": []})

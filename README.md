@@ -63,6 +63,11 @@ Web UI:
 
 `python -m streamlit run app/web/simple_server.py`
 
+The Streamlit UI loads the project-root `.env` before initializing services.
+Values in that file override inherited terminal variables, including old DB/Qdrant
+settings retained by VS Code. Restart the Streamlit process after changing `.env`.
+The CLI and helper scripts retain their existing environment-variable precedence.
+
 CLI:
 
 `python main.py`

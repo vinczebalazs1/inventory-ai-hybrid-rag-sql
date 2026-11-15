@@ -1,0 +1,142 @@
+{
+  "source_name": "D01_Dell_Latitude_5540_reszletes_eszkozadatlap.pdf",
+  "source_sha256": "f6affb0866863b19d4158bd49517b268958ac37ebd6f491d16a384bb55f55041",
+  "provenance": "Actual Docling 2.80.0 page exports (traverse_pictures=True) from the user-supplied five-page PDF. LLM fields and mappings below are hand-labelled offline responses, NOT a saved live LLM run.",
+  "pages": {
+    "1": "INVENTORYAI  /  LELTÁRI ADATLAP\n\n## Dell Latitude 5540\n\nKibővített eszköznyilvántartási és műszaki dosszié\n\nD01  ·  TELJES ADATEGYEZÉS\n\nL-00001   /   LAT5540   /   0\n\n<!-- image -->\n\n<!-- image -->\n\nBESZERZÉSI ÉRTÉK\n\n326 000 Ft\n\nForrásadat\n\nFELHALMOZOTT ÉCS.\n\n171 306 Ft\n\nForrásadat\n\nJELENLEGI ÉRTÉK\n\n154 694 Ft\n\nForrásadat\n\n## 01 Azonosítás és leltári törzsadatok\n\n<!-- image -->\n\nCIKKSZÁM\n\nLAT5540\n\nFORRÁS\n\nLELTÁRI SZÁM\n\nL-00001\n\nFORRÁS\n\nALSZÁM\n\n0\n\nFORRÁS\n\nAKTIVÁLÁS DÁTUMA\n\n2024-02-14\n\nFORRÁS\n\nESZKÖZ MEGNEVEZÉSE\n\nDell Latitude 5540\n\nFORRÁS\n\nHELYSZÍN\n\nLIB\n\nFORRÁS\n\nPÉNZNEM\n\nHUF\n\nFORRÁS\n\nDARABSZÁM\n\n1\n\nFORRÁS\n\n| CIKKSZÁM           | FORRÁS   | LELTÁRI SZÁM    | FORRÁS   |\n|--------------------|----------|-----------------|----------|\n| LAT5540            |          | L-00001         |          |\n| ALSZÁM             | FORRÁS   | AKTIVÁLÁSDÁTUMA | FORRÁS   |\n| 0                  |          | 2024-02-14      |          |\n| ESZKÖZ MEGNEVEZÉSE | FORRÁS   | HELYSZÍN        | FORRÁS   |\n| Dell Latitude 5540 |          | LIB             |          |\n| PÉNZNEM            | FORRÁS   | DARABSZÁM       | FORRÁS   |\n| HUF                |          | 1               |          |\n\n## 02 Nyilvántartási összefoglaló\n\nA Dell Latitude 5540 megnevezésű, LAT5540 cikkszámon és 0 alszámon szereplő eszköz egy darabos tételként jelenik meg a leltári nyilvántartásban. Egyedi leltári azonosítója L-00001 , a nyilvántartott helyszín kódja LIB , az aktiválás dátuma pedig 2024-02-14 . A rögzített pénzügyi adatok pénzneme HUF.\n\nA dokumentumban szereplő eredeti leltári adatokat változatlanul tartottuk meg. A további oldalak a modellre jellemző gyártói paramétereket, valamint elkülönített, szemléltető üzemeltetési mezőket tartalmaznak. Ezek célja egy részletes, kereshető eszközrekord bemutatása.\n\nADATJELÖLÉS\n\nFORRÁS = eredeti D01;  MINTA = fiktív mező;  MODELL = gyártói típusspecifikáció.",
+    "2": "<!-- image -->\n\nINVENTORYAI\n\n## MŰSZAKI SPECIFIKÁCIÓ ÉS MODELLJELLEMZŐK\n\n## Dell Latitude 5540 - technikai profil\n\nA Latitude 5540 üzleti felhasználásra tervezett, 15,6 hüvelykes notebook-platform. A különféle processzor-, memória-, háttértár- és kommunikációs opciók gyártói lehetőségek; nem bizonyítják az L-00001 leltári számú konkrét példány tényleges kiépítését.\n\n| PARAMÉTER                | GYÁRTÓI MODELLJELLEMZŐ / LEHETSÉGES OPCIÓ                                                                 |\n|--------------------------|-----------------------------------------------------------------------------------------------------------|\n| TERMÉKCSALÁD / KIVITEL   | Dell Latitude 5540; üzleti notebook; 15,6 hüvelykes kialakítás.                                           |\n| PROCESSZORPLATFORM       | 13. generációs Intel Core i3 / i5 / i7 variánsok, U- vagy P-sorozatú kivitel a konfiguráció szerint.      |\n| RENDSZERMEMÓRIA          | Két SO-DIMM foglalat; legfeljebb 64 GB. DDR4 és DDR5 opciók, a processzorváltozathoz kötötten.            |\n| KÉPERNYŐ                 | 15,6 hüvelykes Full HD (1920 × 1080) IPS panelopciók; matt kivitel, opcionális érintőfunkció.             |\n| HÁTTÉRTÁR                | M.2 formátumú SSD-alapú tárolás; a kapacitás és a konkrét meghajtó a választott konfigurációtól függ.     |\n| GRAFIKAI ALRENDSZER      | Processzorfüggő Intel UHD / Intel Iris Xe; egyes konfigurációkhoz dedikált NVIDIA MX550 opció.            |\n| KÜLSŐ CSATLAKOZÓK        | 2 × Thunderbolt 4 / USB-C, 2 × USB-A 3.2 Gen 1, HDMI 2.0, RJ-45, audio, microSD.                          |\n| HÁLÓZATI LEHETŐSÉGEK     | Vezetékes Ethernet, Wi-Fi 6/6E konfigurációfüggően; opcionális mobil szélessáv.                           |\n| AKKUMULÁTOR / TÁPELLÁTÁS | Gyártói dokumentáció szerinti 42 vagy 54 Wh-s telepopciók; USB-C alapú tápcsatlakozás.                    |\n| OPERÁCIÓS RENDSZER       | Windows 11 támogatott változatai és egyes Linux-változatok; az aktuálisan telepített rendszer nem ismert. |\n\nKonfiguráció-megállapítás: a konkrét CPU-modell, RAM-kapacitás, SSD-kapacitás, Service Tag, garanciális státusz és operációs rendszer a forrásadatlapból nem állapítható meg. Ezeket csak tényleges eszközlekérdezéssel vagy gyártói szervizazonosító alapján szabad véglegesíteni.\n\n02 / 05",
+    "3": "<!-- image -->\n\nINVENTORYAI\n\nMŰSZAKI HÁTTÉR ÉS VÁLLALATI FELHASZNÁLÁS\n\n## Műszaki működés és integráció\n\nAz alábbi rész gyakorlati, típusszintű műszaki ismertető. A leírt funkciók egyes hardverváltozatoknál opcionálisak lehetnek; a konkrét leltári példány tényleges képességeit helyszíni ellenőrzés tisztázhatja.\n\n## 03 Számítási és tárolási architektúra\n\nA Latitude 5540 platform a modern irodai munkaterhelésekhez igazított mobil számítógép. A 13. generációs Intel Core processzorcsalád különböző teljesítmény- és fogyasztási profilokat kínál, így ugyanazon modellnév alatt eltérő sebességű és energiafelhasználású konfigurációk fordulhatnak elő. Az egyidejű böngésző-, levelezési, videókonferencia- és dokumentumszerkesztési feladatok teljesítményét elsősorban a processzor, az elérhető rendszermemória és az SSD állapota befolyásolja.\n\nA két SO-DIMM foglalatra épülő memóriakialakítás miatt a kapacitásbővítés a konkrét hardverkiépítéstől függően megoldható. A DDR4 és DDR5 opciók nem felcserélhetők tetszőlegesen: a kompatibilitást a processzorváltozat és az alaplap határozza meg. A helyi SSD-tároló az operációs rendszer, az alkalmazások és az ideiglenes állományok gyors elérését támogatja, a vállalati adatmegőrzést azonban külön mentési és felhőszinkronizációs eljárással érdemes biztosítani.\n\n## 04 Kapcsolatok, perifériák és munkaállomás\n\nA két Thunderbolt 4 / USB-C csatlakozó a kompatibilis dokkolókkal, külső kijelzőkkel és perifériákkal történő munkavégzés alapja lehet. A HDMI 2.0 port közvetlen kijelzőkapcsolatot, a két USB-A aljzat hagyományos kiegészítők csatlakoztatását teszi lehetővé. A vezetékes RJ-45 Ethernet hasznos lehet stabil vállalati hálózati környezetben, míg a vezeték nélküli kommunikáció a mozgó munkavégzést támogatja. A pontos kijelző- és dokkolókompatibilitást a használt kábel, adapter és kiépítés együtt határozza meg.\n\n## 05 Végpontvédelem és műszaki kontrollok\n\nVállalati bevezetéskor ajánlott a firmware-verzió és a BIOS-beállítások kontrollált kezelése, a titkosított háttértár, a vállalati identitáskezelés, a többtényezős hitelesítés, a központi eszközfelügyelet és a naprakész végpontvédelem. Ezek üzemeltetési ajánlások , nem pedig az adott példányon már igazolt konfigurációk. A telepített rendszert, védelmi ügynököket és megfelelőségi állapotot az informatikai nyilvántartásból vagy a munkaállomáson végzett ellenőrzésből kell megerősíteni.\n\nA hordozható eszközöknél a hőterhelés és az akkumulátor természetes öregedése hosszabb távon hatással lehet a használati élményre. Az akkumulátor-állapot, a ventilátor működése és az SSD egészsége ezért időszakosan diagnosztikai ellenőrzést igényelhet. A vizsgálati eredményeket célszerű dátummal és eszközazonosítóval ellátva megőrizni.\n\nESZKÖZSZINTŰ BIZONYÍTÉK\n\nService Tag · BIOS-lekérdezés · OS-inventár · hardverdiagnosztika\n\n03 / 05",
+    "4": "<!-- image -->\n\n## ÜZEMELTETÉSI MEZŐK ÉS NYILVÁNTARTÁSI KONTROLLOK\n\n## Üzemeltetési és életciklus-profil\n\nA következő azonosító- és munkafolyamatmezők életszerű, fiktív adatmezők. Nem az eredeti D01 lapból származnak, és nem állítják, hogy a nyilvántartott eszközön konkrét karbantartás, átadás vagy konfigurációs ellenőrzés történt.\n\n## 06 Kiegészített vállalati mezők\n\nMINDEN SOR: MINTA\n\n| REKORDAZONOSÍTÓ    | MINTA   | ESZKÖZOSZTÁLY          | MINTA   |\n|--------------------|---------|------------------------|---------|\n| IA-2024-L00001     |         | IT / Notebook          |         |\n| FELELŐS CSOPORT    | MINTA   | KÖLTSÉGHELY            | MINTA   |\n| Workplace Services |         | IT-OPS-100             |         |\n| BESOROLÁS          | MINTA   | PRIORITÁSI KATEGÓRIA   | MINTA   |\n| Vállalati végpont  |         | Standard               |         |\n| BIZALMASSÁGI SZINT | MINTA   | FELÜLVIZSGÁLATI CIKLUS | MINTA   |\n| Belső használat    |         | 90 nap                 |         |\n\n## 07 Javasolt üzemeltetési eljárás\n\nAz eszköz átvételekor a leltári azonosítót és a gyártói Service Tag értéket célszerű egyeztetni, majd a tényleges hardverparamétereket egy konfigurációs nyilvántartásban rögzíteni. A felhasználóhoz vagy szervezeti egységhez történő hozzárendelést csak tényleges átadás-átvételi folyamat után indokolt lezártnak jelölni. A helyszínkód-változás, a tulajdonosváltás és az eszközcsere önálló eseményként kezelendő.\n\nA rendszeres ellenőrzés fókuszában az operációs rendszer frissítései, a BIOS/UEFI állapota, az eszköztitkosítás, a végpontvédelmi lefedettség, a tárhely egészsége és az akkumulátor állapota állhat. Hibajegy esetén az időbélyeg, a bejelentő, a tünet, az elvégzett művelet és a lezárási bizonyíték együtt ad jó auditálhatóságot. A karbantartási terv alkalmazása előtt a szervezeti szabályzatot és a konkrét eszköz üzleti kritikalitását is figyelembe kell venni.\n\n## NINCS RÖGZÍTETT EGYEDI HARDVERAZONOSÍTÓ\n\nAz eredeti D01 nem tartalmaz sorozatszámot, Service Tag-et, felhasználónevet, beszállítót, garanciális lejáratot vagy tényleges műszaki leltárt. Ezeket nem pótolja fiktív sorozatszám: az adatminőség érdekében 'nem dokumentált' állapotúak maradnak.\n\n04 / 05",
+    "5": "<!-- image -->\n\nPÉNZÜGYI ELLENŐRZÉS ÉS ADATMINŐSÉG\n\n## Értékegyeztetés és kontrollpontok\n\nA D01 eredeti pénzügyi mezőinek számtani egyeztetése az eszköznyilvántartás egyik legalapvetőbb kontrollja. A kimutatott adatok összegei pontosan megfelelnek egymásnak; a kalkuláció a megadott összegekre épül, és nem feltételez új könyvelési tételt.\n\n## 08 Pénzügyi számtani egyezőség\n\n326 000\n\nBeszerzés (HUF)\n\n- -171 306\n\nFelhalmozott ÉCS. (HUF)\n\nFelhalmozott értékcsökkenés: 52,55%\n\n- = 154 694 Jelenlegi érték (HUF)\n\nJelenlegi érték aránya: 47,45%\n\n## 09 Főbb nyilvántartási kontrollok\n\n|   01 | Leltári kulcs és összerendelés LAT5540 / alszám 0 / L-00001 értékek összekapcsolása.                | ELŐÍRT     |\n|------|-----------------------------------------------------------------------------------------------------|------------|\n|   02 | Értékegyeztetés 326000 - 171306 = 154694 HUF; az összeg számítás szerint egyezik.                   | EGYEZIK    |\n|   03 | Fizikai és konfigurációs azonosítás Service Tag, konkrét hardver, hozzárendelt személy ellenőrzése. | NEMIGAZOLT |\n\n## 10 Források és dokumentumhasználat\n\nEredeti adatforrás: D01 - Teljesen egyez leltári adatlap, InventoryAI - szintetikus leltári tesztadatlap. Az eredeti mezők: cikkszám, alszám, aktiválás, megnevezés, beszerzési érték, felhalmozott értékcsökkenés, jelenlegi érték, pénznem, darabszám, leltári szám és helyszín.\n\nMűszaki forrás: Dell Technologies, Latitude 5540 Technical Guidebook (2023, A02); Dell Latitude 5540 Owner's Manual. A műszaki jellemzők típusszintűek, nem az egyedi leltári rekordból származnak.\n\nGyártói technikai dokumentáció: Dell Technologies / Latitude 5540\n\n05 / 05"
+  },
+  "fields": [
+    {
+      "label": "CIKKSZÁM",
+      "value": "LAT5540",
+      "evidence": "CIKKSZÁM\n\nLAT5540",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "item_code"
+    },
+    {
+      "label": "LELTÁRI SZÁM",
+      "value": "L-00001",
+      "evidence": "LELTÁRI SZÁM\n\nL-00001",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "inventory_number"
+    },
+    {
+      "label": "ALSZÁM",
+      "value": "0",
+      "evidence": "ALSZÁM\n\n0",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "sub_code"
+    },
+    {
+      "label": "AKTIVÁLÁS DÁTUMA",
+      "value": "2024-02-14",
+      "evidence": "AKTIVÁLÁS DÁTUMA\n\n2024-02-14",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "activation_date"
+    },
+    {
+      "label": "ESZKÖZ MEGNEVEZÉSE",
+      "value": "Dell Latitude 5540",
+      "evidence": "ESZKÖZ MEGNEVEZÉSE\n\nDell Latitude 5540",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "name"
+    },
+    {
+      "label": "HELYSZÍN",
+      "value": "LIB",
+      "evidence": "HELYSZÍN\n\nLIB",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "location"
+    },
+    {
+      "label": "PÉNZNEM",
+      "value": "HUF",
+      "evidence": "PÉNZNEM\n\nHUF",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "currency"
+    },
+    {
+      "label": "DARABSZÁM",
+      "value": "1",
+      "evidence": "DARABSZÁM\n\n1",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "quantity"
+    },
+    {
+      "label": "BESZERZÉSI ÉRTÉK",
+      "value": "326 000",
+      "evidence": "BESZERZÉSI ÉRTÉK\n\n326 000",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "purchase_value"
+    },
+    {
+      "label": "FELHALMOZOTT ÉCS.",
+      "value": "171 306",
+      "evidence": "FELHALMOZOTT ÉCS.\n\n171 306",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "depreciation"
+    },
+    {
+      "label": "JELENLEGI ÉRTÉK",
+      "value": "154 694",
+      "evidence": "JELENLEGI ÉRTÉK\n\n154 694",
+      "page": 1,
+      "value_origin": "recorded",
+      "expected_target": "current_value"
+    },
+    {
+      "label": "Leltári szám",
+      "value": "L-00001",
+      "evidence": "L-00001",
+      "page": 2,
+      "value_origin": "recorded",
+      "expected_target": "inventory_number"
+    },
+    {
+      "label": "Leltári szám",
+      "value": "L-00001",
+      "evidence": "L-00001",
+      "page": 5,
+      "value_origin": "recorded",
+      "expected_target": "inventory_number"
+    },
+    {
+      "label": "Felhalmozott ÉCS. (HUF)",
+      "value": "-171 306",
+      "evidence": "- -171 306\n\nFelhalmozott ÉCS. (HUF)",
+      "page": 5,
+      "value_origin": "calculation",
+      "expected_target": null
+    },
+    {
+      "label": "Felhalmozott értékcsökkenés",
+      "value": "52,55%",
+      "evidence": "Felhalmozott értékcsökkenés: 52,55%",
+      "page": 5,
+      "value_origin": "calculation",
+      "expected_target": null
+    },
+    {
+      "label": "REKORDAZONOSÍTÓ",
+      "value": "IA-2024-L00001",
+      "evidence": "IA-2024-L00001",
+      "page": 4,
+      "value_origin": "recorded",
+      "expected_target": null
+    }
+  ]
+}

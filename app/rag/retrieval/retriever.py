@@ -2,6 +2,7 @@ from typing import List, Dict
 from app.rag.embedding.embedding_service import embed_text
 from app.rag.vector_store.qdrant_client import search
 from qdrant_client.models import Filter, FieldCondition, MatchValue
+from app.rag.manuals import model_document, valid_manual_hit, MANUAL_TYPE
 
 
 def _chunk_from_hit(hit) -> Dict:
@@ -55,3 +56,17 @@ def retrieve_by_name(name: str, question: str, limit: int = 3) -> List[Dict]:
     chunks = [_chunk_from_hit(hit) for hit in results]
 
     return chunks
+
+
+def retrieve_by_model(name: str, item_code: str, question: str, limit: int = 4,
+                      *, vector=None) -> List[Dict]:
+    """Exact SQL identity AND reviewed document. Never fall back to another model."""
+    document = model_document(name, item_code)
+    if document is None:
+        return []
+    vector = embed_text(question) if vector is None else vector
+    query_filter = Filter(must=[FieldCondition(key=key, match=MatchValue(value=value))
+        for key, value in {"name": name, "item_code": item_code,
+                           "doc_type": MANUAL_TYPE, "source_sha256": document["sha256"]}.items()])
+    chunks = [_chunk_from_hit(hit) for hit in search(vector, query_filter=query_filter, limit=limit)]
+    return [chunk for chunk in chunks if valid_manual_hit(chunk, document)]

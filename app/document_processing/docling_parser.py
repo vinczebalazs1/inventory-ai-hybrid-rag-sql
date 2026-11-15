@@ -30,7 +30,8 @@ def parse_document(
         converter = converter or DocumentConverter(
             allowed_formats=[InputFormat.PDF, InputFormat.DOCX],
             format_options={InputFormat.PDF: PdfFormatOption(
-                pipeline_options=PdfPipelineOptions(artifacts_path=settings.artifacts_path)
+                pipeline_options=PdfPipelineOptions(artifacts_path=settings.artifacts_path,
+                                                    generate_parsed_pages=True)
             )},
         )
         result = converter.convert(
@@ -40,18 +41,29 @@ def parse_document(
         if result.status != ConversionStatus.SUCCESS:
             raise ValueError("Docling conversion did not complete successfully")
         document = result.document
-        markdown = document.export_to_markdown()
+        # Layout may group genuine text (e.g. financial cards) under pictures.
+        # Keep those existing text children; this does not generate image descriptions.
+        markdown = document.export_to_markdown(traverse_pictures=True)
         pages = {
-            number: document.export_to_markdown(page_no=number)
+            number: document.export_to_markdown(page_no=number, traverse_pictures=True)
             for number in sorted(document.pages)
         } if suffix == ".pdf" else {}
         text = "\n\n".join(f"[PAGE {n}]\n{value}" for n, value in pages.items()) if pages else markdown
         if not text.strip():
             raise ValueError("Document contains no extractable text")
         logger.info("Docling parse succeeded: source=%r type=%s", name, suffix)
+        # Native parser/OCR observations, not inferred from Markdown or invented
+        # LLM coordinates. Default OCR remains selective (not force_full_page_ocr).
+        source_cells = {}
+        for page in getattr(result, "pages", []) or []:
+            cells = getattr(page, "cells", [])
+            if cells:
+                source_cells[page.page_no] = [cell.model_dump(mode="json") for cell in cells]
+        ocr_pages = [n for n, cells in source_cells.items() if any(c.get("from_ocr") for c in cells)]
         return ParsedDocument(
             source_name=name, source_extension=suffix, markdown=markdown,
             extraction_text=text, pages=pages, raw_document=document.export_to_dict(),
+            source_cells=source_cells, ocr_pages=ocr_pages,
         )
     except Exception as exc:
         # Exceptions from parsers/providers may embed document contents. Log only

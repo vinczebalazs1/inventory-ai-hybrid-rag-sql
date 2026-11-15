@@ -30,6 +30,10 @@ def main():
                 confidence = source.get("confidence")
                 confidence_text = f"{confidence}%" if confidence is not None else "-"
                 print(f"[{i}] {source.get('source')} | {source.get('section')} | {confidence_text}")
+                if source.get("source_kind") == "manufacturer":
+                    print(f"Gyártói kézikönyv: {source.get('name')} ({source.get('item_code')}) | PDF {source.get('page')} | {source.get('source_url')}")
+                else:
+                    print("Általános dokumentáció")
 
         print("\n--- NATURAL LANGUAGE ANSWER ---")
         print(response["answer"])

@@ -1,0 +1,42 @@
+[
+  {
+    "pdf_sha256": "774f537ab0c8b1ba3b6f0db45b445f9d51629b972d9be714015d66d091476902",
+    "scope": "real Docling, manually annotated LLM stub, fixture SQL reads",
+    "status": "EXACT_MATCH",
+    "counts": {
+      "occurrences": 58,
+      "normalized_occurrences": 58,
+      "equal_occurrences": 58,
+      "differing_occurrences": 0,
+      "unique_differing_fields": 0,
+      "invalid_occurrences": 0,
+      "missing_or_unknown_occurrences": 0,
+      "internal_conflict_fields": 0,
+      "uncertain_occurrences": 0,
+      "unassigned_occurrences": 0
+    },
+    "review_required": false
+  },
+  {
+    "source": "generated independent image-only fixture",
+    "scope": "real local OCR, manual LLM stub, fixture SQL reads",
+    "recognition_gaps": [
+      "quantity",
+      "location"
+    ],
+    "status": "EXACT_MATCH",
+    "counts": {
+      "occurrences": 10,
+      "normalized_occurrences": 10,
+      "equal_occurrences": 8,
+      "differing_occurrences": 0,
+      "unique_differing_fields": 0,
+      "invalid_occurrences": 0,
+      "missing_or_unknown_occurrences": 0,
+      "internal_conflict_fields": 0,
+      "uncertain_occurrences": 2,
+      "unassigned_occurrences": 0
+    },
+    "review_required": true
+  }
+]

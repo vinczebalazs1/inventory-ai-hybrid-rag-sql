@@ -1,0 +1,1351 @@
+{
+  "generated_at_utc": "2026-11-14T21:44:05.305594+00:00",
+  "dataset_version": 2,
+  "dataset_sha256": "773aaf4da61ec1bafc1f86619e566b004546eb6895795664f7729d500b58d062",
+  "python": "3.11.9",
+  "settings": {
+    "exact_only": {
+      "target_schema": "public",
+      "target_table": "inventory_items",
+      "strategy": "exact_only",
+      "max_candidates": 100,
+      "max_scan_rows": 1000,
+      "query_timeout_ms": 3000,
+      "connect_timeout_seconds": 5,
+      "max_field_length": 1000,
+      "exact_threshold": 0.95,
+      "likely_threshold": 0.72,
+      "ambiguity_margin": 0.05,
+      "duplicate_threshold": 0.45,
+      "model_conflict_cap": 0.4,
+      "inventory_number_weight": 0.5,
+      "item_code_weight": 0.4,
+      "sub_code_weight": 0.1,
+      "name_weight": 0.3,
+      "location_weight": 0.1,
+      "activation_date_weight": 0.1
+    },
+    "hybrid": {
+      "target_schema": "public",
+      "target_table": "inventory_items",
+      "strategy": "hybrid",
+      "max_candidates": 100,
+      "max_scan_rows": 1000,
+      "query_timeout_ms": 3000,
+      "connect_timeout_seconds": 5,
+      "max_field_length": 1000,
+      "exact_threshold": 0.95,
+      "likely_threshold": 0.72,
+      "ambiguity_margin": 0.05,
+      "duplicate_threshold": 0.45,
+      "model_conflict_cap": 0.4,
+      "inventory_number_weight": 0.5,
+      "item_code_weight": 0.4,
+      "sub_code_weight": 0.1,
+      "name_weight": 0.3,
+      "location_weight": 0.1,
+      "activation_date_weight": 0.1
+    }
+  },
+  "repeats": 5,
+  "dataset_cases": 74,
+  "metrics": {
+    "calibration": {
+      "exact_only": {
+        "cases": 10,
+        "matching": {
+          "true_positive": 2,
+          "false_positive": 0,
+          "false_negative": 5,
+          "precision": 1.0,
+          "recall": 0.2857142857142857,
+          "f1": 0.4444444444444444,
+          "identity_evaluable_cases": 9,
+          "ranking_evaluable_cases": 7,
+          "top_1_accuracy": 0.42857142857142855,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.42857142857142855,
+              "recall_at_k": 0.42857142857142855
+            },
+            "3": {
+              "precision_at_k": 0.19047619047619047,
+              "recall_at_k": 0.5714285714285714
+            },
+            "5": {
+              "precision_at_k": 0.1142857142857143,
+              "recall_at_k": 0.5714285714285714
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.6,
+          "action_set_accuracy": 0.9,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 5,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.8,
+          "abstention_rate": 0.8,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "MULTIPLE_ASSETS",
+              "count": 1
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 1
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 1
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 0,
+          "false_positive": 0,
+          "false_negative": 1,
+          "precision": null,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "volume": {
+          "supplied_inventory_rows": 9,
+          "examined_rows": 6,
+          "document_fields": 19
+        },
+        "search_paths": {
+          "asset_groups": 1,
+          "exact_identifiers": 3,
+          "fixture_schema_mismatch": 1,
+          "not_searched": 3,
+          "verified_identifier": 2
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 50,
+            "mean_ms": 0.0507079903036356,
+            "median_ms": 0.053050112910568714,
+            "p95_ms": 0.12770015746355057
+          },
+          "fuzzy_search": {
+            "samples": 0,
+            "mean_ms": null,
+            "median_ms": null,
+            "p95_ms": null
+          },
+          "inventory_lookup": {
+            "samples": 15,
+            "mean_ms": 0.038386679564913116,
+            "median_ms": 0.03560003824532032,
+            "p95_ms": null
+          },
+          "scoring": {
+            "samples": 50,
+            "mean_ms": 0.11085601057857275,
+            "median_ms": 0.022699940018355846,
+            "p95_ms": 0.33379998058080673
+          },
+          "secondary_lookup": {
+            "samples": 15,
+            "mean_ms": 0.022680048520366352,
+            "median_ms": 0.02210005186498165,
+            "p95_ms": null
+          },
+          "total": {
+            "samples": 50,
+            "mean_ms": 0.634468006901443,
+            "median_ms": 0.6134000141173601,
+            "p95_ms": 1.2173999566584826
+          }
+        }
+      },
+      "hybrid": {
+        "cases": 10,
+        "matching": {
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 3,
+          "precision": 1.0,
+          "recall": 0.5714285714285714,
+          "f1": 0.7272727272727273,
+          "identity_evaluable_cases": 9,
+          "ranking_evaluable_cases": 7,
+          "top_1_accuracy": 0.7142857142857143,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.7142857142857143,
+              "recall_at_k": 0.7142857142857143
+            },
+            "3": {
+              "precision_at_k": 0.2857142857142857,
+              "recall_at_k": 0.8571428571428571
+            },
+            "5": {
+              "precision_at_k": 0.17142857142857143,
+              "recall_at_k": 0.8571428571428571
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.8,
+          "action_set_accuracy": 1.0,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 5,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.8,
+          "abstention_rate": 0.6,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "MULTIPLE_ASSETS",
+              "count": 1
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 1
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 1
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 1,
+          "false_positive": 0,
+          "false_negative": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "volume": {
+          "supplied_inventory_rows": 9,
+          "examined_rows": 12,
+          "document_fields": 19
+        },
+        "search_paths": {
+          "asset_groups": 1,
+          "fixture_schema_mismatch": 1,
+          "full_table": 5,
+          "not_searched": 1,
+          "verified_identifier": 2
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 50,
+            "mean_ms": 0.08428598754107952,
+            "median_ms": 0.08000002708286047,
+            "p95_ms": 0.1909998245537281
+          },
+          "fuzzy_search": {
+            "samples": 25,
+            "mean_ms": 0.06629198789596558,
+            "median_ms": 0.0771998893469572,
+            "p95_ms": 0.08829985745251179
+          },
+          "inventory_lookup": {
+            "samples": 15,
+            "mean_ms": 0.03452665793399016,
+            "median_ms": 0.0342000275850296,
+            "p95_ms": null
+          },
+          "scoring": {
+            "samples": 50,
+            "mean_ms": 0.16424399334937334,
+            "median_ms": 0.19055011216551065,
+            "p95_ms": 0.3782000858336687
+          },
+          "secondary_lookup": {
+            "samples": 15,
+            "mean_ms": 0.018633374323447544,
+            "median_ms": 0.021600164473056793,
+            "p95_ms": null
+          },
+          "total": {
+            "samples": 50,
+            "mean_ms": 0.7787680020555854,
+            "median_ms": 0.7760999724268913,
+            "p95_ms": 1.3180999085307121
+          }
+        }
+      }
+    },
+    "test": {
+      "exact_only": {
+        "cases": 64,
+        "matching": {
+          "true_positive": 25,
+          "false_positive": 0,
+          "false_negative": 22,
+          "precision": 1.0,
+          "recall": 0.5319148936170213,
+          "f1": 0.6944444444444444,
+          "identity_evaluable_cases": 62,
+          "ranking_evaluable_cases": 47,
+          "top_1_accuracy": 0.6170212765957447,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.6170212765957447,
+              "recall_at_k": 0.6170212765957447
+            },
+            "3": {
+              "precision_at_k": 0.21985815602836878,
+              "recall_at_k": 0.6595744680851063
+            },
+            "5": {
+              "precision_at_k": 0.13191489361702127,
+              "recall_at_k": 0.6595744680851063
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.765625,
+          "action_set_accuracy": 0.84375,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 27,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 0.5,
+          "review_rate": 0.796875,
+          "abstention_rate": 0.609375,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 7
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "ERROR",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 21
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "EXACT_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 7
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 10
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "LIKELY_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 3
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 8,
+          "false_positive": 0,
+          "false_negative": 5,
+          "precision": 1.0,
+          "recall": 0.6153846153846154,
+          "f1": 0.7619047619047619
+        },
+        "volume": {
+          "supplied_inventory_rows": 5166,
+          "examined_rows": 35,
+          "document_fields": 148
+        },
+        "search_paths": {
+          "exact_identifiers": 16,
+          "fixture_partial": 2,
+          "fixture_timeout": 1,
+          "not_searched": 21,
+          "verified_identifier": 24
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 320,
+            "mean_ms": 0.1391415629768744,
+            "median_ms": 0.056849909014999866,
+            "p95_ms": 0.1129999291151762
+          },
+          "fuzzy_search": {
+            "samples": 0,
+            "mean_ms": null,
+            "median_ms": null,
+            "p95_ms": null
+          },
+          "inventory_lookup": {
+            "samples": 75,
+            "mean_ms": 0.39773466686407727,
+            "median_ms": 0.027399975806474686,
+            "p95_ms": 4.283899907022715
+          },
+          "scoring": {
+            "samples": 320,
+            "mean_ms": 0.11259187231189571,
+            "median_ms": 0.025999965146183968,
+            "p95_ms": 0.32110000029206276
+          },
+          "secondary_lookup": {
+            "samples": 145,
+            "mean_ms": 0.026004136829026813,
+            "median_ms": 0.026999972760677338,
+            "p95_ms": 0.04109996370971203
+          },
+          "total": {
+            "samples": 320,
+            "mean_ms": 0.7263046856678557,
+            "median_ms": 0.5447999574244022,
+            "p95_ms": 1.3650998007506132
+          }
+        }
+      },
+      "hybrid": {
+        "cases": 64,
+        "matching": {
+          "true_positive": 31,
+          "false_positive": 0,
+          "false_negative": 16,
+          "precision": 1.0,
+          "recall": 0.6595744680851063,
+          "f1": 0.7948717948717948,
+          "identity_evaluable_cases": 62,
+          "ranking_evaluable_cases": 47,
+          "top_1_accuracy": 0.7872340425531915,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.7872340425531915,
+              "recall_at_k": 0.7872340425531915
+            },
+            "3": {
+              "precision_at_k": 0.2907801418439716,
+              "recall_at_k": 0.8723404255319149
+            },
+            "5": {
+              "precision_at_k": 0.17446808510638298,
+              "recall_at_k": 0.8723404255319149
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.921875,
+          "action_set_accuracy": 0.953125,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 27,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.796875,
+          "abstention_rate": 0.515625,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 4
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 7
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "NO_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "ERROR",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 21
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "EXACT_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 9
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 10
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 4
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 11,
+          "false_positive": 0,
+          "false_negative": 2,
+          "precision": 1.0,
+          "recall": 0.8461538461538461,
+          "f1": 0.9166666666666666
+        },
+        "volume": {
+          "supplied_inventory_rows": 5166,
+          "examined_rows": 1169,
+          "document_fields": 148
+        },
+        "search_paths": {
+          "filtered_subset": 1,
+          "fixture_partial": 2,
+          "fixture_timeout": 1,
+          "full_table": 26,
+          "not_searched": 10,
+          "verified_identifier": 24
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 320,
+            "mean_ms": 0.46541750270989724,
+            "median_ms": 0.09190000128000975,
+            "p95_ms": 0.22879987955093384
+          },
+          "fuzzy_search": {
+            "samples": 140,
+            "mean_ms": 0.6961985674154546,
+            "median_ms": 0.07430010009557009,
+            "p95_ms": 0.14319992624223232
+          },
+          "inventory_lookup": {
+            "samples": 75,
+            "mean_ms": 0.43300399867196876,
+            "median_ms": 0.03600004129111767,
+            "p95_ms": 4.507499979808927
+          },
+          "scoring": {
+            "samples": 320,
+            "mean_ms": 0.43341563214198686,
+            "median_ms": 0.21820003166794777,
+            "p95_ms": 0.47280010767281055
+          },
+          "secondary_lookup": {
+            "samples": 145,
+            "mean_ms": 0.028204134312169307,
+            "median_ms": 0.027999980375170708,
+            "p95_ms": 0.04910002462565899
+          },
+          "total": {
+            "samples": 320,
+            "mean_ms": 1.4372584417287726,
+            "median_ms": 0.8708500536158681,
+            "p95_ms": 1.693699974566698
+          }
+        }
+      }
+    }
+  },
+  "measurement_scope": "Offline synthetic retrieval and actual matching service; no LLM or PostgreSQL latency.",
+  "reference_policy": "Frozen manual expectations may disagree with implementation; discrepancies are retained in CSV.",
+  "implementation_sha256": "d75badeb33bf74a8e5c2fd448a94aa469d6cfcea7db4ac22e29a621bda83ca65",
+  "source_manifest": {
+    "app/db/connection.py": "fd390dd7797175c9297bf4dba60a9ce3a4a0ea60bfb58b02c1cce1172f55d724",
+    "app/db/executor.py": "b5d4b3eb06c5c91a5feba10e10a8ff3cdb8d7e1db296bcb085396049209513cb",
+    "app/document_processing/__init__.py": "ceb5757d553b63820c9bfea9ba0a3d0beb960e04d282a407d2e3844249f32f91",
+    "app/document_processing/config.py": "3fa7daedc5f2251fd1ce75aeeab1bd7bd6160a5f133c9e91744ada58304b95ea",
+    "app/document_processing/docling_parser.py": "283ee9a7b4b752455567c36f1aa6c57946b86804937345d68e478a9c3be046cf",
+    "app/document_processing/extraction_service.py": "77a2798d61f27143b86730f47eef63c903edf57a3834f56db634e9c7ef688119",
+    "app/document_processing/field_labels.py": "55a19d7733834e6d3ecbb85f147a00dd00a792f8af006c476d975948d5b25424",
+    "app/document_processing/field_mapper.py": "3cbc10762f2304faeaa2da8b26ebcc05703ec8a0d7c4acb9885c2e15daadb92f",
+    "app/document_processing/llm_json.py": "5fa8873fd2406f246ac0a8a400d974ef20764538df75f2ad91580818b24856f1",
+    "app/document_processing/models.py": "c2b4282e29750b8a4ec5f4476d0f3ddd1cf7c73b2bb519d5fca876ada1dcba4e",
+    "app/document_processing/processing_service.py": "59f328ba7ac78bd033c5493dde33aac21dbeff9471968de5db677066123d39e1",
+    "app/document_processing/provenance.py": "521619f805b6d3d8cfa9894accf996ba6a3ba0b5ff3c9d3e8d7e9f0e9babbc9b",
+    "app/document_processing/validation_service.py": "0ecfd7c1e1ad5aa33a250a1185b07d8ba035d84e3e9287031e8e9dfd512868a5",
+    "app/errors.py": "841bc3efe80884c54c9ff6c24af2c397fe3f31562e216919af4604476428edec",
+    "app/evaluation/__init__.py": "300e04116d0e7ae52e64a254180d20c7c0ed9581af4a7a13948673168eb520f6",
+    "app/evaluation/_build_fixture.py": "24c72a9c8ca983b64fef1b67d1fc92cb84d1b918b8f00fd356c340e2348c47e6",
+    "app/evaluation/dataset.py": "0240f2f552bf0ad801608ece2407f199be2e134d755c53028d6fd1b148554fce",
+    "app/evaluation/metrics.py": "87378a71e499d9ca9e9c44d346785a6746f8ec43ec2e51b9b4aa1d8c7705638f",
+    "app/evaluation/runner.py": "2d19ab06a70882a6ddb033389b0b644be2fcb0cea4b4cd31b0acadd772b38f6e",
+    "app/orchestration/orchestrator.py": "513a408a66eaa5281d865e787d04ea585685de10780f817da08f465b3e9dc518",
+    "app/rag/embedding/embedding_service.py": "1f45f1bd7dc6e488d1265f5d5d56b0b489de36a0f2d27c41f1ac7fc6a6da81f6",
+    "app/rag/ingestion/chunker.py": "19a4ddd4d97efd253377266db45b6c73f0b80d4eb54613948e9cca123becbe06",
+    "app/rag/ingestion/document_parser.py": "596a016648b25e6781c71d7d0dc6f4622e90cf1023bab942de92dc1da72e5698",
+    "app/rag/ingestion/ingestion_service.py": "75a793be49a0866550aa61b03e4a1c7ebddd8202acff34a090fc7d6aae58cd7d",
+    "app/rag/ingestion/parser.py": "4b744f5d611277b7696d4dffbee13e77573c66aeb2d67ed64e57c79e95a847e6",
+    "app/rag/manuals.py": "b7c1d355d37b6c9e241ace5a183fb1c231e60b2f7fd6645b53138a62d2fd5e51",
+    "app/rag/models/rag_models.py": "634435b3e5736d75fdd37280723d87a87481c9672ea7e7365af972a2cb94cfac",
+    "app/rag/retrieval/rag_service.py": "4170891b04b027155852bf7068dc7f3091f753210ff313172f75a7622d661522",
+    "app/rag/retrieval/retriever.py": "cae15a56baf4b0b614a0e1ad2efac5cde73aa420e9844c5cb5e5f1462858cc4e",
+    "app/rag/vector_store/qdrant_client.py": "70bccf3b871b5c059060a77b5fa37f92dfd398f7e2a3fcdeb3e100615d41db62",
+    "app/record_matching/__init__.py": "3615c329fb53c2a965ad7884a7332a4566f0064b872a511deb760ca7778e5aa2",
+    "app/record_matching/candidate_service.py": "2436dee61d11e7c64b8a350ed5789e5fe2b2f6a076c17221691dc6c484b3873e",
+    "app/record_matching/comparison_service.py": "b5a953c697c7d25d7d2dcbb2be5bd528a8c7a52823756a90b5acc39cd2976a42",
+    "app/record_matching/config.py": "cc9b61c026919d5da0e795011d013a8010bbeebcc88471ca7f38511f91822654",
+    "app/record_matching/grouping.py": "8322d55a0d4d53b6a13b634d17aa74cf7385e557266a4c57ed8bc23f8ef15ff0",
+    "app/record_matching/inventory_audit.py": "3a3de1b2a82cc7924cc353b5dfba760ff666d6a06e66e6b4b549cdcafa8834f5",
+    "app/record_matching/matching_engine.py": "61d58c24a227c40a7822e6ad0eec0a17720bfed49fed32a8cad635a7a675cc3f",
+    "app/record_matching/models.py": "b9b758556211a87fb9640c6d907de74eed6cd5a92626a3fd9464490cc9a7b679",
+    "app/record_matching/normalization.py": "a1708b4c5cc8daa4be37f1194302371ea23d3594fa6b8b4620a816a32ed4eb48",
+    "app/record_matching/preparation.py": "39eb8177ac51b045853f57097ff7c609e166ca5f4e85206046a31797452c59cc",
+    "app/record_matching/reconciliation_service.py": "c06224c3d75be904be2b78aa9877cf8393f3648eab9a16246500b4916414bda6",
+    "app/record_matching/repository.py": "a1c6d6e3ab953d99eb7d9b04e8c846fdb7f32d5f977a4c5fed05c680ec8433f3",
+    "app/record_matching/suggestion_engine.py": "2e469081aa66ae4cdb6e23db7cec43c368511e594e54081227c0089a07d6160f",
+    "app/security/guardrails.py": "ee3d37e8b13766b427e1ec918dba37055156db3e03f3e890a9dd89107ec1792d",
+    "app/security/injection_checks.py": "feba420d24f93c33adf8bf547ec3921038434239b5933d07108ddca41f1ac9f2",
+    "app/security/sql_validator.py": "5c12a4792dae0a15f14d52277a072e65d1a5c736afebfa530fb8a0933e809a20",
+    "app/services/answer_service.py": "fcf9fb2b8b1a998d85081baa2438d9fc992dd4eb1477116ae31ac3fa21af5aa8",
+    "app/services/llm_service.py": "d366626fe609ab15c9454b55825dc219a6dd9a68c5e5950cdac0bc5b6b3dd34f",
+    "app/services/routing_service.py": "5e3a8acac1afae6c468d6e1cf24ff854c01337ab802c586c09838c6457b1164f",
+    "app/services/schema_service.py": "40c7d435c2a8000e70165d8d28db778ef24d916ee4883f84c87398f5e90c4868",
+    "app/services/sql_generation_service.py": "efc2a4d84caf252450c3e4e6b86ad8a5ddd3128fb6cedda6247f574839964a17",
+    "app/test_data/__init__.py": "df6e4e5f5dbdee9364fbf93b646157ee6d1517bad31880584fcaef61b91b6b14",
+    "app/test_data/artifacts.py": "3cc00d27ec007485e836f34483b9c79dc3eaaa16a012d7f95c0224adb82cc5be",
+    "app/test_data/catalog.py": "728be3e4f2ae14312fdf211821496374b6d529af1cd2280a9b6e87824ac285a2",
+    "app/test_data/cli.py": "bcbc81d98ef7239e1b74595e0f6c5e513d55475815a389d737bd39dd31197379",
+    "app/test_data/database.py": "927d6bfb703a6954a701d11b49143cb0c1897fd3baf7b10dfa74717a66c969d1",
+    "app/test_data/documents.py": "f85cf1e07e5190deab57671701da9a94dc2e6e94dcb155f40bb8e6956416ce6f",
+    "app/test_data/evaluation.py": "3e65aa0ad952d338c788072221489e1589f05db4edebaaf0d54f2d3500e23164",
+    "app/test_data/generator.py": "967310b0abc261162be54d3d5e3673c02c5d1570c719c95740a3ce8a60a309e7",
+    "app/test_data/models.py": "a09d6a98ebdfabb3b9b4a8f37e9481c419d299f19de134ed18ece58e9258c1ee",
+    "app/test_data/validation.py": "16710e20af1f6671393617d924ffc0ab1979c9b2b53da34af36da10c78c223d2",
+    "app/web/__init__.py": "9d975f23d1e192a593dddca637d530127638ccaf5fd7d8d2564ede2a0a128357",
+    "app/web/document_exports.py": "0937740e622342d66a6b8b1ac3c94e8045e01d6b8f7f3cb7fac6bd370263d9c2",
+    "app/web/document_preview.py": "eb9f7129b0397d95d20a7b2aae966c5914701a0175180c2bd2207155a9fb3513",
+    "app/web/reconciliation_preview.py": "2c09800bb675579683b9c32af5d26586f925ee6707cc0a77526f7b3a765aedf8",
+    "app/web/simple_server.py": "ef9731897fc8af5a5dfaa374a9e6ddbf45b93c9be6c8d0bb2bff7a84c34900d5",
+    "scripts/audit_inventory_numbers.py": "5c2cb70a3c3d2b71a480d98e4dbf53895e1a83553a075133bfb35ff6cb785530",
+    "scripts/audit_matching_schema.py": "ac3656ee215aebb21fda2035372504db2e0dc2940aac9ba62b50db4f0e091ee2",
+    "scripts/evaluate_clean_inventory.py": "0587598d61a58ccf126951ec0f92b88c4417d34433e2b4dbb7c73436bbfe01de",
+    "scripts/evaluate_matching.py": "80bfcfffc87b0b023fe4beb867c5778d15b8fa45116b93d06e8b73048d5a42ef",
+    "scripts/extract_schema.py": "dc1f5ab37cf131f53ba1dafd53f5fbe4ef3e3ea013448af837b9159f85a5844c",
+    "scripts/generate_inventory_data.py": "e7f9b429640f2dee4cd47ebe56287567d5c9658f4e1e82f70fd29d3e737ddd44",
+    "scripts/ingest_model_manuals.py": "5284fbf2835895be75e926ecf76d71a5af66f282fc30ecb0f9207f4f97f7542f",
+    "scripts/load_inventory_data.py": "c0b207781fbf3aa7295b8bd92d381b14b3f547c881345cdde5214e19d167a3cb",
+    "scripts/prepare_docling_models.py": "4e1f353894b434aec9a013afb6f366ea8552ebdcd67248ec16f45dc155c854cb",
+    "scripts/prepare_inventory_database.py": "ff0ae5b15d325c1a36b85ce74aa88664575fd3cb41c12a6fd5b01988550a6290",
+    "scripts/run_webapp.py": "ca1d3476e26ff82b64297ec42d70fa160b0cdd79ebbd677b295df391bf0dac9c",
+    "scripts/verify_clean_inventory_report.py": "034ef27388c15a8a210e3030bb8561114ac02186d63c5257ec5761e1235b5f79",
+    "scripts/verify_inventory_data.py": "8fa8eddec6beaf986935e9cf3580c1b52f080383870c39ecc661625882545a77",
+    "scripts/verify_matching_report.py": "4378ad9b6faac74bcb12f8da7915f45903d02920437be96bee4e8a00b585bb15",
+    "config/column_mapping.yaml": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "config/schema.json": "8195648a26fc5bf0a85329c4240b8a0f133c8af4e3230e7f3a040a9390970a7e",
+    "config/schema_descriptions.yaml": "714f049c9d2cbf007009fbe91ef035db663171cc51c744f56bb1a74a12092afc",
+    "migrations/001_inventory_number_unique.sql": "a04347b85bfd8faae7fa2c5512ba45d3a598952c9caf633688cb54faef49601a",
+    "migrations/001_inventory_number_unique_rollback.sql": "7b2befa565cac58411739e2a7195c3183617701ef65541773f365f1546cff99e"
+  },
+  "test_cohorts": {
+    "inventory_unique": {
+      "exact_only": {
+        "cases": 12,
+        "matching": {
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 4,
+          "precision": 1.0,
+          "recall": 0.5555555555555556,
+          "f1": 0.7142857142857143,
+          "identity_evaluable_cases": 12,
+          "ranking_evaluable_cases": 9,
+          "top_1_accuracy": 0.6666666666666666,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.6666666666666666,
+              "recall_at_k": 0.6666666666666666
+            },
+            "3": {
+              "precision_at_k": 0.2222222222222222,
+              "recall_at_k": 0.6666666666666666
+            },
+            "5": {
+              "precision_at_k": 0.13333333333333333,
+              "recall_at_k": 0.6666666666666666
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.8333333333333334,
+          "action_set_accuracy": 0.9166666666666666,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 2,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": null,
+          "review_rate": 0.6666666666666666,
+          "abstention_rate": 0.5833333333333334,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 2
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 5
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 3
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 1,
+          "false_positive": 0,
+          "false_negative": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "volume": {
+          "supplied_inventory_rows": 4011,
+          "examined_rows": 6,
+          "document_fields": 24
+        },
+        "search_paths": {
+          "exact_identifiers": 3,
+          "not_searched": 3,
+          "verified_identifier": 6
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 60,
+            "mean_ms": 0.42260833239803713,
+            "median_ms": 0.05950010381639004,
+            "p95_ms": 4.3351000640541315
+          },
+          "fuzzy_search": {
+            "samples": 0,
+            "mean_ms": null,
+            "median_ms": null,
+            "p95_ms": null
+          },
+          "inventory_lookup": {
+            "samples": 40,
+            "mean_ms": 0.5777749931439757,
+            "median_ms": 0.026950030587613583,
+            "p95_ms": 4.525299882516265
+          },
+          "scoring": {
+            "samples": 60,
+            "mean_ms": 0.13282664585858583,
+            "median_ms": 0.09330001194030046,
+            "p95_ms": 0.45419996604323387
+          },
+          "secondary_lookup": {
+            "samples": 5,
+            "mean_ms": 0.027539953589439392,
+            "median_ms": 0.0266998540610075,
+            "p95_ms": null
+          },
+          "total": {
+            "samples": 60,
+            "mean_ms": 1.0179949924349785,
+            "median_ms": 0.5317999748513103,
+            "p95_ms": 5.50389988347888
+          }
+        }
+      },
+      "hybrid": {
+        "cases": 12,
+        "matching": {
+          "true_positive": 7,
+          "false_positive": 0,
+          "false_negative": 2,
+          "precision": 1.0,
+          "recall": 0.7777777777777778,
+          "f1": 0.875,
+          "identity_evaluable_cases": 12,
+          "ranking_evaluable_cases": 9,
+          "top_1_accuracy": 0.8888888888888888,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.8888888888888888,
+              "recall_at_k": 0.8888888888888888
+            },
+            "3": {
+              "precision_at_k": 0.2962962962962963,
+              "recall_at_k": 0.8888888888888888
+            },
+            "5": {
+              "precision_at_k": 0.17777777777777778,
+              "recall_at_k": 0.8888888888888888
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 1.0,
+          "action_set_accuracy": 1.0,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 2,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": null,
+          "review_rate": 0.6666666666666666,
+          "abstention_rate": 0.4166666666666667,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 2
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 5
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 3
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 2,
+          "false_positive": 0,
+          "false_negative": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "volume": {
+          "supplied_inventory_rows": 4011,
+          "examined_rows": 10,
+          "document_fields": 24
+        },
+        "search_paths": {
+          "full_table": 5,
+          "not_searched": 1,
+          "verified_identifier": 6
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 60,
+            "mean_ms": 0.48745165889461833,
+            "median_ms": 0.09624997619539499,
+            "p95_ms": 4.569999873638153
+          },
+          "fuzzy_search": {
+            "samples": 25,
+            "mean_ms": 0.05185202695429325,
+            "median_ms": 0.0646000262349844,
+            "p95_ms": 0.09150011464953423
+          },
+          "inventory_lookup": {
+            "samples": 40,
+            "mean_ms": 0.6234525062609464,
+            "median_ms": 0.03515009302645922,
+            "p95_ms": 4.673300078138709
+          },
+          "scoring": {
+            "samples": 60,
+            "mean_ms": 0.2234366605989635,
+            "median_ms": 0.23229990620166063,
+            "p95_ms": 0.3978998865932226
+          },
+          "secondary_lookup": {
+            "samples": 5,
+            "mean_ms": 0.037140026688575745,
+            "median_ms": 0.03779982216656208,
+            "p95_ms": null
+          },
+          "total": {
+            "samples": 60,
+            "mean_ms": 1.2968400221628447,
+            "median_ms": 0.8832000894472003,
+            "p95_ms": 5.683599971234798
+          }
+        }
+      }
+    },
+    "no_inventory_unique": {
+      "exact_only": {
+        "cases": 52,
+        "matching": {
+          "true_positive": 20,
+          "false_positive": 0,
+          "false_negative": 18,
+          "precision": 1.0,
+          "recall": 0.5263157894736842,
+          "f1": 0.6896551724137931,
+          "identity_evaluable_cases": 50,
+          "ranking_evaluable_cases": 38,
+          "top_1_accuracy": 0.6052631578947368,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.6052631578947368,
+              "recall_at_k": 0.6052631578947368
+            },
+            "3": {
+              "precision_at_k": 0.21929824561403508,
+              "recall_at_k": 0.6578947368421053
+            },
+            "5": {
+              "precision_at_k": 0.13157894736842107,
+              "recall_at_k": 0.6578947368421053
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.75,
+          "action_set_accuracy": 0.8269230769230769,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 25,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 0.5,
+          "review_rate": 0.8269230769230769,
+          "abstention_rate": 0.6153846153846154,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 2
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 5
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "ERROR",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 16
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "EXACT_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 5
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 7
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "LIKELY_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 3
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 7,
+          "false_positive": 0,
+          "false_negative": 4,
+          "precision": 1.0,
+          "recall": 0.6363636363636364,
+          "f1": 0.7777777777777778
+        },
+        "volume": {
+          "supplied_inventory_rows": 1155,
+          "examined_rows": 29,
+          "document_fields": 124
+        },
+        "search_paths": {
+          "exact_identifiers": 13,
+          "fixture_partial": 2,
+          "fixture_timeout": 1,
+          "not_searched": 18,
+          "verified_identifier": 18
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 260,
+            "mean_ms": 0.07372615464891379,
+            "median_ms": 0.056849909014999866,
+            "p95_ms": 0.10659988038241863
+          },
+          "fuzzy_search": {
+            "samples": 0,
+            "mean_ms": null,
+            "median_ms": null,
+            "p95_ms": null
+          },
+          "inventory_lookup": {
+            "samples": 35,
+            "mean_ms": 0.1919742939727647,
+            "median_ms": 0.031800009310245514,
+            "p95_ms": 1.275600166991353
+          },
+          "scoring": {
+            "samples": 260,
+            "mean_ms": 0.10792230918573645,
+            "median_ms": 0.02559996210038662,
+            "p95_ms": 0.31260005198419094
+          },
+          "secondary_lookup": {
+            "samples": 140,
+            "mean_ms": 0.02594928623044065,
+            "median_ms": 0.026999972760677338,
+            "p95_ms": 0.04109996370971203
+          },
+          "total": {
+            "samples": 260,
+            "mean_ms": 0.6589915379523658,
+            "median_ms": 0.5447999574244022,
+            "p95_ms": 1.310399966314435
+          }
+        }
+      },
+      "hybrid": {
+        "cases": 52,
+        "matching": {
+          "true_positive": 24,
+          "false_positive": 0,
+          "false_negative": 14,
+          "precision": 1.0,
+          "recall": 0.631578947368421,
+          "f1": 0.7741935483870968,
+          "identity_evaluable_cases": 50,
+          "ranking_evaluable_cases": 38,
+          "top_1_accuracy": 0.7631578947368421,
+          "at_k": {
+            "1": {
+              "precision_at_k": 0.7631578947368421,
+              "recall_at_k": 0.7631578947368421
+            },
+            "3": {
+              "precision_at_k": 0.2894736842105263,
+              "recall_at_k": 0.868421052631579
+            },
+            "5": {
+              "precision_at_k": 0.1736842105263158,
+              "recall_at_k": 0.868421052631579
+            }
+          }
+        },
+        "decisions": {
+          "status_accuracy": 0.9038461538461539,
+          "action_set_accuracy": 0.9423076923076923,
+          "review_accuracy": 1.0,
+          "uncertain_cases": 25,
+          "uncertainty_detection_rate": 1.0,
+          "ambiguity_status_recall": 1.0,
+          "review_rate": 0.8269230769230769,
+          "abstention_rate": 0.5384615384615384,
+          "false_automatic_matches": 0,
+          "false_create_proposals": 0,
+          "status_confusion": [
+            {
+              "expected": "AMBIGUOUS_MATCH",
+              "predicted": "AMBIGUOUS_MATCH",
+              "count": 4
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 5
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 1
+            },
+            {
+              "expected": "CONFLICTING_DATA",
+              "predicted": "NO_MATCH",
+              "count": 2
+            },
+            {
+              "expected": "ERROR",
+              "predicted": "ERROR",
+              "count": 1
+            },
+            {
+              "expected": "EXACT_MATCH",
+              "predicted": "EXACT_MATCH",
+              "count": 16
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "CONFLICTING_DATA",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "EXACT_MATCH",
+              "count": 1
+            },
+            {
+              "expected": "INSUFFICIENT_DATA",
+              "predicted": "INSUFFICIENT_DATA",
+              "count": 3
+            },
+            {
+              "expected": "LIKELY_MATCH",
+              "predicted": "LIKELY_MATCH",
+              "count": 7
+            },
+            {
+              "expected": "NO_MATCH",
+              "predicted": "NO_MATCH",
+              "count": 7
+            },
+            {
+              "expected": "SEARCH_INCOMPLETE",
+              "predicted": "SEARCH_INCOMPLETE",
+              "count": 4
+            }
+          ]
+        },
+        "deltas": {
+          "true_positive": 9,
+          "false_positive": 0,
+          "false_negative": 2,
+          "precision": 1.0,
+          "recall": 0.8181818181818182,
+          "f1": 0.9
+        },
+        "volume": {
+          "supplied_inventory_rows": 1155,
+          "examined_rows": 1159,
+          "document_fields": 124
+        },
+        "search_paths": {
+          "filtered_subset": 1,
+          "fixture_partial": 2,
+          "fixture_timeout": 1,
+          "full_table": 21,
+          "not_searched": 9,
+          "verified_identifier": 18
+        },
+        "timings": {
+          "candidate_search": {
+            "samples": 260,
+            "mean_ms": 0.46033269743650007,
+            "median_ms": 0.09130011312663555,
+            "p95_ms": 0.21319999359548092
+          },
+          "fuzzy_search": {
+            "samples": 115,
+            "mean_ms": 0.8362739022983157,
+            "median_ms": 0.0792001374065876,
+            "p95_ms": 0.18659979104995728
+          },
+          "inventory_lookup": {
+            "samples": 35,
+            "mean_ms": 0.21534856142742292,
+            "median_ms": 0.0366999302059412,
+            "p95_ms": 1.351300161331892
+          },
+          "scoring": {
+            "samples": 260,
+            "mean_ms": 0.4818723178826846,
+            "median_ms": 0.21385005675256252,
+            "p95_ms": 0.5108998157083988
+          },
+          "secondary_lookup": {
+            "samples": 140,
+            "mean_ms": 0.027884995298726217,
+            "median_ms": 0.027850037440657616,
+            "p95_ms": 0.04910002462565899
+          },
+          "total": {
+            "samples": 260,
+            "mean_ms": 1.4696626923978329,
+            "median_ms": 0.8456000359728932,
+            "p95_ms": 1.4731001574546099
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "rapidfuzz": "3.14.6",
+    "pydantic": "2.12.5",
+    "psycopg2-binary": "2.9.11"
+  },
+  "hybrid_minus_baseline": {
+    "calibration": {
+      "precision": 0.0,
+      "recall": 0.2857142857142857,
+      "f1": 0.2828282828282829,
+      "top_1_accuracy": 0.28571428571428575
+    },
+    "test": {
+      "precision": 0.0,
+      "recall": 0.12765957446808507,
+      "f1": 0.1004273504273504,
+      "top_1_accuracy": 0.17021276595744683
+    }
+  }
+}

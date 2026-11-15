@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-08",
+  "head": "a7bd4278aaa4a7da6aa7375ff1741c6e9107ab83",
+  "files": {
+    "docs/rag_restoration_2026-11-08.md": "861c23a22a008d9711f10194806e13902b6c45826fdf99b5b47e6588460974da",
+    "evaluation/rag_restore_2026-11-08_90ed2390/dependency_install.json": "649fe5bcb8ba229cda017219e7a9179072fccd6c29f23a729ae7bf55b94cdf93",
+    "evaluation/rag_restore_2026-11-08_90ed2390/dependency_plan.json": "649fe5bcb8ba229cda017219e7a9179072fccd6c29f23a729ae7bf55b94cdf93",
+    "evaluation/rag_restore_2026-11-08_90ed2390/final_verification.json": "a38a7a5b1974583f18b49e48b5065049e7735935694794a654c42cd78462e642",
+    "evaluation/rag_restore_2026-11-08_90ed2390/ingest_once.py": "fc7f884a53c37ef0daeb08fefb91855595785dfcf6817e39a12b4c0edd488423",
+    "evaluation/rag_restore_2026-11-08_90ed2390/ingestion.json": "2d19b3aa79b14683f15967a49223049213851c7cfc24c85651bdec37873fd951",
+    "evaluation/rag_restore_2026-11-08_90ed2390/ingestion_started.json": "7cdd5b4651d27a70efb197b72d9f589c52dbc5b600e75a22448bd02de3496dad",
+    "evaluation/rag_restore_2026-11-08_90ed2390/initial_state.json": "13e4f04ecbdc8a4b210a7be247df3a0dd896abc84a1ec521f4759a2f12c777f7",
+    "evaluation/rag_restore_2026-11-08_90ed2390/live_checks.json": "ede96a0bcd14001b4eac24bc3307735b8e7c0808cb978acfd5f0cc3cb3bcc516",
+    "evaluation/rag_restore_2026-11-08_90ed2390/live_checks.py": "314049c41636c53de50e7487fa19e5afd5a8d07ce424906cdf55f1820d230022",
+    "evaluation/rag_restore_2026-11-08_90ed2390/preflight_tests.xml": "77383b1438a20a73fe5f8339546df287767b1afa9706e384ae74dd0fe5661a65",
+    "requirements.txt": "8eab82f34f3ddfd5342e58b1414d5e42f53993c04e32718210d439a01c6b3994"
+  },
+  "checks": {
+    "protected_files_changed": [
+      "requirements.txt"
+    ],
+    "secrets_detected": false,
+    "tests_passed": 10,
+    "live_routes_passed": 3,
+    "point_count": 40,
+    "postgres_unchanged": true
+  }
+}

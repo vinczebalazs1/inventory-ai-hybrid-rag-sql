@@ -1,4 +1,14 @@
+from pathlib import Path
+
+from dotenv import load_dotenv
 import streamlit as st
+
+# A helyi Streamlit alkalmazásban a projekt .env fájlja az elsődleges.
+# VS Code-terminálok régi DB/Qdrant értékeket örökíthetnek tovább; ezeket
+# még az importkor létrejövő szolgáltatáskliensek előtt kell felülírni.
+# .env módosítása után a teljes Streamlit folyamatot újra kell indítani.
+load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=True)
+
 from app.orchestration.orchestrator import handle_question
 from app.rag.ingestion.ingestion_service import ingest_uploaded_document
 from app.web.document_preview import render_document_analysis
@@ -124,6 +134,11 @@ if ask and question.strip():
             source_rows.append({
                 "Citation": f"[{idx}] {source.get('source', '-')}",
                 "Section": source.get("section", "-"),
+                "Model": source.get("name", "-"),
+                "Item code": source.get("item_code") or "-",
+                "Kind": "Gyártói kézikönyv" if source.get("source_kind") == "manufacturer" else "Általános dokumentáció",
+                "PDF page": source.get("page") or "-",
+                "URL": source.get("source_url") or "-",
                 "Confidence": f"{confidence}%" if confidence is not None else "-",
                 "Preview": source.get("text", ""),
             })
